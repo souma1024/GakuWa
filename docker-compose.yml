@@ -1,0 +1,71 @@
+version: "3.9"
+
+services:
+  frontend:
+    image: node:20
+    container_name: gakuwa-frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+  backend:
+    image: node:20
+    container_name: gakuwa-backend
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    command: sh -c "npm install && npm run dev"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=admin
+      - DB_PASSWORD=db_password
+      - DB_NAME=gakuwa_db
+      - MAIL_HOST=mailhog
+      - MAIL_PORT=1025
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - mailhog
+
+  db:
+    image: mysql:8.0
+    container_name: gakuwa-mysql
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=gakuwa_db
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=db_password
+    ports:
+      - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - db-data:/var/lib/mysql
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: gakuwa-mailhog
+    ports:
+      - "8025:8025"  # Web UI → http://localhost:8025
+      - "1025:1025"  # SMTP
+
+  nginx:
+    image: nginx:alpine
+    container_name: gakuwa-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  db-data:
