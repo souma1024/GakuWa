@@ -83,7 +83,7 @@ https://www.docker.com/ja-jp/products/docker-desktop/
   手順３　以下のコマンドをしdockerコンテナを立てる（ローカルPC上にサーバーが立ち上がる）
   ```
    ~/ cd gakuwa
-   ~/gakuwa$ docker compose up 
+   ~/gakuwa$ docker compose up --build
   ```
   
   各サーバーへのアクセスは以下から <br>
