@@ -27,15 +27,6 @@
 <br>
 
 ## セットアップ手順
-<details><summary>Gitとは</summary>
-Gitとは、
-</details>
-<details><summary>Githubとは</summary>
-Githubとは、
-</details>
-<details><summary>Dockerとは</summary>
-とは、
-</details>
 
 ### 1　Gitのセットアップ
 ubuntu上で以下のコマンドを実行してください
@@ -223,6 +214,52 @@ https://www.docker.com/ja-jp/products/docker-desktop/
 
 <details><summary>開発中によく使うコマンド集 gitコマンド編</summary>
 
+現在のブランチの状態確認
+```
+ git status
+```
+ 
+ ローカルリポジトリに存在するすべてのブランチの確認
+ ```
+  git branch
+ ```
+
+ローカルリポジトリに新しいブランチを作り移動する
+```
+ git switch -c (ブランチ名)
+```
+
+ローカルリポジトリにあるブランチに移動する
+```
+ git checkout (ローカルリポジトリ上にあるブランチ名)
+```
+
+ファイルやディレクトリを追跡対象にする
+```
+ git add (ファイル名やディレクトリ名)
+
+ git add .    //こうすると、自分がいるディレクトリ配下の変更されたすべてのファイルが追跡対象になる
+```
+
+追跡対象のファイルの変更を確定させる
+```
+ git commit -m "(コメントを書く)"
+
+ git commit   // -mを忘れると、gitに登録されているデフォルトのエディタ（おそらく vim）が起動しコメントを受け付ける
+```
+
+ローカルリポジトリの現在のブランチをリモートリポジトリにアップロードする
+```
+ git push -u origin (現在のブランチ名)
+```
+
+リモートリポジトリのブランチをローカルリポジトリに取り込む(どうやら git pull よりも git pull --rebaseのほうが推奨されているらしい)
+```
+ git pull --rebase origin (リモートリポジトリに存在するブランチ名)
+```
+ 
+ 
+ 
 </details>
 
 <details><summary>開発中によく使うコマンド集 dockerコマンド編</summary>
@@ -247,6 +284,25 @@ https://www.docker.com/ja-jp/products/docker-desktop/
 ```
  docker compose exec (SERVICE_NAME) bash
 ```
+
+<details><summary>DBコンテナに入り、MySQLにアクセスする例</summary>
+
+ コンテナに入るコマンド
+ ```
+  docker compose exec db bash
+ ```
+ ![実行結果](./docs/docker/docker-intro.png)
+
+ mysqlにrootユーザーでログインするコマンド (passwordはdocker-compose.ymlファイルを参照)
+ ```
+  mysql -u root -p
+ ```
+ ![実行結果](./docs/docker/docker-intro2.png)
+
+ mysqlのログアウト及びコンテナから出る (exit)
+ ![実行結果](./docs/docker/docker-intro3.png)
+ 
+</details>
 
 
 #### 
