@@ -102,17 +102,20 @@ https://www.docker.com/ja-jp/products/docker-desktop/
 
 ### 手順２　mainブランチならリモートリポジトリの変更をローカルリポジトリに取り込む
 ```
-  git pull origin main
+  git pull --rebase origin main
 ```
 
 <details><summary>例:リモートリポジトリに変更があった場合</summary>
- 
+
+--rebaseがあったほうが望ましい
+
 ![実行結果](./docs/dev/dev-intro9.png)
 
 </details>
 
 <details><summary>例:リモートリポジトリに変更がなかった場合</summary>
  
+ --rebaseがあったほうが望ましい <br>
 下の画像の状態になったら、リモートリポジトリとローカルリポジトリが同じ状態なので手順３へ
 ![実行結果](./docs/dev/dev-intro10.png)
 </details>
@@ -213,52 +216,68 @@ https://www.docker.com/ja-jp/products/docker-desktop/
 </details>
 
 <details><summary>開発中によく使うコマンド集 gitコマンド編</summary>
-
+ 
+<br>
+ 
 現在のブランチの状態確認
 ```
  git status
 ```
+  
+<br>
  
  ローカルリポジトリに存在するすべてのブランチの確認
  ```
   git branch
  ```
-
+ 
+<br>
+ 
 ローカルリポジトリに新しいブランチを作り移動する
 ```
  git switch -c (ブランチ名)
 ```
-
+ 
+<br>
+ 
 ローカルリポジトリにあるブランチに移動する
 ```
  git checkout (ローカルリポジトリ上にあるブランチ名)
 ```
-
+ 
+<br>
+ 
 ファイルやディレクトリを追跡対象にする
 ```
  git add (ファイル名やディレクトリ名)
 
  git add .    //こうすると、自分がいるディレクトリ配下の変更されたすべてのファイルが追跡対象になる
 ```
-
+ 
+<br>
+ 
 追跡対象のファイルの変更を確定させる
 ```
  git commit -m "(コメントを書く)"
 
  git commit   // -mを忘れると、gitに登録されているデフォルトのエディタ（おそらく vim）が起動しコメントを受け付ける
 ```
-
+ 
+<br>
+ 
 ローカルリポジトリの現在のブランチをリモートリポジトリにアップロードする
 ```
  git push -u origin (現在のブランチ名)
 ```
-
+ 
+<br>
+ 
 リモートリポジトリのブランチをローカルリポジトリに取り込む(どうやら git pull よりも git pull --rebaseのほうが推奨されているらしい)
 ```
  git pull --rebase origin (リモートリポジトリに存在するブランチ名)
 ```
- 
- 
+  
+<br>
  
 </details>
 
