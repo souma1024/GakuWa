@@ -103,7 +103,7 @@ https://www.docker.com/ja-jp/products/docker-desktop/
 ```
 <details><summary>実行例</summary>
  
-![実行結果](./docs/dev-intro.png)
+![実行結果](./docs/dev/dev-intro.png)
 
 </details>
 
@@ -116,14 +116,14 @@ https://www.docker.com/ja-jp/products/docker-desktop/
 
 <details><summary>例:リモートリポジトリに変更があった場合</summary>
  
-![実行結果](./docs/dev-intro9.png)
+![実行結果](./docs/dev/dev-intro9.png)
 
 </details>
 
 <details><summary>例:リモートリポジトリに変更がなかった場合</summary>
  
 下の画像の状態になったら、リモートリポジトリとローカルリポジトリが同じ状態なので手順３へ
-![実行結果](./docs/dev-intro10.png)
+![実行結果](./docs/dev/dev-intro10.png)
 </details>
 
 <br>
@@ -135,7 +135,7 @@ https://www.docker.com/ja-jp/products/docker-desktop/
 
 <details><summary>例:ブランチ名はfeature/test にした </summary>
  
-![実行結果](./docs/dev-intro2.png)
+![実行結果](./docs/dev/dev-intro2.png)
 
 </details>
 
@@ -145,7 +145,7 @@ https://www.docker.com/ja-jp/products/docker-desktop/
 
 <details><summary>例: ファイルを変更後</summary>
  
-![実行結果](./docs/dev-intro3.png)
+![実行結果](./docs/dev/dev-intro3.png)
 
 </details>
 
@@ -158,7 +158,7 @@ https://www.docker.com/ja-jp/products/docker-desktop/
 
 <details><summary>実行例</summary>
 
-![実行結果](./docs/dev-intro4.png)
+![実行結果](./docs/dev/dev-intro4.png)
 
 </details>
 
@@ -171,7 +171,7 @@ https://www.docker.com/ja-jp/products/docker-desktop/
 
 <details><summary>実行例</summary>
 
-![実行結果](./docs/dev-intro5.png)
+![実行結果](./docs/dev/dev-intro5.png)
 
 </details>
 
@@ -184,7 +184,7 @@ https://www.docker.com/ja-jp/products/docker-desktop/
 
 <details><summary>実行例</summary>
 
-![実行結果](./docs/dev-intro6.png)
+![実行結果](./docs/dev/dev-intro6.png)
 
 </details>
 
@@ -192,13 +192,13 @@ https://www.docker.com/ja-jp/products/docker-desktop/
 
 ### 手順８　github上にpull request作成要求が表示されるので、ボタンを押す
 
-![実行結果](./docs/dev-intro7.png)
+![実行結果](./docs/dev/dev-intro7.png)
 
 <br>
 
 ### 手順９　タイトル、説明文、レビューする人、作成者を選択し pull requestを作成する　
 
-![実行結果](./docs/dev-intro11.png)
+![実行結果](./docs/dev/dev-intro11.png)
 
 <br>
 
@@ -211,7 +211,7 @@ https://www.docker.com/ja-jp/products/docker-desktop/
   git checkout main
 ```
 
-![実行結果](./docs/dev-intro8.png)
+![実行結果](./docs/dev/dev-intro8.png)
 
 <br>
 
