@@ -95,7 +95,163 @@ https://www.docker.com/ja-jp/products/docker-desktop/
 <br>
 
 ## 開発の進め方
+<details><summary>開発の進め方</summary>
+ 
+### 手順１　ローカルレポジトリの現在のブランチがmainブランチかどうか確認する
+```
+  git status
+```
+<details><summary>実行例</summary>
+ 
+![実行結果](./docs/dev-intro.png)
 
+</details>
+
+<br>
+
+### 手順２　mainブランチならリモートリポジトリの変更をローカルリポジトリに取り込む
+```
+  git pull origin main
+```
+
+<details><summary>例:リモートリポジトリに変更があった場合</summary>
+ 
+![実行結果](./docs/dev-intro9.png)
+
+</details>
+
+<details><summary>例:リモートリポジトリに変更がなかった場合</summary>
+ 
+下の画像の状態になったら、リモートリポジトリとローカルリポジトリが同じ状態なので手順３へ
+![実行結果](./docs/dev-intro10.png)
+</details>
+
+<br>
+
+### 手順３　ローカルブランチに新しいブランチを作成し移動する
+```
+  git switch -c (branch名)
+```
+
+<details><summary>例:ブランチ名はfeature/test にした </summary>
+ 
+![実行結果](./docs/dev-intro2.png)
+
+</details>
+
+<br>
+
+### 手順４　Issueに従いコーディングを行う(ファイルを変更したら、以下の画像のような状態になる)
+
+<details><summary>例: ファイルを変更後</summary>
+ 
+![実行結果](./docs/dev-intro3.png)
+
+</details>
+
+<br>
+
+### 手順５　ファイルを変更したらそのファイルを追跡対象に追加する
+```
+  git add (ファイル名、ディレクトリ名、 . )
+```
+
+<details><summary>実行例</summary>
+
+![実行結果](./docs/dev-intro4.png)
+
+</details>
+
+<br>
+
+### 手順６　追跡対象にしたファイルの変更を確定させる
+```
+  git commit -m "（説明文を書く）"
+```
+
+<details><summary>実行例</summary>
+
+![実行結果](./docs/dev-intro5.png)
+
+</details>
+
+<br>
+
+### 手順７　ローカルリポジトリ上の変更したすべてのファイルに対してコミットしたら、リモートリポジトリへアップロード
+```
+  git push -u origin (現在のブランチ名)
+```
+
+<details><summary>実行例</summary>
+
+![実行結果](./docs/dev-intro6.png)
+
+</details>
+
+<br>
+
+### 手順８　github上にpull request作成要求が表示されるので、ボタンを押す
+
+![実行結果](./docs/dev-intro7.png)
+
+<br>
+
+### 手順９　タイトル、説明文、レビューする人、作成者を選択し pull requestを作成する　
+
+![実行結果](./docs/dev-intro11.png)
+
+<br>
+
+### 手順１０　レビューを待つ
+
+<br>
+
+### 手順１１　無事にマージされ、ローカルレポジトリの変更がリモートリポジトリに反映したら、ローカルリポジトリのブランチをmainブランチに移動
+```
+  git checkout main
+```
+
+![実行結果](./docs/dev-intro8.png)
+
+<br>
+
+### 手順１２　新しいタスクを開始する
+
+<br>
+
+</details>
+
+<details><summary>開発中によく使うコマンド集 gitコマンド編</summary>
+
+</details>
+
+<details><summary>開発中によく使うコマンド集 dockerコマンド編</summary>
+
+#### docker-compose.ymlファイルに基づいて、dockerコンテナを起動する コマンド
+```
+ docker compose up      // 終了時は Ctrl + C
+ docker compose up -d 　// -dを使うとバックグランドで起動させる
+```
+
+#### バックグラウンドで起動中のdockerコンテナを停止するコマンド
+```
+ docker compose down
+```
+
+#### docker-compose.ymlやdockerファイルが変更された場合にのみ使用する、コンテナを再構築するコマンド
+```
+ docker compose up --build
+```
+
+#### dockerコンテナの中に入るコマンド
+```
+ docker compose exec (SERVICE_NAME) bash
+```
+
+
+#### 
+
+</details>
 
 <br>
 
