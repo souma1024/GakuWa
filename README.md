@@ -299,6 +299,12 @@ https://www.docker.com/ja-jp/products/docker-desktop/
  docker compose up --build
 ```
 
+#### frontendやbackendのpackage.jsonファイルにパッケージを追加するコマンド
+```
+  docker compose run --rm (frontend もしくは backend) npm install (パッケージ名)
+```
+
+
 #### dockerコンテナの中に入るコマンド
 ```
  docker compose exec (SERVICE_NAME) bash
