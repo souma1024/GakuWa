@@ -1,34 +1,36 @@
 # =========================================
-# Node.js（frontend & backend）
+# Node.js（frontend & backend 共通）
 # =========================================
 node_modules/
 dist/
 build/
+dist-ssr/
+*.local
+
+# Debug logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
 
-# local env files
+# Local environment variables
 .env
-.env.*
-
 
 # =========================================
-# MinIO 関連
+# MinIO 関連（データは Git 管理しない）
 # =========================================
-# MinIO のデータ（Volume）
+# MinIO data (docker volume mount)
 minio-data/
 
-# MinIO のビルド済みバイナリ
+# MinIO binaries (もし自前でビルドしている場合)
 minio/minio
 minio/minio.RELEASE*
-
-# MinIO の build artifacts
 minio/*.gz
 minio/inspect*
 minio/xl-meta*
 
+data
 
 # =========================================
 # Docker 関連
@@ -36,13 +38,25 @@ minio/xl-meta*
 *.log
 docker-compose.override.yml
 
-
 # =========================================
-# OS / Editor
+# OS / Editor / IDE
 # =========================================
+# macOS / Windows
 .DS_Store
 Thumbs.db
+
+# VSCode
 .vscode/
+!.vscode/extensions.json  # 推奨拡張機能だけ許可
+
+# JetBrains / WebStorm
 .idea/
+
+# Swap / Temp files
 *.swp
+*.sw?
 *~
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
