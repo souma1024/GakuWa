@@ -26,6 +26,18 @@
 
 <br>
 
+## システム構成
+
+<br>
+
+<details><summary>システム構成画像</summary>
+ 
+![システム構成](./docs/gakuwa-system-structure.png)
+</details>
+
+
+<br>
+
 ## セットアップ手順
 
 ### 1　Gitのセットアップ
