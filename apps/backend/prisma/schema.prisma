@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+// 役割
+enum UserRole {
+  admin
+  user
+}
+
+// ユーザーステータス
+enum UserStatus {
+  pending
+  active
+  banned
+  withdrawn
+}
+
+// メールOTPの用途
+enum EmailOtpPurpose {
+  signup
+  password_reset
+}
+
+model User {
+  id               BigInt      @id @default(autoincrement())
+  handle           String      @unique @db.VarChar(50)
+  name             String      @db.VarChar(100)
+  email            String      @unique @db.VarChar(255)
+  passwordHash     String      @map("password_hash") @db.VarChar(255)
+
+  role             UserRole    @default(user)
+  status           UserStatus  @default(pending)
+
+  avatarUrl        String      @map("avatar_url") @default("https://example.com/default-avatar.png") @db.VarChar(255)
+  profile          String?     @db.Text
+  discordId        String?     @map("discord_id") @db.VarChar(100)
+
+  followersCount   Int         @map("followers_count") @default(0)
+  followingsCount  Int         @map("followings_count") @default(0)
+
+  createdAt        DateTime    @map("created_at") @default(now())
+  updatedAt        DateTime    @map("updated_at") @updatedAt
+
+  // リレーション
+  emailOtps        EmailOtp[]
+  sessions         UserSession[]
+
+  @@map("users") // 実テーブル名
+}
+
+model EmailOtp {
+  id          BigInt          @id @default(autoincrement())
+  userId      BigInt          @map("user_id")
+
+  publicToken String          @map("public_token") @unique @db.Char(64)
+  codeHash    String          @map("code_hash") @db.VarChar(255)
+
+  expiresAt   DateTime        @map("expires_at")
+  usedAt      DateTime?       @map("used_at")
+  attempts    Int             @default(0)
+
+  createdAt   DateTime        @map("created_at") @default(now())
+  purpose     EmailOtpPurpose @default(signup)
+
+  // リレーション
+  user        User            @relation(fields: [userId], references: [id])
+
+  @@map("email_otps")
+}
+
+model UserSession {
+  id           BigInt    @id @default(autoincrement())
+  userId       BigInt    @map("user_id")
+
+  sessionToken String    @map("session_token") @unique @db.Char(64)
+  expiresAt    DateTime  @map("expires_at")
+  createdAt    DateTime  @map("created_at") @default(now())
+  revokedAt    DateTime? @map("revoked_at")
+
+  // リレーション
+  user         User      @relation(fields: [userId], references: [id])
+
+  @@map("user_sessions")
+}
