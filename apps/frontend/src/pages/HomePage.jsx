@@ -1,5 +1,12 @@
+import { useNavigate } from "react-router-dom"
 
 export default function HomePage() {
+
+  const navigate = useNavigate()
+  function goSignupPage() {
+    navigate('/signup')
+  }
+
   return (
     <div style={{ padding: '24px' }}>
       <h1>Gakuwa 開発ホーム</h1>
@@ -22,6 +29,9 @@ export default function HomePage() {
           <li>API とフロントをつなぐ（fetch / axios）</li>
         </ol>
       </section>
+      <button onClick={goSignupPage}>
+        新規登録画面
+      </button>
     </div>
   )
 }
