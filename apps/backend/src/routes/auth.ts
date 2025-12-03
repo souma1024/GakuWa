@@ -1,75 +1,60 @@
-import { Router, Request, Response } from "express";
-import db from '../config/db'
+import express from "express";
+import bcrypt from "bcryptjs";
+import pool from "../config/db";
 
-const router = Router();
+const router = express.Router();
 
-router.post("/login", async (req: Request, res: Response) => {
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    const { email, password } = req.body as {
-      email: string;
-      password: string;
-    };
-
-    // ✅ バリデーション
-    if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          type: "validation_error",
-          message: "メールアドレスとパスワードは必須です",
-          fields: ["email", "password"],
-        },
-      });
-    }
-
-    // ✅ ユーザ検索
-    const [rows] = await db.execute(
+    const [rows]: any = await pool.execute(
       "SELECT handle, password_hash FROM users WHERE email = ? LIMIT 1",
       [email]
     );
 
-    const users = rows as any[];
-
-    if (users.length === 0) {
+    if (rows.length === 0) {
       return res.status(401).json({
         success: false,
         error: {
           type: "auth_error",
           message: "メールアドレスまたはパスワードが異なります",
-          fields: ["email", "password"],
-        },
+          fields: ["email", "password"]
+        }
       });
     }
 
-    const user = users[0];
+    const user = rows[0];
 
-    // ✅ パスワード照合（今は平文）
-    if (user.password !== password) {
+    // ✅ bcryptjs で照合（同期版を使用してネイティブビルド不要にする）
+    const isMatch = bcrypt.compareSync(password, user.password_hash);
+
+    if (!isMatch) {
       return res.status(401).json({
         success: false,
         error: {
           type: "auth_error",
           message: "メールアドレスまたはパスワードが異なります",
-          fields: ["email", "password"],
-        },
+          fields: ["email", "password"]
+        }
       });
     }
 
-    // ✅ 成功レスポンス
+    // ✅ ログイン成功
     return res.json({
       success: true,
       data: {
-        handle: user.handle,
-      },
+        handle: user.handle
+      }
     });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     return res.status(500).json({
       success: false,
       error: {
         type: "server_error",
-        message: "サーバーエラーが発生しました",
-      },
+        message: "サーバーエラーが発生しました"
+      }
     });
   }
 });
