@@ -1,5 +1,6 @@
 import express from 'express'
 import routes from './routes/index'
+import authRouter from './routes/auth'
 import { errorHandler } from './middlewares/errorMiddleware'
 
 const app = express()
@@ -9,6 +10,8 @@ app.use(express.json())
 
 // /api から下は全部 routes に委譲
 app.use('/api', routes)
+
+app.use("/api/auth", authRouter);
 
 // 共通エラーハンドラ
 app.use(errorHandler)
