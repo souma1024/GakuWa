@@ -392,6 +392,14 @@ https://www.docker.com/ja-jp/products/docker-desktop/
 
 <br>
 
+#### レビューするブランチを選択
+
+<br>
+
+![実行結果](./docs/github/github-intro8.png)
+
+<br>
+
 #### Files Changedを選択
 
 <br>
