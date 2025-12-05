@@ -134,7 +134,7 @@ https://www.docker.com/ja-jp/products/docker-desktop/
 
 <br>
 
-### 手順３　ローカルブランチに新しいブランチを作成し移動する
+### 手順３　ローカルリポジトリに新しいブランチを作成し移動する
 ```
   git switch -c (branch名)
 ```
@@ -343,6 +343,81 @@ https://www.docker.com/ja-jp/products/docker-desktop/
 
 
 #### 
+
+</details>
+
+<details><summary>Githubの使い方</summary>
+
+<br>
+ 
+<details><summary>Pull Requestの作成（開発の進め方　手順８がない場合）</summary>
+
+ <br>
+ 
+ #### コードをgithub上にpushしたら以下のボタンからPull Requestを作成する
+
+ <br>
+ 
+ ![実行結果](./docs/github/github-intro.png)
+
+ <br>
+
+ ![実行結果](./docs/github/github-intro2.png)
+
+ <br>
+
+ #### pushしたブランチ名を選択する
+ 
+ <br>
+
+ ![実行結果](./docs/github/github-intro3.png)
+
+<br>
+
+ #### 開発の進め方　手順９を参考にPull Request
+
+ <br>
+
+ ![実行結果](./docs/github/github-intro4.png)
+
+ <br>
+ 
+</details>
+
+<details><summary>レビュー手順</summary>
+
+<br>
+
+![実行結果](./docs/github/github-intro.png)
+
+<br>
+
+#### Files Changedを選択
+
+<br>
+
+![実行結果](./docs/github/github-intro5.png)
+
+<br>
+
+#### アップロードされているコードを読み、Review changesをクリック
+
+<br>
+
+![実行結果](./docs/github/github-intro6.png)
+
+<br>
+
+#### 指摘事項などやコメントを書き Submit review
+
+<br>
+
+![実行結果](./docs/github/github-intro7.png)
+
+<br>
+ 
+</details>
+
 
 </details>
 
