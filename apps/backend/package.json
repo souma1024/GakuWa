@@ -5,7 +5,14 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "moduleFileExtensions": ["ts", "js"],
+    "testMatch": ["**/__tests__/**/*.test.ts"]
   },
   "keywords": [],
   "author": "",
@@ -21,9 +28,12 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.5",
+    "@types/jest": "^29.5.14",
     "@types/node": "^24.10.1",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.11",
     "prisma": "^7.0.0",
+    "ts-jest": "^29.4.6",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
   }
