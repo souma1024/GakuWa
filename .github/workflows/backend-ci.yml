@@ -1,0 +1,36 @@
+name: Backend CI # バックエンド用のワークフロー
+
+on:
+  push:
+    branches: [main] # mainブランチへのpush時に実行
+    paths:
+      - "apps/backend/**"     # ← backend に変更があったときだけ実行
+  pull_request:
+    branches: [main] # mainブランチへのプルリク作成時にも実行
+    paths:
+      - "apps/backend/**"     # ← backend に変更があったときだけ実行
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4 # コードを取得
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: apps/backend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: apps/backend #
+        run: npm ci
+        
+
+      - name: Run Unit Tests
+        working-directory: apps/backend
+        run: npm test
+        
