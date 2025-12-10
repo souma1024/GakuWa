@@ -1,10 +1,14 @@
-import HomePage from '../components/layout/MainLayout.jsx'
+import { Routes, Route } from "react-router-dom"
+
+import HomePage from '../layout/MainLayout.jsx'
 import MainLayout from '../pages/HomePage.jsx'
+import SignupPage from '../pages/SignupPage.tsx'
 
 export default function App() {
   return (
-    <MainLayout>
-      <HomePage />
-    </MainLayout>
-  )
+    <Routes>
+      <Route path='/' element={<MainLayout><HomePage></HomePage></MainLayout>}></Route>
+      <Route path='/signup' element={<SignupPage />} />
+    </Routes>
+  ) 
 }
