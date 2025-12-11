@@ -3,7 +3,6 @@
     // 出力まわり
     "target": "ES2020",
     "module": "commonjs",
-    "rootDir": "./src",
     "outDir": "./dist",
 
     // Node.js 用解決
@@ -18,9 +17,9 @@
 
     // 既存 JS も混在させる場合（少しずつ TS へ移行用）
     "allowJs": true,
-
+    "types": ["node", "jest"],
     // デバッグ用
     "sourceMap": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "__tests__/**/*"]
 }
