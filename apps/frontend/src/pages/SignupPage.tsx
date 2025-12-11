@@ -124,7 +124,7 @@ export default function SignupPage() {
               
             </div>
             <div className="submit-button">
-              <button type="submit" disabled={submitStatus === "submitting"}>
+              <button className="btn-signup" type="submit" disabled={submitStatus === "submitting"}>
               {submitStatus === "submitting" ? "送信中..." : "新規登録"}
               </button>
               {submitStatus === "error" && <p className="error-msg">{submitError}</p>}

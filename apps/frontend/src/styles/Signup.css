@@ -64,7 +64,7 @@ input {
     display: flex;
 }
 
-button {
+.btn-signup {
   width: 100%;
   padding: 12px 0;
   background: black;
