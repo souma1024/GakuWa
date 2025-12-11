@@ -1,7 +1,87 @@
-.form {
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.title p,
+.intro p {
+  margin: 0;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100dvh;
+  background: #fff;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 420px; 
+  padding: 24px;
+}
+
+.title,
+.intro,
+.form,
+.submit {
+  width: 100%;
+}
+
+.title-size {
+  font-size: 45px;
+  color: rgb(71, 126, 255);
+  font-weight: bold;
+  text-align: center;
+}
+
+.intro-size {
+  font-size: 14px;
+  text-align: center;
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 20px;
+}
+
+input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+.agreement {
     display: flex;
 }
 
-.error {
+.btn-signup {
+  width: 100%;
+  padding: 12px 0;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.text {
+    display: flex;
+    align-items: center;  
+}
+
+.error-msg {
     color: red;
+    margin: 0;
+    margin-left: 40px;
+    font-size: 14px;
 }
