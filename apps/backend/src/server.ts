@@ -1,8 +1,18 @@
-import app from './app'
-import { env } from './config/env'
+import express from 'express'
+import authRouter from './routes/auth'
 
-const port = env.PORT
+const app = express()
 
-app.listen(port, () => {
-  console.log(`Gakuwa backend listening on port ${port}`)
+app.use(express.json())
+
+app.use('/api/auth', authRouter)
+
+const PORT = 3000
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server listening on port ${PORT}`)
+})
+
+app.get('/', (req, res) => {
+  res.send('OK')
 })
