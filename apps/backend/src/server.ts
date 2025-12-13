@@ -1,18 +1,7 @@
-import express from 'express'
-import authRouter from './routes/auth'
+import app from './app'
 
-const app = express()
+const port = process.env.PORT || 3000
 
-app.use(express.json())
-
-app.use('/api/auth', authRouter)
-
-const PORT = 3000
-
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server listening on port ${PORT}`)
-})
-
-app.get('/', (req, res) => {
-  res.send('OK')
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`)
 })
