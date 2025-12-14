@@ -1,12 +1,13 @@
 import { Router } from 'express'
-import authRoutes from './auth'
-import healthRoutes from './healthRoutes'
-import dbRouter from './dbRoutes'
 
+import authRoutes from './auth'
+import { login }from '../controllers/authController'
 const router = Router()
 
 router.use('/auth', authRoutes)
-router.use('/health', healthRoutes)
-router.use('/db', dbRouter)
+
+// /api/auth/login
+router.post('/auth/login', login)
+
 
 export default router
