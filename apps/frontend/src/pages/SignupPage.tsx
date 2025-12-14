@@ -115,7 +115,7 @@ export default function SignupPage() {
               <input  
                 type="checkbox" 
                 id="agreement"
-                 {...register("agreement", { required: true })}
+                {...register("agreement")}
                 />
               <div className="text">
                 <p><a href="">利用規約</a>に同意する</p>
