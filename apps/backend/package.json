@@ -25,6 +25,8 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "6.19.0",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "minio": "^8.0.6",
@@ -34,6 +36,9 @@
   "devDependencies": {
     "@types/babel__generator": "^7.27.0",
     "@types/babel__template": "^7.4.4",
+    "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
     "@types/istanbul-lib-report": "^3.0.3",
     "@types/jest": "^29.5.14",

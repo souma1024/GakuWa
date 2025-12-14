@@ -1,37 +1,65 @@
-import { useNavigate } from "react-router-dom"
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 export default function HomePage() {
+  const navigate = useNavigate();
+  const { isAuthenticated, handle, loading } = useAuth();
 
-  const navigate = useNavigate()
-  function goSignupPage() {
-    navigate('/signup')
+  useEffect(() => {
+    // 認証済みの場合は/@handleにリダイレクト
+    if (!loading && isAuthenticated && handle) {
+      navigate(`/@${handle}`);
+    }
+  }, [loading, isAuthenticated, handle, navigate]);
+
+  // ローディング中
+  if (loading) {
+    return (
+      <div style={{ padding: "20px", textAlign: "center" }}>
+        <p>読み込み中...</p>
+      </div>
+    );
   }
 
+  // 未認証の場合はホームページを表示
   return (
-    <div style={{ padding: '24px' }}>
-      <h1>Gakuwa 開発ホーム</h1>
-      <p>ようこそ！ここから開発を進めていきます。</p>
-
-      <section style={{ marginTop: '24px' }}>
-        <h2>このアプリで作るもの</h2>
-        <ul>
-          <li>✅ ユーザー登録・ログイン</li>
-          <li>✅ Qiita 風の記事投稿・一覧・詳細</li>
-          <li>✅ コメント・タグ機能</li>
-        </ul>
-      </section>
-
-      <section style={{ marginTop: '24px' }}>
-        <h2>開発の進め方（ざっくり）</h2>
-        <ol>
-          <li>まずはフロントのページとコンポーネントを増やす</li>
-          <li>バックエンドの API を Express で実装</li>
-          <li>API とフロントをつなぐ（fetch / axios）</li>
-        </ol>
-      </section>
-      <button onClick={goSignupPage}>
-        新規登録画面
-      </button>
+    <div style={{ padding: "20px" }}>
+      <h1>GakuWa へようこそ</h1>
+      <p>学生限定のブログ投稿Webアプリです。</p>
+      
+      <div style={{ marginTop: "30px" }}>
+        <button
+          onClick={() => navigate("/signup")}
+          style={{
+            padding: "10px 20px",
+            fontSize: "16px",
+            marginRight: "10px",
+            backgroundColor: "#007bff",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          新規登録
+        </button>
+        
+        <button
+          onClick={() => alert("ログイン機能は他メンバーが実装予定です")}
+          style={{
+            padding: "10px 20px",
+            fontSize: "16px",
+            backgroundColor: "#6c757d",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          ログイン
+        </button>
+      </div>
     </div>
-  )
+  );
 }
