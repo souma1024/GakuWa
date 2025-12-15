@@ -24,6 +24,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "@prisma/client": "6.19.0",
     "@types/cookie-parser": "^1.4.10",
     "cookie-parser": "^1.4.7",
@@ -31,9 +32,12 @@
     "express": "^5.1.0",
     "minio": "^8.0.6",
     "mysql2": "^3.15.3",
-    "nodemailer": "^7.0.10"
+    "nodemailer": "^7.0.10",
+    "prisma": "^6.19.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
     "@types/babel__generator": "^7.27.0",
     "@types/babel__template": "^7.4.4",
     "@types/express": "^5.0.5",
