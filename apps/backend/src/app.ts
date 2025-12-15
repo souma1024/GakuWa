@@ -1,16 +1,10 @@
-import express from 'express';
-import cors from 'cors';
+import express from 'express'
+import routes from './routes/index'
+import { errorHandler } from './middlewares/errorMiddleware'
+
 import cookieParser from 'cookie-parser';
-import routes from './routes/index';
-import { errorHandler } from './middlewares/errorMiddleware';
 
-const app = express();
-
-// CORS設定
-app.use(cors({
-  origin: 'http://localhost:5173', // フロントエンドのURL
-  credentials: true // Cookieを送受信するために必要
-}));
+const app = express()
 
 // JSON を受け取るための設定
 app.use(express.json());

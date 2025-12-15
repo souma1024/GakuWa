@@ -1,8 +1,7 @@
 import app from './app'
-import { env } from './config/env'
 
-const port = env.PORT
+const port = process.env.PORT || 3000
 
 app.listen(port, () => {
-  console.log(`Gakuwa backend listening on port ${port}`)
+  console.log(`Server listening on port ${port}`)
 })

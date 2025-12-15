@@ -15,7 +15,7 @@ import {
 // ------------------------------
 export function sendSuccess<T>(
   res: Response,
-  data: T,
+  data?: T,
   status = 200
 ) {
   const body: ApiSuccessResponse<T> = {
