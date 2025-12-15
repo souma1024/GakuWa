@@ -1,14 +1,18 @@
 import { Router } from 'express'
-import healthRoutes from './healthRoutes'
-import dbRoutes from './dbRoutes'
-import { userController } from '../controllers/userController'
 
+import { userController } from '../controllers/userController'
+import authRoutes from './auth'
+import { login }from '../controllers/authController'
 const router = Router()
 
-// /api/health
-router.use('/health', healthRoutes)
-router.use('/db', dbRoutes)
-// /
+
 router.post('/api/register',userController);
+
+router.use('/auth', authRoutes)
+
+
+// /api/auth/login
+router.post('/auth/login', login)
+
 
 export default router
