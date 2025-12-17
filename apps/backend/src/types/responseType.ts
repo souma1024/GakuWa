@@ -1,7 +1,7 @@
 // 成功レスポンス
 export type ApiSuccessResponse<T> = {
   success: true;
-  data: T;
+  data?: T;
 };
 
 // バリデーション関連
