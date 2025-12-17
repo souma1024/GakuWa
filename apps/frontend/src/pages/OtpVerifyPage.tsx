@@ -82,7 +82,7 @@ export default function OtpVerifyPage() {
     setSubmitError("");
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/otp/verify", {
+      const response = await fetch("http://localhost:8080/api/auth/otp/verify", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -128,7 +128,7 @@ export default function OtpVerifyPage() {
     setResendMessage("");
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/otp/send", {
+      const response = await fetch("http://localhost:8080/api/auth/otp/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

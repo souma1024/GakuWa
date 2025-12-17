@@ -60,3 +60,5 @@ Thumbs.db
 *.ntvs*
 *.njsproj
 *.sln
+_metadata.json
+frontend/.vite/deps/package.json

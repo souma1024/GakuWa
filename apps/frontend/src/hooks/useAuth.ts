@@ -22,7 +22,7 @@ export const useAuth = () => {
       try {
         // バックエンドの認証確認エンドポイントを呼ぶ
         // TODO: 他メンバーが実装するまでは、cookieの存在だけチェック
-        const response = await fetch("http://localhost:3000/api/auth/me", {
+        const response = await fetch("http://localhost:8080/api/auth/me", {
           method: "GET",
           credentials: "include", // Cookieを送信
         });
