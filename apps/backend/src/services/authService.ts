@@ -16,7 +16,7 @@ export const authService = {
     const sessionToken = generateSessionToken();
     const expiresAt = new Date(Date.now() + SESSION_TTL_MS);
 
-    const session = await sessionRepository.createSession({
+    await sessionRepository.createSession({
       userId: user.id,
       sessionToken,
       expiresAt,

@@ -25,10 +25,12 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - DATABASE_URL=${DATABASE_URL}
-      - MAIL_HOST=${MAIL_HOST}
-      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_HOST=mailhog
+      - MAIL_PORT=1025
+      - MAIL_FROM=no-reply@example.com
     ports:
       - "${BACKEND_PORT}:3000"
+      - 5555:5555   # For Prisma Studio
     depends_on:
       - db
       - mailhog
