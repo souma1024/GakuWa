@@ -5,20 +5,14 @@ import { z } from "zod";
 ========================= */
 const allowedNamePattern = /^[\p{L}\p{N}\s._-]+$/u;
 
-/* =========================
-   signup（新規登録）
-========================= */
+// サインアップバリデーション
 export const signupSchema = z.object({
   username: z
     .string()
     .trim()
     .min(1, "ユーザ名は必須です")
     .max(30, "30文字以内で入力してください")
-    .regex(
-      allowedNamePattern,
-      "使用できない文字が含まれています（絵文字・特殊記号は不可）"
-    ),
-
+    .regex(allowedNamePattern, "使用できない文字が含まれています（絵文字・特殊記号は不可）"),
   email: z
     .string()
     .trim()
@@ -50,7 +44,6 @@ export const signupSchema = z.object({
 
 /* =========================
    login（ログイン）
-========================= */
 export const loginSchema = z.object({
   email: z
     .string()
@@ -75,10 +68,23 @@ export const loginSchema = z.object({
     .refine((v) => /[!@#$%^&*-]/.test(v), {
       message: "記号を含めてください",
     }),
+    
+   agreement: z
+    .boolean()
+    .refine(v => v === true, {message: "利用規約に同意してください"})
+});  
+  
+
+
+// OTPバリデーション
+export const otpSchema = z.object({
+  otp: z
+    .string()
+    .trim()
+    .length(6, "OTPは6桁で入力してください")
+    .regex(/^\d{6}$/, "OTPは6桁の数字のみで入力してください"),
 });
 
-/* =========================
-   型定義
-========================= */
 export type SignupValues = z.infer<typeof signupSchema>;
 export type LoginValues = z.infer<typeof loginSchema>;
+export type OtpValues = z.infer<typeof otpSchema>;

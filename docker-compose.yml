@@ -27,6 +27,7 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - MAIL_HOST=${MAIL_HOST}
       - MAIL_PORT=${MAIL_PORT}
+      - DATABASE_URL=mysql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
     ports:
       - "${BACKEND_PORT}:3000"
       - "5555:5555"  # For debugging with Node Inspector
