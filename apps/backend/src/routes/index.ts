@@ -4,7 +4,6 @@ import { userController } from '../controllers/userController'
 import authRoutes from './auth'
 import { login }from '../controllers/authController'
 import otpRoutes from './otpRoutes';
-import authRoutes from './authRoutes';
 import { verifyOtp } from '../controllers/otpController';
 import { getMe } from '../controllers/authMeController';
 
@@ -12,9 +11,6 @@ const router = Router();
 
 
 router.post('/api/register',userController);
-
-router.use('/auth', authRoutes)
-
 
 // /api/auth/login
 router.post('/auth/login', login)

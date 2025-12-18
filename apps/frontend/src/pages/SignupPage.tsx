@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { signupSchema, SignupValues } from "../utils/validation";
 
+
 import "../styles/Signup.css";
 
 export default function SignupPage() {
@@ -23,6 +24,7 @@ export default function SignupPage() {
       username: "",
       email: "",
       password: "",
+      agreement: false
     },
   });
 

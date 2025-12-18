@@ -33,6 +33,10 @@ export const signupSchema = z.object({
     .refine((v) => /[!@#$%^&*-]/.test(v), {
       message: "記号（!@#$%^&-*）を1文字以上含めてください",
     }),
+  
+  agreement: z
+    .boolean()
+    .refine(v => v === true, {message: "利用規約に同意してください"})
 });
 
 export type SignupValues = z.infer<typeof signupSchema>;
