@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { registerUser } from "../services/userEntry";
+
+import { registerUser } from "../services/userEntryService";
+import { sendError, sendSuccess, sendValidationError } from '../utils/response'
+
 
 export const userController = async (req: Request, res: Response) => {
     try {
@@ -8,24 +11,31 @@ export const userController = async (req: Request, res: Response) => {
     
         // バリデーション（簡易）
         if (!email || !otpId) {
-          res.status(400).json({ 
-            success: false, 
-            error: { message: 'emailとotpIdは必須です' } 
-          });
-          return; // 必ずreturnして処理を終了させる
+          return sendValidationError(
+            res,
+            'validation_error',
+            '必須項目が不足しています',
+            {
+              email: [
+                { code: "required", message: "メールアドレスは必須です" },
+              ],
+              password: [
+                { code: "required", message: "ワンタイムパスワードは必須です" },
+              ],
+            }
+          );
         }
     
         // 先ほどのロジックを呼び出し
         const result = await registerUser({ email, otpId, desiredName });
     
         if (result.success) {
-          res.status(201).json(result);
+          sendSuccess(res, result.data);
         } else {
-          res.status(400).json(result);
+          sendError(res, 'authentication_error', '登録失敗しました', 403);
         }
     
       } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Internal Server Error' });
+        return sendError(res, 'server_error', 'サーバ内部エラー:' + error, 500);
       }
  }
