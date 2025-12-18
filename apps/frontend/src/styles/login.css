@@ -1,0 +1,86 @@
+/* 全体中央寄せ */
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+}
+
+.error-text {
+  color: #d93025;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+
+/* カード */
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* タイトル */
+.login-title {
+  font-size: 44px;
+  font-weight: bold;
+  color: #5b7bd5;
+}
+
+/* タイトルと説明文の間を広げる */
+.login-description {
+  margin-top: 24px;   /* ← ここがポイント */
+  margin-bottom: 36px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* フォーム */
+.form-group {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+/* ラベル（文字の下に入力欄が来る） */
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #333;
+}
+
+/* 入力欄 */
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+/* ログインボタン */
+.login-button {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px;
+  background-color: #222;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* 新規登録文 */
+.signup-text {
+  margin-top: 20px;
+  font-size: 13px;
+  color: #444;
+}
+
+.signup-text a {
+  color: #5b7bd5;
+  text-decoration: none;
+  margin: 0 4px;
+}

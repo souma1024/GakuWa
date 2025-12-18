@@ -1,12 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from "react-router-dom";
-import App from './app/App'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-createRoot(document.getElementById('root')).render(
+import App from "./app/App";
+import Login from "./pages/Login.jsx";
+
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <Routes>
+        {/* ログイン画面 */}
+        <Route path="/login" element={<Login />} />
+
+        {/* それ以外（ログイン後の画面など） */}
+        <Route path="/*" element={<App />} />
+      </Routes>
     </BrowserRouter>
-  </StrictMode>,
-)
+  </StrictMode>
+);
