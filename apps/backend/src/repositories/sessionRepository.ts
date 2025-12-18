@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma'
 
 export const sessionRepository = {
   // セッション作成
@@ -30,6 +28,12 @@ export const sessionRepository = {
           gt: now,
         },
       },
+    });
+  },
+
+  async getSessionInfoByUserId(userId: any) {
+    return prisma.userSession.findUnique({
+      where: userId,
     });
   },
 
