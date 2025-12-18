@@ -29,6 +29,7 @@ services:
       - MAIL_PORT=${MAIL_PORT}
     ports:
       - "${BACKEND_PORT}:3000"
+      - "5555:5555"  # For debugging with Node Inspector
     depends_on:
       - db
       - mailhog
