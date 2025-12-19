@@ -25,15 +25,9 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - DATABASE_URL=${DATABASE_URL}
-<<<<<<< HEAD
       - MAIL_HOST=mailhog
       - MAIL_PORT=1025
       - MAIL_FROM=no-reply@example.com
-=======
-      - MAIL_HOST=${MAIL_HOST}
-      - MAIL_PORT=${MAIL_PORT}
-      - DATABASE_URL=mysql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
->>>>>>> origin/main
     ports:
       - "${BACKEND_PORT}:3000"
       - 5555:5555   # For Prisma Studio

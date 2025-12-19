@@ -25,11 +25,7 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "6.19.0",
-<<<<<<< HEAD
-    "@types/cookie-parser": "^1.4.10",
     "bcrypt": "^6.0.0",
-=======
->>>>>>> origin/main
     "cookie-parser": "^1.4.7",
     "express": "^5.1.0",
     "minio": "^8.0.6",
@@ -40,12 +36,9 @@
   "devDependencies": {
     "@types/babel__generator": "^7.27.0",
     "@types/babel__template": "^7.4.4",
-<<<<<<< HEAD
     "@types/bcrypt": "^6.0.0",
-=======
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
->>>>>>> origin/main
     "@types/express": "^5.0.5",
     "@types/istanbul-lib-report": "^3.0.3",
     "@types/jest": "^29.5.14",
