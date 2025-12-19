@@ -25,38 +25,20 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "6.19.0",
-<<<<<<< HEAD
-    "@types/cookie-parser": "^1.4.10",
-    "bcrypt": "^6.0.0",
-=======
->>>>>>> origin/main
-    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "express": "^5.1.0",
     "minio": "^8.0.6",
     "mysql2": "^3.15.3",
-    "nodemailer": "^7.0.11",
-    "prisma": "^6.19.1"
+    "nodemailer": "^7.0.10"
   },
   "devDependencies": {
-    "@types/babel__generator": "^7.27.0",
-    "@types/babel__template": "^7.4.4",
-<<<<<<< HEAD
-    "@types/bcrypt": "^6.0.0",
-=======
-    "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
->>>>>>> origin/main
     "@types/express": "^5.0.5",
-    "@types/istanbul-lib-report": "^3.0.3",
     "@types/jest": "^29.5.14",
     "@types/node": "^24.10.1",
-    "@types/nodemailer": "^7.0.4",
-    "@types/supertest": "^6.0.3",
-    "@types/yargs-parser": "^21.0.3",
     "jest": "^29.7.0",
     "nodemon": "^3.1.11",
     "prisma": "6.19.0",
-    "supertest": "^7.1.4",
     "ts-jest": "^29.4.6",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"

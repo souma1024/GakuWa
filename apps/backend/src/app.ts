@@ -7,15 +7,15 @@ import cookieParser from 'cookie-parser';
 const app = express()
 
 // JSON を受け取るための設定
-app.use(express.json())
+app.use(express.json());
 
-//ポート間通信を許可
-app.use(cookieParser())
+// Cookie を解析するための設定
+app.use(cookieParser());
 
 // /api から下は全部 routes に委譲
-app.use('/api', routes)
+app.use('/api', routes);
 
 // 共通エラーハンドラ
-app.use(errorHandler)
+app.use(errorHandler);
 
-export default app
+export default app;
