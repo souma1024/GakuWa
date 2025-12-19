@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { sendSuccess, sendError, sendValidationError } from '../utils/response';
+import { authService } from '../services/authService';
 
 const prisma = new PrismaClient();
 
@@ -22,8 +23,7 @@ export const sendOtp = async (req: Request, res: Response) => {
     }
 
     // OTP再送ロジック（既存 service を使う想定）
-    const otpService = require('../services/authService');
-    await otpService.authService.sendOtp(public_token);
+    await authService.sendOtp(public_token);
 
     return sendSuccess(res, {
       message: 'メール送信に成功しました'
