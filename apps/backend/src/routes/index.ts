@@ -27,4 +27,6 @@ router.post('/verify', verifyOtp);
 // /api/auth/me
 router.get('/me', getMe);
 
+router.use("/auth/otp", otpRoutes);
+
 export default router;

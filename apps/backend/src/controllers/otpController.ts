@@ -5,6 +5,41 @@ import { sendSuccess, sendError, sendValidationError } from '../utils/response';
 
 const prisma = new PrismaClient();
 
+export const sendOtp = async (req: Request, res: Response) => {
+  try {
+    const { public_token } = req.body;
+
+    if (!public_token || typeof public_token !== 'string') {
+      return sendValidationError(
+        res,
+        'validation_error',
+        'public_tokenが必要です',
+        {
+          public_token: [{ message: 'public_tokenが必要です' }]
+        },
+        400
+      );
+    }
+
+    // OTP再送ロジック（既存 service を使う想定）
+    const otpService = require('../services/authService');
+    await otpService.authService.sendOtp(public_token);
+
+    return sendSuccess(res, {
+      message: 'メール送信に成功しました'
+    }, 200);
+
+  } catch (error) {
+    console.error('OTP送信エラー:', error);
+    return sendError(
+      res,
+      'server_error',
+      'サーバーエラーが発生しました',
+      500
+    );
+  }
+};
+
 /**
  * POST /api/auth/otp/verify
  * OTPを検証してユーザーを本登録する
