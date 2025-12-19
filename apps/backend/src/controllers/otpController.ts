@@ -29,14 +29,15 @@ export const sendOtp = async (req: Request, res: Response) => {
       message: 'メール送信に成功しました'
     }, 200);
 
-  } catch (error) {
-    console.error('OTP送信エラー:', error);
-    return sendError(
-      res,
-      'server_error',
-      'サーバーエラーが発生しました',
-      500
-    );
+  } catch (error: any) {
+    if (error.type === 'not_found') {
+      return sendError(
+        res,
+        'not_found',
+        'OTPレコードが見つかりません',
+        404
+      );
+    }
   }
 };
 
