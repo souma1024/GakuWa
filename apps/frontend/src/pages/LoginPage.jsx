@@ -1,32 +1,30 @@
-// src/pages/Login.jsx
+// src/pages/LoginPage.jsx
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { loginSchema } from "../utils/validation";
 import "../styles/login.css";
 
-export default function Login() {
+export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // ← submit を止める
+    e.preventDefault();
 
     const result = loginSchema.safeParse({ email, password });
 
-  if (!result.success) {
-    // ★ ここが決定打
-    const fieldErrors = result.error.flatten().fieldErrors;
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+      setErrors({
+        email: fieldErrors.email?.[0],
+        password: fieldErrors.password?.[0],
+      });
+      return;
+    }
 
-    setErrors({
-      email: fieldErrors.email?.[0],
-      password: fieldErrors.password?.[0],
-    });
-    return;
-  }
-
-  // OK のとき
-  setErrors({});
-  
+    setErrors({});
+    // TODO: API呼び出し
   };
 
   return (
@@ -47,12 +45,9 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               className="form-input"
             />
-            {errors.email && (
-              <p className="error-text">{errors.email}</p>
-            )}
+            {errors.email && <p className="error-text">{errors.email}</p>}
           </div>
 
-          {/* パスワード */}
           <div className="form-group">
             <label className="form-label">パスワード</label>
             <input
@@ -61,19 +56,17 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
               className="form-input"
             />
-            {errors.password && (
-              <p className="error-text">{errors.password}</p>
-            )}
+            {errors.password && <p className="error-text">{errors.password}</p>}
           </div>
 
-          <button type="submit" className="login-button"> 
+          <button type="submit" className="login-button">
             ログイン
           </button>
         </form>
 
         <p className="signup-text">
           アカウントを持っていない場合は
-          <a href="/signup">新規登録</a>
+          <Link to="/signup">新規登録</Link>
           から
         </p>
       </div>
