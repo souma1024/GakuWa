@@ -1,16 +1,28 @@
-import { Router } from 'express'
+import { Router } from 'express';
 
-import { userController } from '../controllers/userController'
+import { signupController } from '../controllers/signupController'
 import { loginController } from '../controllers/loginController'
 
 import { authenticateUser } from '../middlewares/authMiddleware'
+import { verifyOtp } from '../controllers/otpController';
+import { getMe } from '../controllers/authMeController';
+import { validateBody } from '../middlewares/validationMiddleware'
+import { loginFormSchema, otpVerifySchema, signupFormSchema } from '../types/validationType';
 
-const router = Router()
+const router = Router();
 
-
-router.post('/api/register',userController);
+// authenticateUserはログイン済みでないとアクセスできない情報があるとき使う
 
 // /api/auth/login
-router.post('/login', loginController); 
+router.post('/auth/login', validateBody(loginFormSchema), loginController); 
 
-export default router
+// api/auth/signup
+router.post('/auth/signup', validateBody(signupFormSchema), signupController);
+
+// /api/auth/otp/verify
+router.post('/auth/otp/verify', validateBody(otpVerifySchema), verifyOtp);
+
+// /api/auth/me
+router.get('/auth/me', authenticateUser, getMe);
+
+export default router;
