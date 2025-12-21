@@ -43,13 +43,13 @@ export const emailOtpRepository = {
     });
   },
 
-  async disableOtp(db: Prisma.TransactionClient, email: string) {
+  async disableOtp(db: Prisma.TransactionClient, public_token: string) {
     return await db.emailOtp.update({
       data: {
         usedAt: new Date,
       },
       where :{
-        email: email,
+        publicToken: public_token,
       }
     })
   }

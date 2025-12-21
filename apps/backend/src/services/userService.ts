@@ -33,7 +33,7 @@ export const userService = {
   },
 
   // ユーザー本登録関数
-  async signup(name: string, email: string, passwordHash: string) {
+  async signup(name: string, email: string, passwordHash: string, public_token: string) {
     const handle = await generateUniqueHandle(name);
 
     const sameEmail = await userRepository.findByEmail(email);
@@ -43,7 +43,7 @@ export const userService = {
 
     const { user, isDisabled, sessionToken } = await prisma.$transaction(async (tx) => {
       const user = await userRepository.registerUser(tx, name, handle, email, passwordHash);
-      const isDisabled = await emailOtpRepository.disableOtp(tx, email);
+      const isDisabled = await emailOtpRepository.disableOtp(tx, public_token);
       const sessionToken = await sessionService.createSession(tx, user.id);
       return { user, isDisabled, sessionToken };
     });
