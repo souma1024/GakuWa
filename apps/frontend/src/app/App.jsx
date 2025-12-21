@@ -3,12 +3,16 @@ import SignupPage from "../pages/SignupPage";
 import OtpVerifyPage from "../pages/OtpVerifyPage";
 import UserHomePage from "../pages/UserHomePage";
 import HomePage from "../pages/HomePage";
+import LoginPage from "../pages/LoginPage";
 
 function App() {
   return (
     <Routes>
       {/* ホームページ */}
       <Route path="/" element={<HomePage />} />
+
+      {/* ログイン */}
+      <Route path="/login" element={<LoginPage />} />
       
       {/* 新規登録 */}
       <Route path="/signup" element={<SignupPage />} />
