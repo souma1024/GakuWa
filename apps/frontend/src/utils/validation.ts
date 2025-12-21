@@ -14,11 +14,11 @@ export const signupSchema = z.object({
     .max(30, "30文字以内で入力してください")
     .regex(allowedNamePattern, "使用できない文字が含まれています（絵文字・特殊記号は不可）"),
   email: z
-    .string()
+    .email("メールアドレスの形式が不正です")
     .trim()
     .min(1, "メールアドレスは必須です")
-    .email("メールアドレスの形式が不正です")
-    .refine((v) => v.endsWith(".ac.jp"), {
+    .max(200, "入力文字数が多すぎます")
+    .refine(v => v.endsWith(".ac.jp"), {
       message: "ac.jp ドメインのメールアドレスのみ使用できます",
     }),
 
@@ -27,6 +27,7 @@ export const signupSchema = z.object({
     .trim()
     .min(1, "パスワードは必須です")
     .min(8, "8文字以上にしてください")
+    .max(24, "24文字以下にしてください")
     .refine((v) => /[A-Za-z]/.test(v), {
       message: "英字を1文字以上含めてください",
     })
@@ -88,3 +89,4 @@ export const otpSchema = z.object({
 export type SignupValues = z.infer<typeof signupSchema>;
 export type LoginValues = z.infer<typeof loginSchema>;
 export type OtpValues = z.infer<typeof otpSchema>;
+export type SignupValues = z.infer<typeof signupSchema>;

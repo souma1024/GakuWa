@@ -1,5 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma'
 
 interface RegisterRequest {
   email: string;
@@ -64,13 +63,6 @@ export const registerUser = async (reqBody: RegisterRequest) => {
     };
 
   } catch (error) {
-    console.error('本登録失敗:', error);
-    return {
-      success: false,
-      error: {
-        type: 'registration_error',
-        message: 'ユーザー登録に失敗しました。',
-      }
-    };
+    return {success: false, message: error};
   }
 };
