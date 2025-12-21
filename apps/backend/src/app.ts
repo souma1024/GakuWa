@@ -2,6 +2,7 @@ import express from 'express'
 import routes from './routes/index'
 
 import cookieParser from 'cookie-parser';
+import { errorHandler } from './middlewares/errorMiddleware';
 
 const app = express()
 
@@ -13,5 +14,6 @@ app.use(cookieParser())
 
 // /api から下は全部 routes に委譲
 app.use('/api', routes);
+app.use(errorHandler);
 
 export default app
