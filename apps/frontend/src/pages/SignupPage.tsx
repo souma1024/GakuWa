@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { signupSchema, SignupValues } from "../utils/validation";
 
 
-import "../styles/Signup.css";
+import "../styles/signup.css";
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -155,6 +155,12 @@ export default function SignupPage() {
               )}
             </div>
           </div>
+          
+          <p className="signup-text">
+            アカウントを既に持っている場合は
+            <Link to="/login">ログイン</Link>
+            から
+          </p>
         </div>
       </div>
     </form>
