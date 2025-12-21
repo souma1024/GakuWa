@@ -1,30 +1,28 @@
 import { Router } from 'express';
 
-import { userController } from '../controllers/userController'
-import authRoutes from './auth'
-import { login }from '../controllers/authController'
-import otpRoutes from './otpRoutes';
+import { signupController } from '../controllers/signupController'
+import { loginController } from '../controllers/loginController'
+
+import { authenticateUser } from '../middlewares/authMiddleware'
 import { verifyOtp } from '../controllers/otpController';
 import { getMe } from '../controllers/authMeController';
+import { validateBody } from '../middlewares/validationMiddleware'
+import { loginFormSchema, otpVerifySchema, signupFormSchema } from '../types/validationType';
 
 const router = Router();
 
-
-router.post('/api/register',userController);
+// authenticateUserはログイン済みでないとアクセスできない情報があるとき使う
 
 // /api/auth/login
-router.post('/auth/login', login)
+router.post('/auth/login', validateBody(loginFormSchema), loginController); 
 
-// /api/auth/otp
-router.use('/auth/otp', otpRoutes);
-
-// /api/auth
-router.use('/auth', authRoutes);
+// api/auth/signup
+router.post('/auth/signup', validateBody(signupFormSchema), signupController);
 
 // /api/auth/otp/verify
-router.post('/verify', verifyOtp);
+router.post('/auth/otp/verify', validateBody(otpVerifySchema), verifyOtp);
 
 // /api/auth/me
-router.get('/me', getMe);
+router.get('/auth/me', authenticateUser, getMe);
 
 export default router;
