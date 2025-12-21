@@ -21,10 +21,10 @@ export const signupSchema = z.object({
 
   email: z
     .string()
+    .email("メールアドレスの形式が不正です")
     .trim()
     .min(1, "メールアドレスは必須です")
     .max(200, "入力文字数が多すぎます")
-    .email("メールアドレスの形式が不正です")
     .refine((v) => v.endsWith(".ac.jp"), {
       message: "ac.jp ドメインのメールアドレスのみ使用できます",
     }),

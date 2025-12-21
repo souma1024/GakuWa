@@ -46,7 +46,7 @@ export default function HomePage() {
         </button>
         
         <button
-          onClick={() => alert("ログイン機能は他メンバーが実装予定です")}
+          onClick={() => navigate("/login")}
           style={{
             padding: "10px 20px",
             fontSize: "16px",
