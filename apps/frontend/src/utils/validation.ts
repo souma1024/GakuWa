@@ -9,7 +9,7 @@ const allowedNamePattern = /^[\p{L}\p{N}\s._-]+$/u;
 // signup（サインアップ）
 // =========================
 export const signupSchema = z.object({
-  username: z
+  name: z
     .string()
     .trim()
     .min(1, "ユーザ名は必須です")

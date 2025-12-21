@@ -21,7 +21,7 @@ export default function SignupPage() {
   } = useForm<SignupValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
       password: "",
       agreement: false
@@ -32,7 +32,7 @@ export default function SignupPage() {
     setSubmitStatus("submitting");
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/signup', {
+      const response = await fetch('http://localhost:8080/api/auth/preSignup', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -41,34 +41,34 @@ export default function SignupPage() {
       });
 
       
-      // if (!response.ok) {
-      //   // 4xx / 5xx の場合
-      //   const errorBody = await response.json().catch(() => null);
-      //   setSubmitStatus("error");
-      //   setSubmitError(
-      //     errorBody?.error?.message || 
-      //     "新規登録に失敗しました"
-      //   );
-      //   return;
-      // }
+      if (!response.ok) {
+        // 4xx / 5xx の場合
+        const errorBody = await response.json().catch(() => null);
+        setSubmitStatus("error");
+        setSubmitError(
+          errorBody?.error?.message || 
+          "新規登録に失敗しました"
+        );
+        return;
+      }
 
-      // const result = await response.json();
-      // console.log("Success:", result);
+      const result = await response.json();
+      console.log("Success:", result);
 
       // public_tokenを取得してOTP画面に遷移
-      //if (result.success && result.data.public_token) {
+      if (result.success && result.data.public_token) {
         setSubmitStatus("success");
         
         // OTP入力画面に遷移 (public_tokenをstateで渡す)
         setTimeout(() => {
           navigate("/signup/otp-verify", {
-            state: { publicToken: "dfafda"}
+            state: { publicToken: result.data.public_token}
           });
         }, 500);
-      // } else {
-      //   setSubmitStatus("error");
-      //   setSubmitError("public_tokenが取得できませんでした");
-      // }
+      } else {
+        setSubmitStatus("error");
+        setSubmitError("public_tokenが取得できませんでした");
+      }
 
     } catch (error) {
       console.error("signup error:", error);
@@ -96,13 +96,13 @@ export default function SignupPage() {
           <div className="form">
             <div className="input-field">
               <div className="text">
-                <label htmlFor="username">ユーザー名</label>
-                {errors.username && <p className="error-msg">※{errors.username.message}</p>}
+                <label htmlFor="name">ユーザー名</label>
+                {errors.name && <p className="error-msg">※{errors.name.message}</p>}
               </div>
               <input
                 type="text"
-                id="username"
-                {...register("username")}
+                id="name"
+                {...register("name")}
               />
             </div>
             <div className="input-field">
