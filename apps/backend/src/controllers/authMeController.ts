@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { sendSuccess, sendError } from '../utils/response';
 
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma';
 
 /**
  * GET /api/auth/me
@@ -12,16 +11,7 @@ export const getMe = async (req: Request, res: Response) => {
   try {
     // Cookieからsession_idを取得
     const sessionToken = req.cookies?.session_id;
-
-    if (!sessionToken) {
-      return sendError(
-        res,
-        'authentication_error',
-        '認証されていません',
-        401
-      );
-    }
-
+    
     // セッションを検索
     const session = await prisma.userSession.findUnique({
       where: { sessionToken },

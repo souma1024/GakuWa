@@ -267,6 +267,7 @@ export default function OtpVerifyPage() {
               <input
                 key={index}
                 type="text"
+                ref={(el) => {inputRefs.current[index] = el}}
                 inputMode="numeric"
                 maxLength={1}
                 value={digit}

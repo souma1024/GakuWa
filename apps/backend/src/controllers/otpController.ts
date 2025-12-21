@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
-import { sendSuccess, sendError, sendValidationError } from '../utils/response';
 
-const prisma = new PrismaClient();
+import { sendSuccess, sendError, sendValidationError } from '../utils/response';
+import { prisma } from '../lib/prisma';
+import { sessionService } from '../services/sessionService';
 
 /**
  * POST /api/auth/otp/verify
@@ -12,46 +12,6 @@ const prisma = new PrismaClient();
 export const verifyOtp = async (req: Request, res: Response) => {
   try {
     const { public_token, otp } = req.body;
-
-    // ===========================
-    // 1. バリデーション
-    // ===========================
-    if (!public_token || typeof public_token !== 'string') {
-      return sendValidationError(
-        res,
-        'validation_error',
-        'public_tokenが必要です',
-        {
-          public_token: [{ message: 'public_tokenが必要です' }]
-        },
-        400
-      );
-    }
-
-    if (!otp || typeof otp !== 'string') {
-      return sendValidationError(
-        res,
-        'validation_error',
-        'OTPが必要です',
-        {
-          otp: [{ message: 'OTPが必要です' }]
-        },
-        400
-      );
-    }
-
-    // OTPが6桁の数字かチェック
-    if (!/^\d{6}$/.test(otp)) {
-      return sendValidationError(
-        res,
-        'format_error',
-        'OTPは6桁の数字である必要があります',
-        {
-          otp: [{ message: 'OTPは6桁の数字である必要があります' }]
-        },
-        400
-      );
-    }
 
     // ===========================
     // 2. public_tokenでEmailOtpを検索
@@ -142,38 +102,19 @@ export const verifyOtp = async (req: Request, res: Response) => {
       data: { usedAt: new Date() }
     });
 
-    // ===========================
-    // 9. セッション発行 (仮実装)
-    // ===========================
-    // TODO: 他メンバーがセッション管理を実装したら置き換える
-    // 今はダミーのセッショントークンを生成
-    const crypto = require('crypto');
-    const sessionToken = crypto.randomBytes(32).toString('hex');
-    
-    // UserSessionテーブルにセッションを保存
-    const session = await prisma.userSession.create({
-      data: {
-        userId: updatedUser.id,
-        sessionToken: sessionToken,
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7日後
-      }
-    });
-
-    // Cookieにセッションをセット (仮実装)
-    res.cookie('session_id', sessionToken, {
+    // セッション情報の作成とセッショントークンをクッキーに保存している。
+    const sessionToken = sessionService.createSession(updatedUser.id);
+    res.cookie("session_id", sessionToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7日
-      sameSite: 'lax'
+      sameSite: "strict",
+      secure: false,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     // ===========================
     // 10. 成功レスポンス
     // ===========================
-    return sendSuccess(res, {
-      handle: updatedUser.handle
-    }, 200);
-
+    return sendSuccess(res, {handle: updatedUser.handle});
   } catch (error) {
     console.error('OTP検証エラー:', error);
     return sendError(
