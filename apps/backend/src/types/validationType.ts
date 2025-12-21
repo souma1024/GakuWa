@@ -28,6 +28,9 @@ export const signupFormSchema = z.object({
     .refine((v) => /[!@#$%^&*-]/.test(v),
       { error: "記号（!@#$%^&-*）を1文字以上含めてください" },
     ),
+  agreement: z.boolean().refine((v) => v === true, {
+    error: "利用規約に同意してください",
+  }),
 });
 
 export const loginFormSchema = z.object({
@@ -36,12 +39,12 @@ export const loginFormSchema = z.object({
 });
 
 export const otpVerifySchema = z.object({
-   otp: z
-    .string()
-    .trim()
-    .length(6, { error: "OTPは6桁で入力してください" })
-    .regex(/^\d{6}$/, { error: "OTPは6桁の数字のみで入力してください" }),
-  public_token: z.string().trim().length(32, { error: "トークンが不正です" })
+  public_token: z.string().trim().length(36, { error: "トークンが不正です" }),
+  otp: z
+  .string()
+  .trim()
+  .length(6, { error: "OTPは6桁で入力してください" })
+  .regex(/^\d{6}$/, { error: "OTPは6桁の数字のみで入力してください" }),
 });
 
 
