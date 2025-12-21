@@ -3,16 +3,37 @@ import bcrypt from 'bcrypt'
 import { prisma } from '../lib/prisma'
 import { ApiError } from '../errors/apiError';
 
-import { sessionService } from './sessionService';
+import { generateSixDigitCode } from '../utils/otpGenerator';
+import { emailOtpRepository } from '../repositories/emailOtpRepository';
 
-type checkOtpResult = { handle: string, sessionToken: string }
+type checkOtpResult = { name: string, email: string, passwordHash: string }
 
 export const otpService = {
+  async issueOtp(public_token: string) {
+    const otpCode = generateSixDigitCode(); // これはメールでユーザーに送る「数字」
+
+     // 3. OTPコードもハッシュ化！
+    // もしDBの中身を見られても認証コードがバレないように、こっちもハッシュ化して保存するのが安全らしいです
+    const otpHash = await bcrypt.hash(otpCode, 10);
+
+    // 有効期限を設定（とりあえず今から15分後にしてます）
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
+    // 試行回数
+    const attempts: number = 0;
+
+    const reOtp = await emailOtpRepository.changeOtp(public_token, otpHash, attempts, expiresAt);
+    if (!reOtp) {
+      throw new ApiError('database_error', 'OTPパスワード発行に失敗しました');
+    }
+
+    return reOtp;
+  },
+
   async checkOtp(otp: string, public_token: string): Promise<checkOtpResult> {
 
     const emailOtp = await prisma.emailOtp.findUnique({
       where: { publicToken: public_token },
-      include: { user: true }
     });
 
     if (!emailOtp) {
@@ -55,24 +76,7 @@ export const otpService = {
       throw new ApiError('invalid_credentials', 'OTPが正しくありません')
     }
 
-    // ===========================
-    // 7. ユーザー本登録 (statusをactiveに)
-    // ===========================
-    const updatedUser = await prisma.user.update({
-      where: { id: emailOtp.userId },
-      data: { status: 'active' }
-    });
-    const handle: string = updatedUser.handle;
-    // ===========================
-    // 8. EmailOtpを使用済みにする
-    // ===========================
-    await prisma.emailOtp.update({
-      where: { id: emailOtp.id },
-      data: { usedAt: new Date() }
-    });
-
-    // セッション情報の作成とセッショントークンをクッキーに保存している。
-    const sessionToken = await sessionService.createSession(updatedUser.id);
-    return { handle, sessionToken };
+    const { name: name, email: email, passwordHash: passwordHash} = await emailOtp;
+    return { name, email, passwordHash };
   }
 }

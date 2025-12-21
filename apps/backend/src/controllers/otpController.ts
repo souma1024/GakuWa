@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { sendSuccess } from '../utils/sendSuccess';
 
 import { otpService } from '../services/otpService';
+import { userService } from '../services/userService';
 
 /**
  * POST /api/auth/otp/verify
@@ -9,9 +10,11 @@ import { otpService } from '../services/otpService';
  */
 export const otpController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { public_token, otp } = req.body;
+    const { otp, public_token } = req.body;
 
-    const { handle, sessionToken } = await otpService.checkOtp(otp, public_token);
+    const { name, email, passwordHash } = await otpService.checkOtp(otp, public_token);
+
+    const { user, sessionToken } = await userService.signup(name, email, passwordHash);
 
     res.cookie("session_id", sessionToken, {
       httpOnly: true,
@@ -19,7 +22,7 @@ export const otpController = async (req: Request, res: Response, next: NextFunct
       secure: false,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-    return sendSuccess(res, {handle: handle});
+    return sendSuccess(res, {handle: user.handle});
   } catch (e) {
     return next(e)
   }

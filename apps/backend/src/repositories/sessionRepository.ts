@@ -1,15 +1,16 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma'
 
 export const sessionRepository = {
   // セッション作成
-  async createSession(params: {
-    userId: bigint;
-    sessionToken: string;
-    expiresAt: Date;
-  }) {
-    const { userId, sessionToken, expiresAt } = params;
-
-    return await prisma.userSession.create({
+  async createSession(
+    db: Prisma.TransactionClient,
+    userId: bigint,
+    sessionToken: string,
+    expiresAt: Date,
+  ) {
+    
+    return await db.userSession.create({
       data: {
         userId,
         sessionToken,

@@ -1,6 +1,8 @@
+import { PrismaClientValidationError } from '@prisma/client/runtime/library';
 import { ApiError } from '../errors/apiError';
 import { sessionRepository } from '../repositories/sessionRepository';
 import crypto from 'crypto';
+import { Prisma } from '@prisma/client';
 
 type checkSessionResult = { success: true, session: any}
 
@@ -11,16 +13,12 @@ function generateSessionToken(): string {
 }
 
 export const sessionService = {
-  async createSession(id: bigint) {
+  async createSession(db: Prisma.TransactionClient,id: bigint) {
 
     const sessionToken = generateSessionToken();
     const expiresAt = new Date(Date.now() + SESSION_TTL_MS);
 
-    const session = await sessionRepository.createSession({
-      userId: id,
-      sessionToken,
-      expiresAt,
-    });
+    const session = await sessionRepository.createSession(db, id, sessionToken, expiresAt);
 
     if (!session) {
       throw new ApiError('database_error', '新規登録に失敗しました');

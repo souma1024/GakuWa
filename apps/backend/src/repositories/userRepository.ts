@@ -1,14 +1,17 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma'
 
 export const userRepository = {
 
-  async insertUser(name: string, handle: string, email: string, passwordHash: string) {
-    return await prisma.user.create({
+  // 新規登録関数
+  async registerUser(db: Prisma.TransactionClient, name: string, handle: string, email: string, passwordHash: string) {
+    return await db.user.create({
       data: {
         name: name,
         handle: handle,
         email: email,
         passwordHash: passwordHash,
+        status: 'active'
       },
     });
   },
