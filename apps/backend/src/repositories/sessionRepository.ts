@@ -9,7 +9,7 @@ export const sessionRepository = {
   }) {
     const { userId, sessionToken, expiresAt } = params;
 
-    return prisma.userSession.create({
+    return await prisma.userSession.create({
       data: {
         userId,
         sessionToken,
@@ -20,7 +20,7 @@ export const sessionRepository = {
 
   // トークンからセッション取得（有効なもののみ）
   async findValidSessionByToken(sessionToken: string, now = new Date()) {
-    return prisma.userSession.findFirst({
+    return await prisma.userSession.findFirst({
       where: {
         sessionToken,
         revokedAt: null,
@@ -32,14 +32,14 @@ export const sessionRepository = {
   },
 
   async getSessionInfoByUserId(userId: any) {
-    return prisma.userSession.findUnique({
+    return await prisma.userSession.findUnique({
       where: userId,
     });
   },
 
   // セッション失効（ログアウト）
   async revokeSession(sessionToken: string, revokedAt = new Date()) {
-    return prisma.userSession.updateMany({
+    return await prisma.userSession.updateMany({
       where: { sessionToken, revokedAt: null },
       data: { revokedAt },
     });
@@ -47,7 +47,7 @@ export const sessionRepository = {
 
   // ユーザーの全セッションを失効（全端末ログアウト）
   async revokeAllSessionsForUser(userId: bigint, revokedAt = new Date()) {
-    return prisma.userSession.updateMany({
+    return await prisma.userSession.updateMany({
       where: { userId, revokedAt: null },
       data: { revokedAt },
     });
