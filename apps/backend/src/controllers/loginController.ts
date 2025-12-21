@@ -10,7 +10,8 @@ export const loginController = async (req: Request, res: Response, next: NextFun
 
     const user = await userService.login(email, password);
 
-    return sendSuccess(res, user.handle);
+    const handle = await user.handle;
+    return sendSuccess(res, { handle: handle });
   } catch (e) {
     return next(e);
   }
