@@ -106,7 +106,7 @@ export default function OtpVerifyPage() {
       const handle = result.data.handle;
 
       setTimeout(() => {
-        navigate(`/@${handle}`);
+        navigate(`/${handle}`);
       }, 1000);
 
     } catch (error) {

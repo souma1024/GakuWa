@@ -25,7 +25,7 @@
 .login-title {
   font-size: 44px;
   font-weight: bold;
-  color: #5b7bd5;
+  color: rgb(71, 126, 255);
 }
 
 /* タイトルと説明文の間を広げる */
@@ -52,7 +52,7 @@
 
 /* 入力欄 */
 .form-input {
-  width: 100%;
+  width: 420px;
   padding: 10px 12px;
   font-size: 14px;
   border: 1px solid #ddd;
@@ -61,7 +61,7 @@
 
 /* ログインボタン */
 .login-button {
-  width: 100%;
+  width: 111%;
   margin-top: 16px;
   padding: 12px;
   background-color: #222;

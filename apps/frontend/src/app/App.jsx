@@ -21,7 +21,6 @@ function App() {
       <Route path="/signup/otp-verify" element={<OtpVerifyPage />} />
       
       {/* ユーザーホーム画面 */}
-      <Route path="/@:handle" element={<UserHomePage />} />
       <Route path="/:handle" element={<UserHomePage />} />
       
       {/* 404 Not Found */}
