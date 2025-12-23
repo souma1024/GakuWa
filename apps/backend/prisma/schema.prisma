@@ -34,62 +34,75 @@ enum EmailOtpPurpose {
 }
 
 model User {
-  id               BigInt      @id @default(autoincrement())
-  handle           String      @unique @db.VarChar(50)
-  name             String      @db.VarChar(100)
-  email            String      @unique @db.VarChar(255)
-  passwordHash     String      @map("password_hash") @db.VarChar(255)
+  id           BigInt @id @default(autoincrement())
+  handle       String @unique @db.VarChar(50)
+  name         String @db.VarChar(100)
+  email        String @unique @db.VarChar(255)
+  passwordHash String @map("password_hash") @db.VarChar(255)
 
-  role             UserRole    @default(user)
-  status           UserStatus  @default(pending)
+  role   UserRole   @default(user)
+  status UserStatus @default(pending)
 
-  avatarUrl        String      @map("avatar_url") @default("https://example.com/default-avatar.png") @db.VarChar(255)
-  profile          String?     @db.Text
-  discordId        String?     @map("discord_id") @db.VarChar(100)
+  avatarUrl String  @default("https://example.com/default-avatar.png") @map("avatar_url") @db.VarChar(255)
+  profile   String? @db.Text
+  discordId String? @map("discord_id") @db.VarChar(100)
 
-  followersCount   Int         @map("followers_count") @default(0)
-  followingsCount  Int         @map("followings_count") @default(0)
+  followersCount  Int @default(0) @map("followers_count")
+  followingsCount Int @default(0) @map("followings_count")
 
-  createdAt        DateTime    @map("created_at") @default(now())
-  updatedAt        DateTime    @map("updated_at") @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   // リレーション
-  sessions         UserSession[]
+  sessions UserSession[]
 
   @@map("users") // 実テーブル名
 }
 
 model EmailOtp {
-  id          BigInt          @id @default(autoincrement())
-  
-  name             String      @db.VarChar(100)
-  email            String      @db.VarChar(255)
-  passwordHash     String      @map("password_hash") @db.VarChar(255)
+  id BigInt @id @default(autoincrement())
 
-  publicToken String          @map("public_token") @unique @db.Char(64)
-  codeHash    String          @map("code_hash") @db.VarChar(255)
+  name         String @db.VarChar(100)
+  email        String @db.VarChar(255)
+  passwordHash String @map("password_hash") @db.VarChar(255)
 
-  expiresAt   DateTime        @map("expires_at")
-  usedAt      DateTime?       @map("used_at")
-  attempts    Int             @default(0)
+  publicToken String @unique @map("public_token") @db.Char(64)
+  codeHash    String @map("code_hash") @db.VarChar(255)
 
-  createdAt   DateTime        @map("created_at") @default(now())
-  purpose     EmailOtpPurpose @default(signup)
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  attempts  Int       @default(0)
+
+  createdAt DateTime        @default(now()) @map("created_at")
+  purpose   EmailOtpPurpose @default(signup)
 
   @@map("email_otps")
 }
 
 model UserSession {
-  id           BigInt    @id @default(autoincrement())
-  userId       BigInt    @map("user_id")
+  id     BigInt @id @default(autoincrement())
+  userId BigInt @map("user_id")
 
-  sessionToken String    @map("session_token") @unique @db.Char(64)
+  sessionToken String    @unique @map("session_token") @db.Char(64)
   expiresAt    DateTime  @map("expires_at")
-  createdAt    DateTime  @map("created_at") @default(now())
+  createdAt    DateTime  @default(now()) @map("created_at")
   revokedAt    DateTime? @map("revoked_at")
 
   // リレーション
-  user         User      @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 
   @@map("user_sessions")
+}
+
+model Event {
+  id           BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  name         String   @db.VarChar(100)
+  thumbnailUrl String   @default("https://example.com/thumbnail.png") @map("thumbnail_url") @db.VarChar(255)
+  details      String   @db.Text
+  difficulty   Int      @db.UnsignedTinyInt
+  isActive     Int      @default(1) @map("is_active") @db.UnsignedTinyInt
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  @@map("events")
 }
