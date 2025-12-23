@@ -7,10 +7,8 @@ export type EmailOtpDto = {
   password_hash: string,
   public_token: string,
   code_hash: string,
-  expired_at: Date,
   used_at?: Date,
-  attempts: number,
-  created_at: Date,
+  expires_at: Date
 }
 
 export const emailOtpRepository = {
@@ -22,10 +20,8 @@ export const emailOtpRepository = {
         passwordHash: emailOtpDto.password_hash,
         publicToken: emailOtpDto.public_token,
         codeHash: emailOtpDto.code_hash,
-        expiresAt: emailOtpDto.expired_at,
         usedAt: emailOtpDto.used_at,
-        attempts: emailOtpDto.attempts,
-        createdAt: emailOtpDto.created_at
+        expiresAt: emailOtpDto.expires_at
       },
     });
   },

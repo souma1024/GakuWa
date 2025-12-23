@@ -3,7 +3,7 @@ export type LoginRequest = {
   password: string
 }
 
-export type SignupRequest = LoginRequest & {
+export type PreSignupRequest = LoginRequest & {
   name: string
 } 
 

@@ -3,6 +3,8 @@ import { userService } from '../../src/services/userService'
 import { userRepository } from "../../src/repositories/userRepository";
 import bcrypt from "bcrypt";
 import { LoginResponse } from '../../src/dtos/users/responseDto'
+import { LoginRequest } from '../../src/dtos/users/requestDto';
+import { PreSignupRequest } from '../../src/dtos/users/requestDto';
 
 // Repository をモック
 jest.mock("../../src/repositories/userRepository");
@@ -12,24 +14,47 @@ jest.mock("bcrypt", () => ({
   compare: jest.fn(),
 }));
 
-const mockUser = {
-  id: 1,
-  email: "test@example.ac.jp",
-  passwordHash: "hashed-password",
-  name: "Test User",
-};
+let login: LoginRequest;
+let preSignup: PreSignupRequest;
+let dbUser: any;
+
+const mockedUserRepo = jest.mocked(userRepository);
+beforeEach(() => {
+
+  login = {
+    email: "test@example.ac.jp",
+    password: "password",
+  };
+
+  preSignup = {
+    name: "test",
+    email: "test@example.ac.jp",
+    password: "password",
+  };
+
+  dbUser = {
+    id: 1,
+    email: "test@example.ac.jp",
+    passwordHash: "hashed-password",
+    handle: "test-handle",
+    name: "Test User",
+    avatarUrl: "https://example.com/a.png",
+    profile: null,
+    followersCount: 0,
+    followingsCount: 0,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }
+
+  jest.clearAllMocks();
+});
 
 describe("userService.login", () => {
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it("ユーザーが存在しない場合はエラーを投げる", async () => {
-    (userRepository.findByEmail as jest.Mock).mockResolvedValue(null);
+    mockedUserRepo.findByEmail.mockResolvedValue(null);
 
     await expect(
-      userService.login("test@example.ac.jp", "password")
+      userService.login(login)
     ).rejects.toMatchObject({
       type: "authentication_error",
       message: "ユーザーが存在しません",
@@ -39,45 +64,34 @@ describe("userService.login", () => {
   });
 
   it("パスワードが一致しない場合はエラーを投げる", async () => {
-    (userRepository.findByEmail as jest.Mock).mockResolvedValue(mockUser);
+    login.password = 'wrong-password';
+
+    mockedUserRepo.findByEmail.mockResolvedValue(dbUser);
     (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
+
     await expect(
-      userService.login("test@example.ac.jp", "wrong-password")
+      userService.login(login)
     ).rejects.toMatchObject({
       type: "authentication_error",
-      message: "ユーザーが存在しません",
+      message: "メールアドレスもしくはパスワードが異なります",
     });
 
     expect(bcrypt.compare).toHaveBeenCalledWith(
       "wrong-password",
-      mockUser.passwordHash
+      dbUser.passwordHash
     );
   });
 
   it("メールとパスワードが正しい場合はLoginResponse(DTO)を返す", async () => {
 
-    const dbUser = {
-      id: 1,
-      email: "test@example.com",
-      passwordHash: "hashed-password",
-      handle: "test-handle",
-      name: "Test User",
-      avatarUrl: "https://example.com/a.png",
-      profile: null,
-      followersCount: 0,
-      followingsCount: 0,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
     // findByEmailで返されるコラムをdbUserとする。
-    (userRepository.findByEmail as jest.Mock).mockResolvedValue(dbUser);
+    mockedUserRepo.findByEmail.mockResolvedValue(dbUser);
 
     // compare関数の戻り値がtrueとする
     (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
-    const result = await userService.login("test@example.ac.jp", "correct-password");
+    const result = await userService.login(login);
 
     const expected: LoginResponse = {
       handle: "test-handle",
@@ -98,6 +112,29 @@ describe("userService.login", () => {
     expect(userRepository.findByEmail).toHaveBeenCalledWith("test@example.ac.jp");
 
     // bcryptのcompare関数がしっかりと呼ばれているか
-    expect(bcrypt.compare).toHaveBeenCalledWith("correct-password", "hashed-password");
+    expect(bcrypt.compare).toHaveBeenCalledWith("password", "hashed-password");
   });
+});
+
+
+// 仮登録のテスト作成中(12/23)
+describe("userService.preSignup", () => {
+
+  it("メールが既に存在している場合はエラーを投げる", async () => {
+    mockedUserRepo.findByEmail.mockResolvedValue(dbUser);
+
+    await expect(
+      userService.preSignup(preSignup)
+    ).rejects.toMatchObject({
+      type: "duplicate_error",
+      message: "そのメールアドレスは既に使用されています",
+    });
+
+    expect(userRepository.findByEmail).toHaveBeenCalledWith("test@example.ac.jp");
+  });
+
+  it("仮登録に失敗した場合はエラーを投げる", async () => {
+
+  });
+
 });

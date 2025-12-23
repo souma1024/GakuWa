@@ -9,17 +9,18 @@ import { generateUniqueHandle } from '../utils/handleNameGenerator'
 import { sessionService } from './sessionService'
 import { LoginResponse } from '../dtos/users/responseDto'
 import { prisma } from '../lib/prisma'
+import { LoginRequest, PreSignupRequest } from '../dtos/users/requestDto'
 
 export const userService = {
-  async login(email: string, password: string): Promise<LoginResponse> {
-    const user = await userRepository.findByEmail(email);
+  async login(input: LoginRequest): Promise<LoginResponse> {
+    const user = await userRepository.findByEmail(input.email);
     if (!user) {
       throw new ApiError('authentication_error', 'ユーザーが存在しません');
     }
 
-    const ok = await bcrypt.compare(password, user.passwordHash);
+    const ok = await bcrypt.compare(input.password, user.passwordHash);
     if (!ok) {
-      throw new ApiError('authentication_error', 'ユーザーが存在しません');
+      throw new ApiError('authentication_error', 'メールアドレスもしくはパスワードが異なります');
     }
 
     return {
@@ -61,15 +62,15 @@ export const userService = {
   },
   
   // ユーザー仮登録関数
-  async preSignup(name: string, email: string, password: string) {
+  async preSignup(input: PreSignupRequest): Promise<string> {
 
-    const sameEmail = await userRepository.findByEmail(email);
+    const sameEmail = await userRepository.findByEmail(input.email);
     if (sameEmail) {
       throw new ApiError('duplicate_error', 'そのメールアドレスは既に使用されています');
     }
 
     const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(password, saltRounds);
+    const passwordHash = await bcrypt.hash(input.password, saltRounds);
 
     // 2. トークンを生成
     const otpCode = generateSixDigitCode(); // これはメールでユーザーに送る「数字」
@@ -80,29 +81,24 @@ export const userService = {
     const otpHash = await bcrypt.hash(otpCode, 10);
 
     // 有効期限を設定（とりあえず今から15分後にしてます）
-    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    // 試行回数
-    const attempts: number = 0;
-
-    const input = {
-      name: name, 
-      email:email, 
+    const params = {
+      name: input.name,
+      email: input.email, 
       password_hash: passwordHash, 
       public_token: publicToken, 
-      code_hash: otpHash, 
-      expired_at: expiresAt, 
-      attempts: attempts, 
-      created_at: new Date() 
+      code_hash: otpHash,
+      expires_at: expiresAt
     };
 
-    const preUser = await emailOtpRepository.registerEmailOtp(input);
+    const preUser = await emailOtpRepository.registerEmailOtp(params);
 
     if (!preUser) {
       throw new ApiError('database_error', '仮登録に失敗しました');
     }
 
-    const send = await sendVerificationEmail(email, otpCode);
+    const send = await sendVerificationEmail(input.email, otpCode);
 
     if (!send) {
       throw new ApiError('external_service_error', 'メール送信に失敗しました');
