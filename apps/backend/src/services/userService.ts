@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 import { ApiError } from "../errors/apiError"
 import { userRepository } from "../repositories/userRepository"
 import { generateSixDigitCode } from '../utils/otpGenerator'
-import { emailService } from './sendEmailService'
+import { emailService } from './emailService'
 import { emailOtpRepository } from '../repositories/emailOtpRepository'
 import { generateUniqueHandle } from '../utils/handleNameGenerator'
 import { sessionService } from './sessionService'
@@ -80,7 +80,7 @@ export const userService = {
     const otpHash = await bcrypt.hash(otpCode, 10);
 
     // 有効期限を設定（とりあえず今から15分後にしてます）
-    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
     // 試行回数
     const attempts: number = 0;
