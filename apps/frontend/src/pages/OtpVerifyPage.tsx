@@ -99,6 +99,13 @@ export default function OtpVerifyPage() {
       if (!response.ok) {
         setSubmitStatus("error");
         setSubmitError(result.error?.message || "OTP検証に失敗しました");
+
+        if (result.error.status === 409) {
+          setSubmitError(`${result.error.message}画面を遷移します`);
+          setTimeout(() => {
+            navigate('/signup');
+          }, 2000);
+        }
         return;
       }
 
@@ -160,55 +167,6 @@ export default function OtpVerifyPage() {
       setResendMessage("通信エラーが発生しました");
     }
   };
-
-  // public_tokenがない場合はエラー表示
-  if (!publicToken) {
-    return (
-      <div style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "#f5f5f5",
-      }}>
-        <div style={{
-          background: "white",
-          borderRadius: "8px",
-          padding: "48px 32px",
-          maxWidth: "400px",
-          width: "100%",
-          textAlign: "center",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        }}>
-          <h2 style={{ 
-            fontSize: "20px", 
-            marginBottom: "16px", 
-            color: "#333",
-            fontWeight: "500",
-          }}>
-            エラー
-          </h2>
-          <p style={{ color: "#666", marginBottom: "24px", fontSize: "14px" }}>
-            無効なアクセスです。
-          </p>
-          <button
-            onClick={() => navigate("/signup")}
-            style={{
-              padding: "12px 24px",
-              fontSize: "14px",
-              background: "#4a90e2",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-            }}
-          >
-            新規登録画面に戻る
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div style={{
