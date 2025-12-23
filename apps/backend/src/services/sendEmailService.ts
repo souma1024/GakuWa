@@ -1,5 +1,25 @@
-export async function sendVerificationEmail(email: string, code: string): Promise<boolean> {
-  // ここで本当にメールを送る処理を書く予定
-  console.log(`[メール送信テスト] 宛先: ${email}, コード: ${code}`);
-  return true;
+import nodemailer from 'nodemailer'
+import { ApiError } from '../errors/apiError'
+
+
+export const emailService = {
+  async sendVerificationEmail(email: string, otp: string): Promise<void> {
+
+    const transporter = await nodemailer.createTransport({
+      host: process.env.MAIL_HOST,
+      port: Number(process.env.MAIL_PORT),
+      secure: false,
+    })
+
+    if (!transporter) {
+      throw new ApiError('external_service_error', 'メールサーバに問題があります');
+    }
+
+    await transporter.sendMail({
+      from: process.env.MAIL_FROM,
+      to: email,
+      subject: 'GakuWa運営チームワンタイムパスワードの認証',
+      text: `あなたのワンタイムパスワードは ${otp} です。\n15分以内に入力してください。`,
+    });
+  }
 }
