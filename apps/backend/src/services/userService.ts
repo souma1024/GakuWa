@@ -7,29 +7,29 @@ import { sendVerificationEmail } from './sendEmailService'
 import { emailOtpRepository } from '../repositories/emailOtpRepository'
 import { generateUniqueHandle } from '../utils/handleNameGenerator'
 import { sessionService } from './sessionService'
+import { LoginResponse } from '../dtos/users/responseDto'
 import { prisma } from '../lib/prisma'
 
-type user = {
-  handle: string;
-  name: string;
-  avatarUrl: string;
-  profile: string | null;
-  followersCount: number;
-  followingsCount: number;
-}
-
 export const userService = {
-  async login(email: string, password: string): Promise<user> {
+  async login(email: string, password: string): Promise<LoginResponse> {
     const user = await userRepository.findByEmail(email);
     if (!user) {
       throw new ApiError('authentication_error', 'ユーザーが存在しません');
     }
 
-    const ok =  bcrypt.compare(password, user.passwordHash);
+    const ok = await bcrypt.compare(password, user.passwordHash);
     if (!ok) {
       throw new ApiError('authentication_error', 'ユーザーが存在しません');
     }
-    return user;
+
+    return {
+      handle: user.handle,
+      name: user.name,
+      avatarUrl: user.avatarUrl,
+      profile: user.profile,
+      followersCount: user.followersCount,
+      followingsCount: user.followingsCount
+    };
   },
 
   // ユーザー本登録関数
