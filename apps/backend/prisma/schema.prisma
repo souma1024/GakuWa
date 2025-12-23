@@ -54,7 +54,8 @@ model User {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // リレーション
-  sessions UserSession[]
+  sessions          UserSession[]
+  eventParticipants EventParticipant[]
 
   @@map("users") // 実テーブル名
 }
@@ -104,5 +105,23 @@ model Event {
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
 
+  participants EventParticipant[]
+
   @@map("events")
+}
+
+model EventParticipant {
+  id BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+
+  userId  BigInt @map("user_id")
+  eventId BigInt @map("event_id") @db.UnsignedBigInt
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+
+  // リレーション
+  user  User  @relation(fields: [userId], references: [id])
+  event Event @relation(fields: [eventId], references: [id])
+
+  @@unique([userId, eventId])
+  @@map("event_participants")
 }
