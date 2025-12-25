@@ -8,6 +8,7 @@ import { emailOtpRepository } from '../repositories/emailOtpRepository'
 import { generateUniqueHandle } from '../utils/handleNameGenerator'
 import { sessionService } from './sessionService'
 import { prisma } from '../lib/prisma'
+import { sessionRepository } from '../repositories/sessionRepository'
 
 type user = {
   handle: string;
@@ -30,6 +31,28 @@ export const userService = {
       throw new ApiError('authentication_error', 'ユーザーが存在しません');
     }
     return user;
+  },
+
+  async cookielogin(sessionToken: string): Promise<user> {
+    
+    const sessionInfo = await sessionRepository.findValidSessionByToken(sessionToken);
+
+    if (!sessionInfo) {
+      throw new ApiError('authentication_error', 'セッション情報がありません');
+    }
+    const user = await userRepository.findById(sessionInfo.userId);
+    if (!user) {
+      throw new ApiError('authentication_error', 'ユーザーが存在しません');
+    }
+
+    return {
+      handle: user.handle,
+      name: user.name,
+      avatarUrl: user.avatarUrl,
+      profile: user.profile,
+      followersCount: user.followersCount,
+      followingsCount: user.followingsCount,
+    };
   },
 
   // ユーザー本登録関数
@@ -79,8 +102,8 @@ export const userService = {
     // もしDBの中身を見られても認証コードがバレないように、こっちもハッシュ化して保存するのが安全らしいです
     const otpHash = await bcrypt.hash(otpCode, 10);
 
-    // 有効期限を設定（とりあえず今から15分後にしてます）
-    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+    // 有効期限を設定（とりあえず今から10分後にしてます）
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
     // 試行回数
     const attempts: number = 0;

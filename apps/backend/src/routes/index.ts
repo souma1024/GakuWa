@@ -5,6 +5,8 @@ import { preSignupController } from '../controllers/preSignupController';
 import { otpController } from '../controllers/otpController'
 import { validateBody } from '../middlewares/validationMiddleware'
 import { loginFormSchema, otpVerifySchema, signupFormSchema } from '../types/validationType';
+import { authenticateUser } from '../middlewares/sessionMiddleware';
+import { indexController } from '../controllers/indexController';
 
 const router = Router();
 
@@ -16,5 +18,8 @@ router.post('/auth/preSignup', validateBody(signupFormSchema), preSignupControll
 
 // /api/auth/otp/verify
 router.post('/auth/otp/verify', validateBody(otpVerifySchema), otpController);
+
+// /api/auth/session
+router.post('/auth/session', authenticateUser, indexController);
 
 export default router;
