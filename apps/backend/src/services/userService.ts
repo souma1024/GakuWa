@@ -98,7 +98,7 @@ export const userService = {
       throw new ApiError('database_error', '仮登録に失敗しました');
     }
 
-    await emailService.sendVerificationEmail(email, otpCode);
+    await emailService.sendVerificationEmail(input.email, otpCode);
 
     return (await preUser).publicToken;
   }
