@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma'
+import { string } from 'zod';
 
 export type EmailOtpDto = {
   name: string,
@@ -41,6 +42,18 @@ export const emailOtpRepository = {
         publicToken: public_token
       }
     });
+  },
+
+  async findEmailByPublicToken(public_token: string): Promise<string | null> {
+    const user = await prisma.emailOtp.findUnique({
+      where: {
+        publicToken: public_token
+      },
+      select: {
+        email: true,
+      }
+    });
+    return user?.email ?? null;
   },
 
   async disableOtp(db: Prisma.TransactionClient, public_token: string) {
