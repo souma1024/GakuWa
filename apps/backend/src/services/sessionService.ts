@@ -39,7 +39,7 @@ export const sessionService = {
   },
 
   async checkSession(sessionToken: string): Promise<checkSessionResult> {
-    const sessionTokenHash = sessionTokenHashGenerator(sessionToken);
+    const sessionTokenHash = await sessionTokenHashGenerator(sessionToken);
     const sessionInfo = await sessionRepository.findValidSessionByToken(sessionTokenHash);
 
     if (!sessionInfo) {

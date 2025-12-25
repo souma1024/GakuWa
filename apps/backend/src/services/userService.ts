@@ -10,7 +10,7 @@ import { sessionService } from './sessionService'
 import { prisma } from '../lib/prisma'
 import { sessionRepository } from '../repositories/sessionRepository'
 
-type user = {
+export type user = {
   handle: string;
   name: string;
   avatarUrl: string;

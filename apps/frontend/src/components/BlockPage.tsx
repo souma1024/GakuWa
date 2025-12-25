@@ -1,18 +1,23 @@
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 export default function BlockPage() {
+  const location = useLocation();
   const [allowed, setAllowed] = useState<boolean | null>(null);
+  const [user, setUser] = useState<any>(location.state as any);
 
   useEffect(() => {
     const check = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/auth/session", {
-          method: "POST",
-          credentials: "include",
-        });
-        
-        setAllowed(res.ok);
+        if (!user.handle) {
+          const res = await fetch("http://localhost:8080/api/auth/session", {
+            method: "POST",
+            credentials: "include",
+          });
+          setAllowed(res.ok);
+        } else {
+          setAllowed(true);
+        }
       } catch {
         setAllowed(false);
       }

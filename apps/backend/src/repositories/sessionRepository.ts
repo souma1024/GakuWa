@@ -24,7 +24,6 @@ export const sessionRepository = {
     const session = await prisma.userSession.findUnique({
       where: {
         sessionToken: sessionTokenHash,
-        revokedAt: null,
       }
     });
     return session;

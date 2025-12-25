@@ -103,10 +103,15 @@ export default function OtpVerifyPage() {
       }
 
       setSubmitStatus("success");
-      const handle = result.data.handle;
+      const user = result.data;
+      console.log(user);
 
       setTimeout(() => {
-        navigate(`/${handle}`);
+        navigate(`/${user.handle}`, {
+          state: {
+            user: user
+          }
+        });
       }, 1000);
 
     } catch (error) {
