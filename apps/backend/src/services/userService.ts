@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 import { ApiError } from "../errors/apiError"
 import { userRepository } from "../repositories/userRepository"
 import { generateSixDigitCode } from '../utils/otpGenerator'
-import { sendVerificationEmail } from './sendEmailService'
+import { emailService } from './emailService'
 import { emailOtpRepository } from '../repositories/emailOtpRepository'
 import { generateUniqueHandle } from '../utils/handleNameGenerator'
 import { sessionService } from './sessionService'
@@ -98,11 +98,7 @@ export const userService = {
       throw new ApiError('database_error', '仮登録に失敗しました');
     }
 
-    const send = await sendVerificationEmail(input.email, otpCode);
-
-    if (!send) {
-      throw new ApiError('external_service_error', 'メール送信に失敗しました');
-    }
+    await emailService.sendVerificationEmail(email, otpCode);
 
     return (await preUser).publicToken;
   }

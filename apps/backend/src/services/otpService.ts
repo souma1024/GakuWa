@@ -10,6 +10,13 @@ type checkOtpResult = { name: string, email: string, passwordHash: string }
 
 export const otpService = {
   async issueOtp(public_token: string) {
+
+    const email = await emailOtpRepository.findEmailByPublicToken(public_token);
+
+    if (!email) {
+      throw new ApiError('database_error', 'public_tokenが存在しません');
+    }
+
     const otpCode = generateSixDigitCode(); // これはメールでユーザーに送る「数字」
 
      // 3. OTPコードもハッシュ化！
@@ -22,12 +29,12 @@ export const otpService = {
     // 試行回数
     const attempts: number = 0;
 
-    const reOtp = await emailOtpRepository.changeOtp(public_token, otpHash, attempts, expiresAt);
-    if (!reOtp) {
+    const success = await emailOtpRepository.changeOtp(public_token, otpHash, attempts, expiresAt);
+    if (!success) {
       throw new ApiError('database_error', 'OTPパスワード発行に失敗しました');
     }
 
-    return reOtp;
+    return { otpCode, email};
   },
 
   async checkOtp(otp: string, public_token: string): Promise<checkOtpResult> {
