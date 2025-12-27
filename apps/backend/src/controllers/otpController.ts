@@ -14,7 +14,7 @@ export const otpController = async (req: Request, res: Response, next: NextFunct
 
     const { name, email, passwordHash } = await otpService.checkOtp(otp, public_token);
 
-    const { user, sessionToken } = await userService.signup(name, email, passwordHash, public_token);
+    const { userInfo, sessionToken } = await userService.signup(name, email, passwordHash, public_token);
 
     res.cookie("session_id", sessionToken, {
       httpOnly: true,
@@ -23,7 +23,7 @@ export const otpController = async (req: Request, res: Response, next: NextFunct
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    sendSuccess(res, {name: user.name, handle: user.handle});
+    sendSuccess(res, { userInfo });
   } catch (e) {
     return next(e)
   }

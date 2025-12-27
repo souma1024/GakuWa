@@ -3,8 +3,6 @@ import { sessionRepository } from '../repositories/sessionRepository';
 import crypto from 'crypto';
 import { Prisma } from '@prisma/client';
 
-type checkSessionResult = { success: true, session: any}
-
 const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 7; // 7日
 
 function generateSessionTokenHash() {
@@ -38,7 +36,7 @@ export const sessionService = {
     const sessionTokenHash = sessionTokenHashGenerator(sessionToken);
   },
 
-  async checkSession(sessionToken: string): Promise<checkSessionResult> {
+  async checkSession(sessionToken: string): Promise<bigint> {
     const sessionTokenHash = await sessionTokenHashGenerator(sessionToken);
     const sessionInfo = await sessionRepository.findValidSessionByToken(sessionTokenHash);
 
@@ -54,7 +52,7 @@ export const sessionService = {
       throw new ApiError('authentication_error', "有効期限が切れています");
     }
 
-    return {success: true, session: sessionInfo};
+    return sessionInfo.userId;
   },
 
   async expiresSession(sessionToken: string) {
