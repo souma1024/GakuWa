@@ -7,29 +7,30 @@ import { emailService } from './emailService'
 import { emailOtpRepository } from '../repositories/emailOtpRepository'
 import { generateUniqueHandle } from '../utils/handleNameGenerator'
 import { sessionService } from './sessionService'
+import { LoginResponse } from '../dtos/users/responseDto'
 import { prisma } from '../lib/prisma'
-
-type user = {
-  handle: string;
-  name: string;
-  avatarUrl: string;
-  profile: string | null;
-  followersCount: number;
-  followingsCount: number;
-}
+import { LoginRequest, PreSignupRequest } from '../dtos/users/requestDto'
 
 export const userService = {
-  async login(email: string, password: string): Promise<user> {
-    const user = await userRepository.findByEmail(email);
+  async login(input: LoginRequest): Promise<LoginResponse> {
+    const user = await userRepository.findByEmail(input.email);
     if (!user) {
       throw new ApiError('authentication_error', 'ユーザーが存在しません');
     }
 
-    const ok =  bcrypt.compare(password, user.passwordHash);
+    const ok = await bcrypt.compare(input.password, user.passwordHash);
     if (!ok) {
-      throw new ApiError('authentication_error', 'ユーザーが存在しません');
+      throw new ApiError('authentication_error', 'メールアドレスもしくはパスワードが異なります');
     }
-    return user;
+
+    return {
+      handle: user.handle,
+      name: user.name,
+      avatarUrl: user.avatarUrl,
+      profile: user.profile,
+      followersCount: user.followersCount,
+      followingsCount: user.followingsCount
+    };
   },
 
   // ユーザー本登録関数
@@ -61,15 +62,15 @@ export const userService = {
   },
   
   // ユーザー仮登録関数
-  async preSignup(name: string, email: string, password: string) {
+  async preSignup(input: PreSignupRequest): Promise<string> {
 
-    const sameEmail = await userRepository.findByEmail(email);
+    const sameEmail = await userRepository.findByEmail(input.email);
     if (sameEmail) {
       throw new ApiError('duplicate_error', 'そのメールアドレスは既に使用されています');
     }
 
     const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(password, saltRounds);
+    const passwordHash = await bcrypt.hash(input.password, saltRounds);
 
     // 2. トークンを生成
     const otpCode = generateSixDigitCode(); // これはメールでユーザーに送る「数字」
@@ -82,27 +83,22 @@ export const userService = {
     // 有効期限を設定（とりあえず今から15分後にしてます）
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    // 試行回数
-    const attempts: number = 0;
-
-    const input = {
-      name: name, 
-      email:email, 
+    const params = {
+      name: input.name,
+      email: input.email, 
       password_hash: passwordHash, 
       public_token: publicToken, 
-      code_hash: otpHash, 
-      expired_at: expiresAt, 
-      attempts: attempts, 
-      created_at: new Date() 
+      code_hash: otpHash,
+      expires_at: expiresAt
     };
 
-    const preUser = await emailOtpRepository.registerEmailOtp(input);
+    const preUser = await emailOtpRepository.registerEmailOtp(params);
 
     if (!preUser) {
       throw new ApiError('database_error', '仮登録に失敗しました');
     }
 
-    await emailService.sendVerificationEmail(email, otpCode);
+    await emailService.sendVerificationEmail(input.email, otpCode);
 
     return (await preUser).publicToken;
   }
