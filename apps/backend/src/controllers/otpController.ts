@@ -22,8 +22,8 @@ export const otpController = async (req: Request, res: Response, next: NextFunct
       secure: false,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-    const handle = await user.handle;
-    return sendSuccess(res, { handle: handle });
+
+    sendSuccess(res, {name: user.name, handle: user.handle});
   } catch (e) {
     return next(e)
   }

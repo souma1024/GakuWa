@@ -20,22 +20,13 @@ export const sessionRepository = {
   },
 
   // トークンからセッション取得（有効なもののみ）
-  async findValidSessionByToken(sessionToken: string, now = new Date()) {
-    return await prisma.userSession.findFirst({
+  async findValidSessionByToken(sessionTokenHash: string) {
+    const session = await prisma.userSession.findUnique({
       where: {
-        sessionToken,
-        revokedAt: null,
-        expiresAt: {
-          gt: now,
-        },
-      },
+        sessionToken: sessionTokenHash,
+      }
     });
-  },
-
-  async getSessionInfoByUserId(userId: any) {
-    return await prisma.userSession.findUnique({
-      where: userId,
-    });
+    return session;
   },
 
   // セッション失効（ログアウト）

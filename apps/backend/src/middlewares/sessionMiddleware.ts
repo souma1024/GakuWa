@@ -8,10 +8,10 @@ import { ApiError } from "../errors/apiError";
 // ログイン済みじゃないとアクセスできないAPI（eventやprofileなど）の前に呼び出す。
 export const authenticateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const sessionToken = req.cookies?.session_id;
+    const sessionToken = req.cookies.session_id;
   
     if (!sessionToken) {
-      return next(new ApiError('authentication_error', 'セッション情報が保存されていません。'));
+      return next(new ApiError('authentication_error', 'ブラウザにセッション情報が保存されていません。'));
     }
  
     const session = await sessionService.checkSession(sessionToken);
