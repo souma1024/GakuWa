@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt'
 
 import { ApiError } from "../errors/apiError"
 import { userRepository } from "../repositories/userRepository"
+import { sessionRepository } from '../repositories/sessionRepository'
 import { generateSixDigitCode } from '../utils/otpGenerator'
 import { emailService } from './emailService'
 import { emailOtpRepository } from '../repositories/emailOtpRepository'
@@ -33,6 +34,24 @@ export const userService = {
     };
   },
 
+  async cookielogin(userId: bigint): Promise<LoginResponse> {
+    
+    const user = await userRepository.findById(userId);
+
+    if (!user) {
+      throw new ApiError('authentication_error', 'ユーザーが存在しません');
+    }
+
+    return {
+      handle: user.handle,
+      name: user.name,
+      avatarUrl: user.avatarUrl,
+      profile: user.profile,
+      followersCount: user.followersCount,
+      followingsCount: user.followingsCount,
+    };
+  },
+
   // ユーザー本登録関数
   async signup(name: string, email: string, passwordHash: string, public_token: string) {
     const handle = await generateUniqueHandle(name);
@@ -58,7 +77,16 @@ export const userService = {
       throw new ApiError('database_error', 'OTP削除に失敗しました');
     }
 
-    return { user, sessionToken };
+    const userInfo = {
+      handle: user.handle,
+      name: user.name,
+      avatarUrl: user.avatarUrl,
+      profile: user.profile,
+      followersCount: user.followersCount,
+      followingsCount: user.followingsCount,
+    };
+
+    return { userInfo, sessionToken };
   },
   
   // ユーザー仮登録関数
@@ -80,7 +108,7 @@ export const userService = {
     // もしDBの中身を見られても認証コードがバレないように、こっちもハッシュ化して保存するのが安全らしいです
     const otpHash = await bcrypt.hash(otpCode, 10);
 
-    // 有効期限を設定（とりあえず今から15分後にしてます）
+    // 有効期限を設定（とりあえず今から10分後にしてます）
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
     const params = {

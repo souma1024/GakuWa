@@ -10,9 +10,9 @@ export const loginController = async (req: Request, res: Response, next: NextFun
   try {
     const request: LoginRequest = req.body;
 
-    const response: LoginResponse = await userService.login(request);
+    const userInfo: LoginResponse = await userService.login(request);
 
-    return sendSuccess(res, { response });
+    return sendSuccess(res, { userInfo });
   } catch (e) {
     return next(e);
   }

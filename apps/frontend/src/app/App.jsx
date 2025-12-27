@@ -4,6 +4,7 @@ import OtpVerifyPage from "../pages/OtpVerifyPage";
 import UserHomePage from "../pages/UserHomePage";
 import HomePage from "../pages/HomePage";
 import LoginPage from "../pages/LoginPage";
+import BlockPage from "../components/BlockPage";
 
 function App() {
   return (
@@ -21,7 +22,9 @@ function App() {
       <Route path="/signup/otp-verify" element={<OtpVerifyPage />} />
       
       {/* ユーザーホーム画面 */}
-      <Route path="/:handle" element={<UserHomePage />} />
+      <Route element={<BlockPage />}>
+        <Route path="/:handle" element={<UserHomePage />} />
+      </Route>
       
       {/* 404 Not Found */}
       <Route path="*" element={<div>404 Not Found</div>} />

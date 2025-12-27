@@ -16,6 +16,14 @@ export const userRepository = {
     });
   },
 
+  async findById(id: bigint) {
+    return await prisma.user.findUnique({
+      where: {
+        id: id
+      }
+    });
+  },
+
   async findByEmailPassword(email: string, passwordHash: string) {
     return await prisma.user.findUnique({
       where: {
