@@ -5,7 +5,7 @@ export default function UserHomePage() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>ようこそ、@{user}さん!</h1>
+      <h1>ようこそ、{user}さん!</h1>
       <p>ユーザーホーム画面（仮実装）</p>
 
       <div

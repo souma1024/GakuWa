@@ -9,12 +9,22 @@ export default function BlockPage() {
   useEffect(() => {
     const check = async () => {
       try {
-        if (!user.handle) {
-          const res = await fetch("http://localhost:8080/api/auth/session", {
+
+        if (!user?.handle) {
+          const response = await fetch("http://localhost:8080/api/auth/session", {
             method: "POST",
             credentials: "include",
           });
-          setAllowed(res.ok);
+          const result = await response.json();
+
+          if (result.success) {
+            history.replaceState(result.data, "", result.data.handle)
+
+            setUser(result.data)
+
+            setAllowed(result.success);
+          } 
+          setAllowed(result.success);
         } else {
           setAllowed(true);
         }

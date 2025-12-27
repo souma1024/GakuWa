@@ -50,18 +50,19 @@ export default function LoginPage() {
       }
 
       const result = await response.json();
-      console.log("Success:", result);
-      const handle = result.data.handle;
+
+      const user = result.data.userInfo;
+      console.log("user情報 %o", user)
       // public_tokenを取得してOTP画面に遷移
-      if (result.success && handle) {
+      if (result.success && user.handle) {
         setSubmitStatus("success");
         
         // OTP入力画面に遷移 (public_tokenをstateで渡す)
         setTimeout(() => {
-          navigate(`/${handle}`, {
-            state: { handle: handle}
+          navigate(`/${user.handle}`, {
+            state: user
           });
-        }, 500);
+        }, 1000);
       } else {
         setSubmitStatus("error");
         setSubmitError("handleNameが取得できませんでした");
@@ -114,7 +115,7 @@ export default function LoginPage() {
           {submitStatus === "error" && <p className="error-text">{submitError}</p>}
           {submitStatus === "success" && (
             <p style={{ color: "green" }}>
-              登録メールを送信しました。OTP入力画面に移動します...
+              ホーム画面に遷移します
             </p>
           )}
           
