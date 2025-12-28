@@ -13,6 +13,7 @@ import {
   getArticlesController,
   getArticleDetailController,
   updateArticleController,
+  publishArticleController,
 } from "../controllers/articleController";
 
 import { createArticleSchema } from '../types/articleSchema';
@@ -45,4 +46,6 @@ router.get("/articles/:id", /*authenticateUser,*/ getArticleDetailController);
 
 // 下書き更新
 router.put("/articles/:id",/*authenticateUser,*/validateBody(updateArticleSchema),updateArticleController);
+
+router.patch("/articles/:id/publish",/*authenticateUser,*/publishArticleController);
 export default router;

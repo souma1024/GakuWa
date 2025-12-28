@@ -143,3 +143,52 @@ export const updateArticleController = async (
     });
   }
 };
+
+export const publishArticleController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const id = BigInt(req.params.id);
+
+    const article = await articleService.publishArticle(id);
+
+    if (!article) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          type: "not_found",
+          message: "article not found",
+        },
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: {
+        id: article.id.toString(),
+        status: article.status,
+        updatedAt: article.updatedAt,
+      },
+    });
+  } catch (err: any) {
+    if (err.message === "already_published") {
+      return res.status(400).json({
+        success: false,
+        error: {
+          type: "invalid_state",
+          message: "article is already published",
+        },
+      });
+    }
+
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      error: {
+        type: "internal_error",
+        message: "failed to publish article",
+      },
+    });
+  }
+};

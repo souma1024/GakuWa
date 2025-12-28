@@ -15,4 +15,14 @@ export const articleService = {
   async updateArticle(id: bigint, data: UpdateArticleInput) {
     return articleRepository.updateById(id, data);
   },
+   async publishArticle(id: bigint) {
+    const article = await articleRepository.findById(id);
+    if (!article) {
+      return null;
+    }
+    if (article.status === "published") {
+      throw new Error("already_published");
+    }
+    return articleRepository.publishById(id);
+  },
 };

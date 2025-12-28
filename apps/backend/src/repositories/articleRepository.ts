@@ -25,4 +25,10 @@ export const articleRepository = {
       data,
     });
   },
+  async publishById(id: bigint) {
+    return prisma.article.update({
+      where: { id },
+      data: { status: "published" },
+    });
+  },
 };
