@@ -49,5 +49,5 @@ export default function BlockPage() {
   );
 
   // OKなら配下を描画
-  return <Outlet />;
+  return <Outlet context={user}/>;
 }
