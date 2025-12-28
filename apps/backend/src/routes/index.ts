@@ -8,10 +8,15 @@ import { validateBody } from '../middlewares/validationMiddleware'
 import { loginFormSchema, otpVerifySchema, signupFormSchema } from '../types/validationType';
 import { authenticateUser } from '../middlewares/sessionMiddleware';
 import { indexController } from '../controllers/indexController';
-import {createArticleController,getArticlesController,getArticleDetailController,} from "../controllers/articleController";
+import {
+  createArticleController,
+  getArticlesController,
+  getArticleDetailController,
+  updateArticleController,
+} from "../controllers/articleController";
 
 import { createArticleSchema } from '../types/articleSchema';
-
+import { updateArticleSchema } from "../types/articleSchema";
 
 const router = Router();
 
@@ -37,4 +42,7 @@ router.get("/articles", /*authenticateUser,*/ getArticlesController);
 
 // 記事詳細取得
 router.get("/articles/:id", /*authenticateUser,*/ getArticleDetailController);
+
+// 下書き更新
+router.put("/articles/:id",/*authenticateUser,*/validateBody(updateArticleSchema),updateArticleController);
 export default router;

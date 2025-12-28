@@ -101,3 +101,45 @@ export const getArticleDetailController = async (
     });
   }
 };
+
+export const updateArticleController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const id = BigInt(req.params.id);
+
+    const article = await articleService.updateArticle(id, req.body);
+
+    return res.json({
+      success: true,
+      data: {
+        id: article.id.toString(),
+        title: article.title,
+        content: article.content,
+        status: article.status,
+        updatedAt: article.updatedAt,
+      },
+    });
+  } catch (err: any) {
+    // Prisma: レコードが存在しない場合
+    if (err.code === "P2025") {
+      return res.status(404).json({
+        success: false,
+        error: {
+          type: "not_found",
+          message: "article not found",
+        },
+      });
+    }
+
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      error: {
+        type: "internal_error",
+        message: "failed to update article",
+      },
+    });
+  }
+};
