@@ -9,6 +9,7 @@ import { loginFormSchema, otpVerifySchema, signupFormSchema } from '../types/val
 import { authenticateUser } from '../middlewares/sessionMiddleware';
 import { indexController } from '../controllers/indexController';
 import { eventsController } from '../controllers/eventsController';
+import { participateController } from '../controllers/participateController';
 
 const router = Router();
 
@@ -28,5 +29,8 @@ router.post('/auth/session', authenticateUser, indexController);
 
 // /api/events
 router.get('/events', authenticateUser, eventsController);
+
+// /api/events/:eventId/participate
+router.post('/events/:eventId/participate', authenticateUser, participateController);
 
 export default router;
