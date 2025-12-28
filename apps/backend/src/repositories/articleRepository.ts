@@ -7,4 +7,10 @@ export const articleRepository = {
       data,
     });
   },
+  async findByStatus(status: string) {
+    return prisma.article.findMany({
+      where: { status },
+      orderBy: { createdAt: "desc" },
+    });
+  },
 };

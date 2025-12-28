@@ -8,7 +8,7 @@ import { validateBody } from '../middlewares/validationMiddleware'
 import { loginFormSchema, otpVerifySchema, signupFormSchema } from '../types/validationType';
 import { authenticateUser } from '../middlewares/sessionMiddleware';
 import { indexController } from '../controllers/indexController';
-import { createArticleController } from '../controllers/articleController';
+import { createArticleController, getArticlesController } from '../controllers/articleController';
 import { createArticleSchema } from '../types/articleSchema';
 
 
@@ -31,4 +31,6 @@ router.post('/auth/session', authenticateUser, indexController);
 // /api/articles
 router.post('/articles', /*authenticateUser,*/ validateBody(createArticleSchema), createArticleController);
 
+// 下書き一覧取得
+router.get("/articles", /*authenticateUser,*/ getArticlesController);
 export default router;
