@@ -22,6 +22,17 @@ export const participateRepository = {
         }
       }
     });
-  }
+  },
 
+  // 参加取り消し ← 追加
+  async delete(userId: bigint, eventId: bigint) {
+    return await prisma.eventParticipant.delete({
+      where: {
+        userId_eventId: {
+          userId: userId,
+          eventId: eventId
+        }
+      }
+    });
+  }
 }

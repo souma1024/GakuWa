@@ -13,6 +13,15 @@ export const participateService = {
 
     // 参加登録
     return await participateRepository.create(userId, eventId);
-  }
+  },
 
+  // イベント参加を取り消す ← 追加
+  async cancelParticipate(userId: bigint, eventId: bigint) {
+    const existing = await participateRepository.findByUserAndEvent(userId, eventId);
+    if (!existing) {
+      throw new ApiError('not_found', 'このイベントに参加していません');
+    }
+
+    return await participateRepository.delete(userId, eventId);
+  }
 }

@@ -10,6 +10,7 @@ import { authenticateUser } from '../middlewares/sessionMiddleware';
 import { indexController } from '../controllers/indexController';
 import { eventsController } from '../controllers/eventsController';
 import { participateController } from '../controllers/participateController';
+import { cancelParticipateController } from '../controllers/cancelParticipateController'
 
 const router = Router();
 
@@ -32,5 +33,8 @@ router.get('/events', authenticateUser, eventsController);
 
 // /api/events/:eventId/participate
 router.post('/events/:eventId/participate', authenticateUser, participateController);
+
+// /api/events/:eventId/participate
+router.delete('/events/:eventId/participate', authenticateUser, cancelParticipateController);
 
 export default router;
