@@ -8,6 +8,9 @@ import { validateBody } from '../middlewares/validationMiddleware'
 import { loginFormSchema, otpVerifySchema, signupFormSchema } from '../types/validationType';
 import { authenticateUser } from '../middlewares/sessionMiddleware';
 import { indexController } from '../controllers/indexController';
+import { createArticleController } from '../controllers/articleController';
+import { createArticleSchema } from '../types/articleSchema';
+
 
 const router = Router();
 
@@ -24,5 +27,8 @@ router.post('/auth/otp/verify', validateBody(otpVerifySchema), otpController);
 router.post('/auth/otp/send', reOtpController);
 // /api/auth/session
 router.post('/auth/session', authenticateUser, indexController);
+
+// /api/articles
+router.post('/articles', /*authenticateUser,*/ validateBody(createArticleSchema), createArticleController);
 
 export default router;
