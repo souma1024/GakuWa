@@ -14,6 +14,7 @@ import {
   getArticleDetailController,
   updateArticleController,
   publishArticleController,
+  deleteArticleController,
 } from "../controllers/articleController";
 
 import { createArticleSchema } from '../types/articleSchema';
@@ -48,4 +49,6 @@ router.get("/articles/:id", /*authenticateUser,*/ getArticleDetailController);
 router.put("/articles/:id",/*authenticateUser,*/validateBody(updateArticleSchema),updateArticleController);
 
 router.patch("/articles/:id/publish",/*authenticateUser,*/publishArticleController);
+
+router.delete("/articles/:id",/*authenticateUser,*/deleteArticleController);
 export default router;

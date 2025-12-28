@@ -31,4 +31,9 @@ export const articleRepository = {
       data: { status: "published" },
     });
   },
+  async deleteById(id: bigint) {
+    return prisma.article.delete({
+      where: { id },
+    });
+  },
 };

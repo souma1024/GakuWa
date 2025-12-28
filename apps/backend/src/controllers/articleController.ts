@@ -192,3 +192,37 @@ export const publishArticleController = async (
     });
   }
 };
+
+export const deleteArticleController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const id = BigInt(req.params.id);
+
+    await articleService.deleteArticle(id);
+
+    // 削除成功：レスポンスボディなし
+    return res.status(204).send();
+  } catch (err: any) {
+    // Prisma: 対象が存在しない
+    if (err.code === "P2025") {
+      return res.status(404).json({
+        success: false,
+        error: {
+          type: "not_found",
+          message: "article not found",
+        },
+      });
+    }
+
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      error: {
+        type: "internal_error",
+        message: "failed to delete article",
+      },
+    });
+  }
+};

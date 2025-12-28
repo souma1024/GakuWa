@@ -25,4 +25,7 @@ export const articleService = {
     }
     return articleRepository.publishById(id);
   },
+  async deleteArticle(id: bigint) {
+    return articleRepository.deleteById(id);
+  },
 };
