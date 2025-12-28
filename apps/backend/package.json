@@ -29,9 +29,11 @@
     "cookie-parser": "^1.4.7",
     "express": "^5.1.0",
     "minio": "^8.0.6",
+    "multer": "^2.0.2",
     "mysql2": "^3.15.3",
     "nodemailer": "^7.0.10",
     "prisma": "^6.19.1",
+    "uuid": "^13.0.0",
     "zod": "^4.1.13"
   },
   "devDependencies": {
@@ -42,6 +44,7 @@
     "@types/express": "^5.0.5",
     "@types/istanbul-lib-report": "^3.0.3",
     "@types/jest": "^29.5.14",
+    "@types/multer": "^2.0.0",
     "@types/node": "^24.10.1",
     "@types/nodemailer": "^7.0.4",
     "@types/yargs-parser": "^21.0.3",
