@@ -8,6 +8,7 @@ import { validateBody } from '../middlewares/validationMiddleware'
 import { loginFormSchema, otpVerifySchema, signupFormSchema } from '../types/validationType';
 import { authenticateUser } from '../middlewares/sessionMiddleware';
 import { indexController } from '../controllers/indexController';
+import { eventsController } from '../controllers/eventsController';
 
 const router = Router();
 
@@ -24,5 +25,8 @@ router.post('/auth/otp/verify', validateBody(otpVerifySchema), otpController);
 router.post('/auth/otp/send', reOtpController);
 // /api/auth/session
 router.post('/auth/session', authenticateUser, indexController);
+
+// /api/events
+router.get('/events', authenticateUser, eventsController);
 
 export default router;
