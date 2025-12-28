@@ -13,4 +13,9 @@ export const articleRepository = {
       orderBy: { createdAt: "desc" },
     });
   },
+  async findById(id: bigint) {
+    return prisma.article.findUnique({
+      where: { id },
+    });
+  },
 };

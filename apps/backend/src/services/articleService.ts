@@ -9,4 +9,7 @@ export const articleService = {
   async getArticlesByStatus(status: string) {
     return articleRepository.findByStatus(status);
   },
+  async getArticleById(id: bigint) {
+    return articleRepository.findById(id);
+  },
 };

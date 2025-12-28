@@ -59,3 +59,45 @@ export const getArticlesController = async (
     });
   }
 };
+
+export const getArticleDetailController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const id = BigInt(req.params.id);
+
+    const article = await articleService.getArticleById(id);
+
+    if (!article) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          type: "not_found",
+          message: "article not found",
+        },
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: {
+        id: article.id.toString(), // BigInt対策
+        title: article.title,
+        content: article.content,
+        status: article.status,
+        createdAt: article.createdAt,
+        updatedAt: article.updatedAt,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      error: {
+        type: "internal_error",
+        message: "failed to fetch article",
+      },
+    });
+  }
+};
