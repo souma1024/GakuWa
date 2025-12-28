@@ -5,9 +5,12 @@ import { preSignupController } from '../controllers/preSignupController'
 import { otpController } from '../controllers/otpController'
 import { reOtpController } from '../controllers/reOtpController'
 import { validateBody } from '../middlewares/validationMiddleware'
-import { loginFormSchema, otpVerifySchema, signupFormSchema } from '../types/validationType';
+import { loginFormSchema, otpVerifySchema, signupFormSchema } from '../types/validationType'
 import { authenticateUser } from '../middlewares/sessionMiddleware';
 import { indexController } from '../controllers/indexController';
+import { imageUploadController } from '../controllers/imageUploadController'
+import { imageGetController } from '../controllers/imageGetController'
+import { upload } from '../middlewares/imageMiddleware'
 
 const router = Router();
 
@@ -24,5 +27,9 @@ router.post('/auth/otp/verify', validateBody(otpVerifySchema), otpController);
 router.post('/auth/otp/send', reOtpController);
 // /api/auth/session
 router.post('/auth/session', authenticateUser, indexController);
+
+router.post('/images/upload', authenticateUser, upload.single('file'),  imageUploadController);
+router.get('/images/avatars/:handle/:key', imageGetController);
+router.get('/images/avatars/:key', imageGetController);
 
 export default router;
