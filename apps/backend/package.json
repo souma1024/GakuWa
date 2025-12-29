@@ -8,17 +8,6 @@
     "start": "node dist/server.js",
     "test": "jest"
   },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "moduleFileExtensions": [
-      "ts",
-      "js"
-    ],
-    "testMatch": [
-      "**/__tests__/**/*.test.ts"
-    ]
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
