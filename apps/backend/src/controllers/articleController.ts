@@ -6,17 +6,23 @@ export const createArticleController = async (
   res: Response
 ) => {
   try {
-    const article = await articleService.createArticle(req.body);
+    const { title, content, categoryId } = req.body;
 
-    return res.json({
-      success: true,
-      data: {
-        id: article.id.toString(),
-        title: article.title,
-        status: article.status,
-        createdAt: article.createdAt,
-      },
+    const article = await articleService.createArticle({
+      title,
+      content,
+      categoryId,
     });
+
+  return res.status(201).json({
+  success: true,
+  data: {
+    id: article.id.toString(),
+    title: article.title,
+    status: article.status,
+    createdAt: article.createdAt,
+  },
+});  
   } catch (err) {
     console.error(err);
     return res.status(500).json({
@@ -29,7 +35,7 @@ export const createArticleController = async (
   }
 };
 
-// ★ これを必ず export する
+
 export const getArticlesController = async (
   req: Request,
   res: Response
@@ -65,24 +71,29 @@ export const getArticleDetailController = async (
   res: Response
 ) => {
   try {
-    const id = BigInt(req.params.id);
+    const { id } = req.params;
 
-    const article = await articleService.getArticleById(id);
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        error: { message: "id is required" },
+      });
+    }
+
+    const articleId = BigInt(id);
+    const article = await articleService.getArticleById(articleId);
 
     if (!article) {
       return res.status(404).json({
         success: false,
-        error: {
-          type: "not_found",
-          message: "article not found",
-        },
+        error: { message: "article not found" },
       });
     }
 
     return res.json({
       success: true,
       data: {
-        id: article.id.toString(), // BigInt対策
+        id: article.id.toString(),
         title: article.title,
         content: article.content,
         status: article.status,
@@ -94,13 +105,11 @@ export const getArticleDetailController = async (
     console.error(err);
     return res.status(500).json({
       success: false,
-      error: {
-        type: "internal_error",
-        message: "failed to fetch article",
-      },
+      error: { message: "failed to fetch article" },
     });
   }
 };
+
 
 export const updateArticleController = async (
   req: Request,
