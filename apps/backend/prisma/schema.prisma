@@ -43,7 +43,7 @@ model User {
   role   UserRole   @default(user)
   status UserStatus @default(pending)
 
-  avatarUrl String  @default("https://example.com/default-avatar.png") @map("avatar_url") @db.VarChar(255)
+  avatarUrl String  @default("default_avatar.png") @map("avatar_url") @db.VarChar(255)
   profile   String? @db.Text
   discordId String? @map("discord_id") @db.VarChar(100)
 
