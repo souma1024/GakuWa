@@ -5,7 +5,7 @@ import { preSignupController } from '../controllers/preSignupController'
 import { otpController } from '../controllers/otpController'
 import { reOtpController } from '../controllers/reOtpController'
 import { validateBody } from '../middlewares/validationMiddleware'
-import { loginFormSchema, otpVerifySchema, signupFormSchema } from '../types/validationType';
+import { loginFormSchema, otpVerifySchema, signupFormSchema } from '../types/validationType'
 import { authenticateUser } from '../middlewares/sessionMiddleware';
 import { indexController } from '../controllers/indexController';
 import {
@@ -19,6 +19,9 @@ import {
 
 import { createArticleSchema } from '../types/articleSchema';
 import { updateArticleSchema } from "../types/articleSchema";
+import { imageUploadController } from '../controllers/imageUploadController'
+import { imageGetController } from '../controllers/imageGetController'
+import { upload } from '../middlewares/imageMiddleware'
 
 const router = Router();
 
@@ -51,4 +54,8 @@ router.put("/articles/:id",/*authenticateUser,*/validateBody(updateArticleSchema
 router.patch("/articles/:id/publish",/*authenticateUser,*/publishArticleController);
 
 router.delete("/articles/:id",/*authenticateUser,*/deleteArticleController);
+router.post('/images/upload', authenticateUser, upload.single('file'),  imageUploadController);
+router.get('/images/avatars/:handle/:key', imageGetController);
+router.get('/images/avatars/:key', imageGetController);
+
 export default router;
