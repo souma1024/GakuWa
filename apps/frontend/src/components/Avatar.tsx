@@ -20,7 +20,6 @@ export default function Avatar({ src, user }: Props) {
   const url: string = '/api/images/avatars/' + src;
   const navigate = useNavigate();
 
-  console.log("avatar.tsx: ", url);
   return (
     <>
       <img src={url} alt="avatar" onClick={() => navigate(`/${user.handle}/profile`, {state: user})} style={{
@@ -28,8 +27,7 @@ export default function Avatar({ src, user }: Props) {
         height: "40px",
         width: "40px",
         marginRight: "20px",
-        border: "solid",
-        borderColor: "blue",
+        border: "1px solid blue",
         cursor: "pointer",
       }} />
     </>
