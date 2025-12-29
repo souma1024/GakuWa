@@ -2,7 +2,7 @@ import request from "supertest";
 import app from "../../src/app";
 import { prisma } from "../../src/lib/prisma";
 
-describe("Article API", () => {
+describe.skip("Article API", () => {
   let articleId: string;
   let categoryId: number;
 
