@@ -4,6 +4,7 @@ import OtpVerifyPage from "../pages/OtpVerifyPage";
 import HomePage from "../pages/HomePage";
 import LoginPage from "../pages/LoginPage";
 import BlockPage from "../components/BlockPage";
+import ArticlesList from "../pages/ArticlesList";
 import MainLayout from "../layout/MainLayout";
 import ProfilePage from "../pages/ProfilePage";
 
@@ -22,6 +23,10 @@ function App() {
       
       {/* ユーザーホーム画面 */}
       <Route element={<BlockPage />}>
+
+        {/* ★ 記事一覧 */}
+        <Route path="/articles" element={<ArticlesList />} />
+
         <Route element={<MainLayout/>}>
           <Route path="/" element={<HomePage />} />
           <Route path="/:handle" element={<HomePage />} />
