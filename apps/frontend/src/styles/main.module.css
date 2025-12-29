@@ -1,0 +1,43 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  border-bottom: solid;
+  border-bottom-color: darkgrey;
+  justify-content: space-between;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+}
+
+.content {
+  flex: 12;
+  overflow-y: auto;
+}
+
+.appTitle {
+  font-size: 28px;
+  margin-left: 24px;
+  font-family: "Arial Black";
+  line-height: 0.3;
+  color: rgb(71, 126, 255);
+}
+
+.search {
+  margin-right: 20px;
+  border-radius: 10px;
+  width: 200px;
+}
+
+.footer {
+  background-color: aqua;
+  margin-top: auto;
+}
