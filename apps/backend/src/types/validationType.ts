@@ -47,7 +47,6 @@ export const otpVerifySchema = z.object({
   .regex(/^\d{6}$/, { error: "OTPは6桁の数字のみで入力してください" }),
 });
 
-
 export type signupData = z.infer<typeof signupFormSchema>;
 export type loginData = z.infer<typeof loginFormSchema>;
 export type otpData = z.infer<typeof otpVerifySchema>;
