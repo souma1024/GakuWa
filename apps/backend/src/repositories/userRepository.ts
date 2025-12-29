@@ -58,5 +58,18 @@ export const userRepository = {
         id: orderBy
       },
     })
+  },
+
+  async updateUserProfile(id: bigint, name?: string, profile?: string) {
+    const user = await prisma.user.update({
+      data: {
+        name: name === undefined ? undefined : name,
+        profile: profile === undefined ? undefined : profile,
+      },
+      where: {
+        id: id
+      }
+    })
+    return user;
   }
 }

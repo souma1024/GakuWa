@@ -10,6 +10,7 @@ import { authenticateUser } from '../middlewares/sessionMiddleware';
 import { indexController } from '../controllers/indexController';
 import { imageUploadController } from '../controllers/imageUploadController'
 import { imageGetController } from '../controllers/imageGetController'
+import { updateProfileController } from '../controllers/updateProfileController'
 import { upload } from '../middlewares/imageMiddleware'
 
 const router = Router();
@@ -28,8 +29,12 @@ router.post('/auth/otp/send', reOtpController);
 // /api/auth/session
 router.post('/auth/session', authenticateUser, indexController);
 
+// 画像関係
 router.post('/images/upload', authenticateUser, upload.single('file'),  imageUploadController);
 router.get('/images/avatars/:handle/:key', imageGetController);
 router.get('/images/avatars/:key', imageGetController);
+
+// プロフィール編集
+router.patch('/profile', authenticateUser, updateProfileController);
 
 export default router;

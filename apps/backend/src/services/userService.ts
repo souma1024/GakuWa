@@ -129,5 +129,22 @@ export const userService = {
     await emailService.sendVerificationEmail(input.email, otpCode);
 
     return (await preUser).publicToken;
+  },
+
+  async updateProfile(id: bigint, name?: string, profile?: string) {
+
+    const user = await userRepository.updateUserProfile(id, name, profile);
+    if (!user) {
+      throw new ApiError('database_error', 'ユーザー情報更新に失敗しました');
+    }
+ 
+    return {
+      handle: user.handle,
+      name: user.name,
+      avatarUrl: user.avatarUrl,
+      profile: user.profile,
+      followersCount: user.followersCount,
+      followingsCount: user.followingsCount,
+    };
   }
 }

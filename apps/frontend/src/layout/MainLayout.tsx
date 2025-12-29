@@ -4,18 +4,10 @@ import Button from '../components/Button';
 import Avatar from '../components/Avatar';
 import { Outlet } from "react-router-dom";
 import { useOutletContext } from "react-router-dom";
-
-type OutletContext = {
-  handle: string;
-  name: string;
-  avatarUrl: string;
-  profile: string | null;
-  followersCount: number;
-  followingsCount: number;
-};
+import { OutletContext } from '../pages/BlockPage';
 
 export default function MainLayout() {
-  const user = useOutletContext<OutletContext>();
+  const { user, setUser } = useOutletContext<OutletContext>();
 
   return (
     <div id="main" className={styles.main}>
@@ -35,7 +27,7 @@ export default function MainLayout() {
       </div>
 
       <div id="content" className={styles.content}>
-        <Outlet />
+        <Outlet context={{user, setUser}}/>
       </div>
     </div>
   );
