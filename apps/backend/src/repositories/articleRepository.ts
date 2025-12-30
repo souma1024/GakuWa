@@ -10,7 +10,7 @@ export const articleRepository = {
         title,
         content,
         status: "draft",
-        category: {
+        categories: {
           connect: {
             id: BigInt(categoryId), // ← ここが重要
           },
