@@ -34,6 +34,7 @@ import { imageUploadController } from '../controllers/imageUploadController'
 import { imageGetController } from '../controllers/imageGetController'
 import { updateProfileController } from '../controllers/updateProfileController'
 import { upload } from '../middlewares/imageMiddleware'
+import { createTagController } from "../controllers/tagController";
 
 
 const router = Router()
@@ -108,5 +109,9 @@ router.get('/images/avatars/:key', imageGetController);
 
 // プロフィール編集
 router.patch('/profile', authenticateUser, updateProfileController);
+
+// タグ作成
+router.post("/tags", createTagController);
+
 
 export default router;
