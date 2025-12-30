@@ -5,7 +5,7 @@ export const articleRepository = {
   async create(data: CreateArticleInput) {
     const { title, content, categoryId } = data;
 
-    return prisma.article.create({
+    return await prisma.article.create({
       data: {
         title,
         content,
@@ -19,35 +19,35 @@ export const articleRepository = {
     });
   },
 
-  async findByStatus(status: string) {
-    return prisma.article.findMany({
+  async findArticlesByStatus(status: string) {
+    return await prisma.article.findMany({
       where: { status },
       orderBy: { createdAt: "desc" },
     });
   },
 
   async findById(id: bigint) {
-    return prisma.article.findUnique({
+    return await prisma.article.findUnique({
       where: { id },
     });
   },
 
   async updateById(id: bigint, data: UpdateArticleInput) {
-    return prisma.article.update({
+    return await prisma.article.update({
       where: { id },
       data,
     });
   },
 
   async publishById(id: bigint) {
-    return prisma.article.update({
+    return await prisma.article.update({
       where: { id },
       data: { status: "published" },
     });
   },
 
   async deleteById(id: bigint) {
-    return prisma.article.delete({
+    return await prisma.article.delete({
       where: { id },
     });
   },
