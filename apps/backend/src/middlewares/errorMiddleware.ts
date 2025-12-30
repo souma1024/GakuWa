@@ -10,6 +10,15 @@ export const errorHandler = (err: any, _req: Request, res: Response, _next: Next
         : { success: false, error: {status:err.status, type: err.type, message: err.message } };
 
     return res.status(err.status).json(body);
+  } else if (err.code === "P2025") {
+    
+    return res.status(404).json({
+      success: false,
+      error: {
+        type: "not_found",
+        message: "article not found",
+      },
+    });
   }
 
   // 異常エラー
