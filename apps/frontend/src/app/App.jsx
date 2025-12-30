@@ -3,8 +3,8 @@ import SignupPage from "../pages/SignupPage";
 import OtpVerifyPage from "../pages/OtpVerifyPage";
 import HomePage from "../pages/HomePage";
 import LoginPage from "../pages/LoginPage";
-import BlockPage from "../components/BlockPage";
 import ArticlesList from "../pages/ArticlesList";
+import BlockPage from "../pages/BlockPage";
 import MainLayout from "../layout/MainLayout";
 import ProfilePage from "../pages/ProfilePage";
 

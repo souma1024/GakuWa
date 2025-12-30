@@ -12,9 +12,6 @@ export const imageGetController = async (req: Request, res: Response, next: Next
     let stream: NodeJS.ReadableStream;
     let contentType: string;
 
-    console.log('key: ',key);
-    console.log('handle: ', handle)
-
     if (handle) {
       ({ stream, contentType} = await imageService.getImageStream(key, handle));
     } else {

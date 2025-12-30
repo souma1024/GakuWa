@@ -32,6 +32,7 @@ import { createArticleSchema } from '../types/articleSchema';
 import { updateArticleSchema } from "../types/articleSchema";
 import { imageUploadController } from '../controllers/imageUploadController'
 import { imageGetController } from '../controllers/imageGetController'
+import { updateProfileController } from '../controllers/updateProfileController'
 import { upload } from '../middlewares/imageMiddleware'
 
 
@@ -100,8 +101,12 @@ router.get('/images/avatars/:key', imageGetController)
 
 
 router.delete("/articles/:id",/*authenticateUser,*/deleteArticleController);
+// 画像関係
 router.post('/images/upload', authenticateUser, upload.single('file'),  imageUploadController);
 router.get('/images/avatars/:handle/:key', imageGetController);
 router.get('/images/avatars/:key', imageGetController);
 
-export default router
+// プロフィール編集
+router.patch('/profile', authenticateUser, updateProfileController);
+
+export default router;
