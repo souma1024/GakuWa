@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GakuWa - 記事検索</title>
+    <style>
+        /* --- 共通設定 (GakuWaテーマ) --- */
+        :root {
+            --primary-blue: #4A90E2; /* GakuWaロゴに近い青 */
+            --bg-color: #F5F7FA;
+            --white: #FFFFFF;
+            --text-main: #333333;
+            --text-sub: #777777;
+            --border-color: #E1E4E8;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* --- ヘッダー --- */
+        header {
+            background-color: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-blue); /* ロゴ色 */
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+        }
+
+        .user-icon-header {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #ccc;
+            overflow: hidden;
+        }
+        .user-icon-header img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* --- メインレイアウト (3カラム) --- */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 200px 1fr 200px; /* 左サイド・メイン・右サイド */
+            gap: 20px;
+            padding: 0 10px;
+        }
+
+        /* サイドバー (手書きメモのAdd部分) */
+        .sidebar {
+            background-color: #E8E8E8; /* グレーのプレースホルダー */
+            height: 300px; /* 仮の高さ */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            border-radius: 8px;
+        }
+
+        /* --- 検索エリア (メインカラム) --- */
+        .search-header {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .search-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .search-input-wrapper {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button.search-btn {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* --- 記事リスト --- */
+        .article-list {
+            background: var(--white);
+            min-height: 400px;
+            border-radius: 0 0 8px 8px;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        /* カードデザイン (手書きメモ準拠) */
+        .article-card {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .article-card:hover {
+            background-color: #fafafa;
+        }
+
+        /* ユーザー情報 (メモでは右上にアイコンがあるが、一般的には左上が多い。メモに合わせて調整) */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .author-info {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
+
+        .author-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #eee;
+        }
+
+        .article-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-main);
+            margin: 5px 0;
+        }
+
+        .article-summary {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            line-height: 1.5;
+        }
+
+        /* タグ (DBにないので仮デザイン) */
+        .tags {
+            display: flex;
+            gap: 8px;
+            margin-top: 5px;
+        }
+        .tag {
+            background-color: #f0f0f0;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: #555;
+            border: 1px solid #ddd;
+        }
+
+        /* アクション (いいね数など) */
+        .card-footer {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* レスポンシブ対応 (スマホでサイドバーを消す) */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">GakuWa</div>
+        <nav class="nav-links">
+            <a href="#">ホーム</a>
+            <a href="#">イベント</a>
+            <a href="#">ブログ作成</a>
+        </nav>
+        <div class="user-icon-header">
+            <img src="https://placehold.co/100x100/4A90E2/white?text=Me" alt="User">
+        </div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">Add</aside>
+
+        <main>
+            <div class="search-header">
+                <div class="search-input-wrapper">
+                    <input type="text" id="searchInput" placeholder="キーワードを入力 (例: 初心者)">
+                    <button class="search-btn" id="searchBtn">検索</button>
+                </div>
+                <p id="resultMsg" style="margin-top:10px; font-size:0.9rem; color:#666;"></p>
+            </div>
+
+            <ul id="articleList" class="article-list">
+                <li style="padding:20px; text-align:center; color:#888;">検索してください</li>
+            </ul>
+            
+            <div id="pagination" style="text-align:center; padding:20px; display:none;">
+                <button id="prevBtn">前へ</button>
+                <span id="pageInfo" style="margin:0 10px;"></span>
+                <button id="nextBtn">次へ</button>
+            </div>
+        </main>
+
+        <aside class="sidebar">Add</aside>
+    </div>
+
+    <script>
+        const API_URL = '/api/articles/search'; // 環境に合わせて変更
+        
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const articleList = document.getElementById('articleList');
+        const resultMsg = document.getElementById('resultMsg');
+
+        // 検索実行
+        async function executeSearch() {
+            const keyword = searchInput.value;
+            if(!keyword) return;
+
+            resultMsg.textContent = `「${keyword}」の検索結果`;
+            articleList.innerHTML = '<li style="padding:20px; text-align:center;">Loading...</li>';
+
+            try {
+                // APIリクエスト
+                const res = await fetch(`${API_URL}?q=${encodeURIComponent(keyword)}&limit=10`);
+                if(!res.ok) throw new Error('Network error');
+                const data = await res.json();
+
+                renderArticles(data.articles);
+            } catch (e) {
+                console.error(e);
+                articleList.innerHTML = '<li style="padding:20px; text-align:center; color:red;">エラーが発生しました</li>';
+            }
+        }
+
+        // 記事描画
+        function renderArticles(articles) {
+            if(articles.length === 0) {
+                articleList.innerHTML = '<li style="padding:20px; text-align:center;">記事が見つかりませんでした</li>';
+                return;
+            }
+
+            articleList.innerHTML = '';
+            articles.forEach(article => {
+                // 手書きメモのデザインを再現
+                const li = document.createElement('li');
+                li.className = 'article-card';
+                li.innerHTML = `
+                    <div class="card-header">
+                        <div class="author-info">
+                            <div>${escapeHtml(article.author.name)} (@${escapeHtml(article.author.handle)})</div>
+                            <div style="font-size:0.8rem; color:#aaa;">${new Date(article.publishedAt).toLocaleDateString()}</div>
+                        </div>
+                        <img src="${article.author.avatarUrl || 'https://placehold.co/40'}" class="author-icon" alt="icon">
+                    </div>
+                    
+                    <a href="/articles/${article.handle}" class="article-title">${escapeHtml(article.title)}</a>
+                    
+                    <div class="article-summary">${escapeHtml(article.summary)}</div>
+
+                    <div class="tags">
+                        <span class="tag">C言語</span>
+                        <span class="tag">初心者</span>
+                    </div>
+
+                    <div class="card-footer">
+                        <span class="stat-item">♡ ${article.likesCount}</span>
+                        <span class="stat-item">👍 0</span> <span class="stat-item">👀 ${article.viewsCount}</span>
+                    </div>
+                `;
+                articleList.appendChild(li);
+            });
+        }
+
+        function escapeHtml(str) {
+            if(!str) return '';
+            return str.replace(/[&<>"']/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[m]);
+        }
+
+        searchBtn.addEventListener('click', executeSearch);
+        searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeSearch(); });
+    </script>
+</body>
+</html>
