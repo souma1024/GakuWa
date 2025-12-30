@@ -137,6 +137,8 @@ model Article {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("articles")
 }
 
 
@@ -145,4 +147,5 @@ model Category {
   name String @unique @db.VarChar(50)
 
   articles Article[]
+  @@map("categories")
 }
