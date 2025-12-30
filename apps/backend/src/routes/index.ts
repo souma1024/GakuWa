@@ -5,30 +5,102 @@ import { preSignupController } from '../controllers/preSignupController'
 import { otpController } from '../controllers/otpController'
 import { reOtpController } from '../controllers/reOtpController'
 import { validateBody } from '../middlewares/validationMiddleware'
-import { loginFormSchema, otpVerifySchema, signupFormSchema } from '../types/validationType'
-import { authenticateUser } from '../middlewares/sessionMiddleware';
-import { indexController } from '../controllers/indexController';
+
+import {
+  loginFormSchema,
+  otpVerifySchema,
+  signupFormSchema,
+} from '../types/validationType'
+import { authenticateUser } from '../middlewares/sessionMiddleware'
+import { indexController } from '../controllers/indexController'
+
+// ===== 記事関連 =====
+
+
+import {
+  createArticleController,
+  getArticlesController,
+  getArticleDetailController,
+  updateArticleController,
+  publishArticleController,
+  deleteArticleController,
+} from '../controllers/articleController'
+
+
+
+import { createArticleSchema } from '../types/articleSchema';
+import { updateArticleSchema } from "../types/articleSchema";
 import { imageUploadController } from '../controllers/imageUploadController'
 import { imageGetController } from '../controllers/imageGetController'
 import { updateProfileController } from '../controllers/updateProfileController'
 import { upload } from '../middlewares/imageMiddleware'
 
-const router = Router();
 
-// /api/auth/login
-router.post('/auth/login', validateBody(loginFormSchema), loginController); 
+const router = Router()
 
-// /api/auth/preSignup
-router.post('/auth/preSignup', validateBody(signupFormSchema), preSignupController); 
+// ===== Auth =====
+router.post('/auth/login', validateBody(loginFormSchema), loginController)
+router.post('/auth/preSignup', validateBody(signupFormSchema), preSignupController)
+router.post('/auth/otp/verify', validateBody(otpVerifySchema), otpController)
+router.post('/auth/otp/send', reOtpController)
+router.post('/auth/session', authenticateUser, indexController)
 
-// /api/auth/otp/verify
-router.post('/auth/otp/verify', validateBody(otpVerifySchema), otpController);
+// ===== Articles =====
+router.post(
+  '/articles',
+  /* authenticateUser, */
+  validateBody(createArticleSchema),
+  createArticleController
+)
 
-// /api/auth/otp/send
-router.post('/auth/otp/send', reOtpController);
-// /api/auth/session
-router.post('/auth/session', authenticateUser, indexController);
+router.get(
+  '/articles',
+  /* authenticateUser, */
+  getArticlesController
+)
 
+
+router.get(
+  '/articles/:id',
+  /* authenticateUser, */
+  getArticleDetailController
+)
+
+router.put(
+  '/articles/:id',
+  /* authenticateUser, */
+  validateBody(updateArticleSchema),
+  updateArticleController
+)
+// /api/articles
+router.post('/articles', /*authenticateUser,*/ validateBody(createArticleSchema), createArticleController);
+
+
+router.patch(
+  '/articles/:id/publish',
+  /* authenticateUser, */
+  publishArticleController
+)
+
+router.delete(
+  '/articles/:id',
+  /* authenticateUser, */
+  deleteArticleController
+)
+
+// ===== Images =====
+router.post(
+  '/images/upload',
+  authenticateUser,
+  upload.single('file'),
+  imageUploadController
+)
+
+router.get('/images/avatars/:handle/:key', imageGetController)
+router.get('/images/avatars/:key', imageGetController)
+
+
+router.delete("/articles/:id",/*authenticateUser,*/deleteArticleController);
 // 画像関係
 router.post('/images/upload', authenticateUser, upload.single('file'),  imageUploadController);
 router.get('/images/avatars/:handle/:key', imageGetController);

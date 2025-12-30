@@ -3,6 +3,7 @@ import SignupPage from "../pages/SignupPage";
 import OtpVerifyPage from "../pages/OtpVerifyPage";
 import HomePage from "../pages/HomePage";
 import LoginPage from "../pages/LoginPage";
+import ArticlesList from "../pages/ArticlesList";
 import BlockPage from "../pages/BlockPage";
 import MainLayout from "../layout/MainLayout";
 import ProfilePage from "../pages/ProfilePage";
@@ -22,6 +23,10 @@ function App() {
       
       {/* ユーザーホーム画面 */}
       <Route element={<BlockPage />}>
+
+        {/* ★ 記事一覧 */}
+        <Route path="/articles" element={<ArticlesList />} />
+
         <Route element={<MainLayout/>}>
           <Route path="/" element={<HomePage />} />
           <Route path="/:handle" element={<HomePage />} />
