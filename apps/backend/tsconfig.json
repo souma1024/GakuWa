@@ -18,6 +18,8 @@
     // 既存 JS も混在させる場合（少しずつ TS へ移行用）
     "allowJs": true,
     "types": ["node", "jest"],
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    
     // デバッグ用
     "sourceMap": true
   },

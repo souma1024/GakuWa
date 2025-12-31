@@ -35,7 +35,8 @@ import { imageGetController } from '../controllers/imageGetController'
 import { updateProfileController } from '../controllers/updateProfileController'
 import { upload } from '../middlewares/imageMiddleware'
 import { createTagController } from "../controllers/tagController";
-
+import {updateTagController,} from "../controllers/tagController";
+import { adminOnly } from "../middlewares/adminMiddleware";
 
 const router = Router()
 
@@ -112,6 +113,13 @@ router.patch('/profile', authenticateUser, updateProfileController);
 
 // タグ作成
 router.post("/tags", createTagController);
+router.put("/admin/tags/:tagId", authenticateUser, updateTagController);
 
 
+router.put(
+  "/admin/tags/:tagId",
+  authenticateUser, // ① セッション確認
+  adminOnly,        // ② 管理者確認
+  updateTagController
+);
 export default router;

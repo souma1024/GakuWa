@@ -13,26 +13,37 @@ import { prisma } from '../lib/prisma'
 import { LoginRequest, PreSignupRequest } from '../dtos/users/requestDto'
 
 export const userService = {
-  async login(input: LoginRequest): Promise<LoginResponse> {
-    const user = await userRepository.findByEmail(input.email);
-    if (!user) {
-      throw new ApiError('authentication_error', 'ユーザーが存在しません');
-    }
+  async login(input: LoginRequest) {
+  const user = await userRepository.findByEmail(input.email);
+  if (!user) {
+    throw new ApiError('authentication_error', 'ユーザーが存在しません');
+  }
 
-    const ok = await bcrypt.compare(input.password, user.passwordHash);
-    if (!ok) {
-      throw new ApiError('authentication_error', 'メールアドレスもしくはパスワードが異なります');
-    }
+  const ok = await bcrypt.compare(input.password, user.passwordHash);
+  if (!ok) {
+    throw new ApiError(
+      'authentication_error',
+      'メールアドレスもしくはパスワードが異なります'
+    );
+  }
 
-    return {
+  // ★ セッションを作成（これが無かった）
+const sessionToken = await sessionService.createSession(user.id);
+
+  return {
+    user: {
+      id: user.id,
       handle: user.handle,
       name: user.name,
       avatarUrl: user.avatarUrl,
       profile: user.profile,
       followersCount: user.followersCount,
-      followingsCount: user.followingsCount
-    };
-  },
+      followingsCount: user.followingsCount,
+      role: user.role,
+    },
+    sessionToken,
+  };
+},
 
   async cookielogin(userId: bigint): Promise<LoginResponse> {
     
@@ -64,7 +75,7 @@ export const userService = {
     const { user, isDisabled, sessionToken } = await prisma.$transaction(async (tx) => {
       const user = await userRepository.registerUser(tx, name, handle, email, passwordHash);
       const isDisabled = await emailOtpRepository.disableOtp(tx, public_token);
-      const sessionToken = await sessionService.createSession(tx, user.id);
+      const sessionToken = await sessionService.createSession(user.id, tx);
       return { user, isDisabled, sessionToken };
     });
 

@@ -13,5 +13,13 @@ export function sendSuccess<T>(
     success: true,
     data,
   };
-  return res.status(status).json(body);
+
+  // ★ BigInt を安全に number に変換してから返す
+  return res.status(status).json(
+    JSON.parse(
+      JSON.stringify(body, (_, value) =>
+        typeof value === "bigint" ? Number(value) : value
+      )
+    )
+  );
 }

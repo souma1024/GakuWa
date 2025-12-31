@@ -1,19 +1,32 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response, NextFunction } from "express";
+import { sendSuccess } from "../utils/sendSuccess";
+import { userService } from "../services/userService";
 
-import { sendSuccess } from '../utils/sendSuccess'
-import { userService } from '../services/userService'
-import { LoginRequest } from '../dtos/users/requestDto';
-import { LoginResponse } from '../dtos/users/responseDto';
-
-
-export const loginController = async (req: Request, res: Response, next: NextFunction) => {
+export const loginController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const request: LoginRequest = req.body;
+    const { user, sessionToken } = await userService.login(req.body);
 
-    const userInfo: LoginResponse = await userService.login(request);
+    // Cookie は先にセット
+    res.cookie("session_id", sessionToken, {
+      httpOnly: true,
+      sameSite: "lax",
+    });
 
-    return sendSuccess(res, { userInfo });
+    // ★ BigInt を完全に排除したレスポンス
+    return sendSuccess(res, {
+      handle: user.handle,
+      name: user.name,
+      avatarUrl: user.avatarUrl,
+      profile: user.profile,
+      followersCount: Number(user.followersCount),
+      followingsCount: Number(user.followingsCount),
+      role: user.role,
+    });
   } catch (e) {
     return next(e);
   }
-}
+};
