@@ -40,9 +40,7 @@ import { updateProfileController } from "../controllers/updateProfileController"
 
 // ===== Tags =====
 import { adminOnly } from "../middlewares/adminMiddleware";
-
 import { createTagSchema, updateTagSchema } from "../types/tagSchema";
-
 import { createTagController } from "../controllers/tagController";
 import {
   updateTagController,
@@ -73,7 +71,7 @@ router.delete("/articles/:id", deleteArticleController);
 
 // ===== Images =====
 router.post(
-  "/images/supload",
+  "/images/upload",
   authenticateUser,
   upload.single("file"),
   imageUploadController
@@ -87,13 +85,19 @@ router.patch("/profile", authenticateUser, updateProfileController);
 // ===== Tags =====
 
 // タグ作成（ユーザー）
-router.post("/tags", authenticateUser, createTagController);
+router.post(
+  "/tags",
+  authenticateUser,
+  validateBody(createTagSchema),
+  createTagController
+);
 
 // タグ更新（管理者）
 router.put(
   "/admin/tags/:tagId",
   authenticateUser,
   adminOnly,
+  validateBody(updateTagSchema),
   updateTagController
 );
 
