@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Request, Response, NextFunction } from "express";
 import { adminTagService } from "../services/adminTagService";
 import { sendSuccess } from "../utils/sendSuccess";
@@ -30,4 +31,28 @@ export const deleteTagController = async (
   } catch (err) {
     next(err);
   }
+=======
+import { Request, Response } from "express";
+import { adminTagService } from "../services/adminTagService";
+
+export const deleteTagController = async (req: Request, res: Response) => {
+  const tagId = Number(req.params.tagId);
+
+  // バリデーション
+  if (Number.isNaN(tagId)) {
+    return res.status(400).json({
+      success: false,
+      error: {
+        type: "validation_error",
+        message: "タグIDが不正です",
+      },
+    });
+  }
+
+  await adminTagService.deleteTag(tagId);
+
+  return res.status(200).json({
+    success: true,
+  });
+>>>>>>> 0adcb1a (タグ削除完成)
 };
