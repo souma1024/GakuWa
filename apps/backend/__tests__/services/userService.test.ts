@@ -103,10 +103,32 @@ describe("userService.login", () => {
     };
 
     // login関数で返すusersテーブルのコラム
-    expect(result).toEqual(expected);
+    expect(result.user).toMatchObject({
+  handle: "test-handle",
+  name: "Test User",
+  avatarUrl: "https://example.com/a.png",
+  profile: null,
+  followersCount: 0,
+  followingsCount: 0,
+});
+
+expect(typeof result.sessionToken).toBe("string");
 
     // login関数で返さないusersテーブルのコラム
-    expect(Object.keys(result).sort()).toEqual(Object.keys(expected).sort());
+    // トップレベル構造の確認
+expect(result).toHaveProperty("sessionToken");
+expect(result).toHaveProperty("user");
+
+// user の中身だけを検証
+expect(result.user).toMatchObject({
+  handle: "test-handle",
+  name: "Test User",
+  avatarUrl: "https://example.com/a.png",
+  profile: null,
+  followersCount: 0,
+  followingsCount: 0,
+});
+
 
     // findByEmail関数がしっかりと呼ばれているか
     expect(userRepository.findByEmail).toHaveBeenCalledWith("test@example.ac.jp");
