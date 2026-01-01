@@ -39,6 +39,7 @@ import {updateTagController,} from "../controllers/tagController";
 import { adminOnly } from "../middlewares/adminMiddleware";
 
 import { createTagSchema } from "../types/tagSchema";
+import { deleteTagController } from "../controllers/adminTagController";
 
 const router = Router()
 
@@ -131,6 +132,17 @@ router.post(
   authenticateUser,
   validateBody(createTagSchema),
   createTagController
+);
+
+/**
+ * 管理者：タグ削除
+ * DELETE /api/admin/tags/:tagId
+ */
+router.delete(
+  "/admin/tags/:tagId",
+  authenticateUser,
+  adminOnly,
+  deleteTagController
 );
 
 export default router;
