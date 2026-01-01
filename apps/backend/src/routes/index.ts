@@ -38,6 +38,8 @@ import { createTagController } from "../controllers/tagController";
 import {updateTagController,} from "../controllers/tagController";
 import { adminOnly } from "../middlewares/adminMiddleware";
 
+import { createTagSchema } from "../types/tagSchema";
+
 const router = Router()
 
 // ===== Auth =====
@@ -122,4 +124,13 @@ router.put(
   adminOnly,        // ② 管理者確認
   updateTagController
 );
+
+// POST /api/tags
+router.post(
+  "/tags",
+  authenticateUser,
+  validateBody(createTagSchema),
+  createTagController
+);
+
 export default router;
