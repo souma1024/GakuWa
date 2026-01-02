@@ -41,6 +41,14 @@ import { adminOnly } from "../middlewares/adminMiddleware";
 import { createTagSchema } from "../types/tagSchema";
 import { deleteTagController } from "../controllers/adminTagController";
 
+import {
+  getCategoriesController,
+  createCategoryController,
+  updateCategoryController,
+  deleteCategoryController,
+} from "../controllers/categoryController";
+import { createCategorySchema, updateCategorySchema } from "../types/categorySchema";
+
 const router = Router()
 
 // ===== Auth =====
@@ -143,6 +151,35 @@ router.delete(
   authenticateUser,
   adminOnly,
   deleteTagController
+);
+
+// public: カテゴリ一覧（必要なら authenticateUser を付ける）
+router.get("/categories", getCategoriesController);
+
+// admin: 作成
+router.post(
+  "/admin/categories",
+  authenticateUser,
+  adminOnly,
+  validateBody(createCategorySchema),
+  createCategoryController
+);
+
+// admin: 更新
+router.put(
+  "/admin/categories/:categoryId",
+  authenticateUser,
+  adminOnly,
+  validateBody(updateCategorySchema),
+  updateCategoryController
+);
+
+// admin: 削除
+router.delete(
+  "/admin/categories/:categoryId",
+  authenticateUser,
+  adminOnly,
+  deleteCategoryController
 );
 
 export default router;
