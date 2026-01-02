@@ -2,7 +2,13 @@ import { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
 
 export const suggestController = async (req: Request, res: Response) => {
-  const { type, keyword, limit } = (req as any).validatedQuery;
+  const { type, keyword } = (req as any).validatedQuery;
+
+  // ★ 決定打：limit のデフォルト保証
+  const limit =
+    typeof (req as any).validatedQuery.limit === "number"
+      ? (req as any).validatedQuery.limit
+      : 5;
 
   try {
     if (type === "category") {
@@ -11,7 +17,7 @@ export const suggestController = async (req: Request, res: Response) => {
           name: { contains: keyword },
         },
         orderBy: { name: "asc" },
-        take: limit,
+        take: limit, // ★ 常に number（最大5）
         select: { id: true, name: true },
       });
 
@@ -30,7 +36,7 @@ export const suggestController = async (req: Request, res: Response) => {
           name: { contains: keyword },
         },
         orderBy: { name: "asc" },
-        take: limit,
+        take: limit, // ★ ここも同様
         select: { id: true, name: true },
       });
 
@@ -47,11 +53,13 @@ export const suggestController = async (req: Request, res: Response) => {
       success: false,
       error: { type: "validation_error", message: "type が不正です" },
     });
-  } catch (e) {
-    console.error("Suggest API Error:", e); // ★ ログ明示
+  } catch (err) {
+    console.error("Suggest API Error:", err);
     return res.status(500).json({
       success: false,
       error: { type: "server_error", message: "Internal Server Error" },
     });
   }
 };
+
+
