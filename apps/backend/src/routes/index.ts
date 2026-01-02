@@ -49,6 +49,11 @@ import {
 } from "../controllers/categoryController";
 import { createCategorySchema, updateCategorySchema } from "../types/categorySchema";
 
+import { validateQuery } from "../middlewares/validationMiddleware";
+import { suggestQuerySchema } from "../types/suggestSchema";
+import { suggestController } from "../controllers/suggestController";
+
+
 const router = Router()
 
 // ===== Auth =====
@@ -122,11 +127,6 @@ router.get('/images/avatars/:key', imageGetController);
 // プロフィール編集
 router.patch('/profile', authenticateUser, updateProfileController);
 
-// タグ作成
-router.post("/tags", createTagController);
-router.put("/admin/tags/:tagId", authenticateUser, updateTagController);
-
-
 router.put(
   "/admin/tags/:tagId",
   authenticateUser, // ① セッション確認
@@ -181,5 +181,7 @@ router.delete(
   adminOnly,
   deleteCategoryController
 );
+
+router.get("/suggest", validateQuery(suggestQuerySchema), suggestController);
 
 export default router;
