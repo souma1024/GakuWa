@@ -1,0 +1,92 @@
+
+.card {
+  width: 300px;
+  height: 500px;
+  border-radius: 10%;
+  border: solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 100px;
+  margin-top: 50px;
+  background-color: rgb(234, 246, 255);
+}
+
+.avatar {
+  height: 120px;
+  width: 120px;
+  border-radius: 50%;
+  border: "solid";
+  border-color: "blue";
+  margin-top: 20px;
+}
+
+.upper {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.handle {
+  font-size: 23px;
+  font-family: Georgia, Times, 'Times New Roman', serif;
+}
+
+.name {
+  margin: 0px;
+}
+
+.center {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.intro {
+  margin: 0px;
+  height: 30px;
+  width: 90%;
+  font-size: 10px;
+  color: grey;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lower {
+  display: flex;
+  width: 80%;
+  justify-content: space-between;
+  font-size: small; 
+  border-top: solid;
+  border-color: rgb(233, 232, 232);
+}
+
+.articles {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.followers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.followings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.editBtn {
+  height: 40px;
+  margin-top: 15px;
+  border-radius: 20px;
+  border: 2px solid;
+  cursor: pointer;
+}
+

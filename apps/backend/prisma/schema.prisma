@@ -43,7 +43,7 @@ model User {
   role   UserRole   @default(user)
   status UserStatus @default(pending)
 
-  avatarUrl String  @default("https://example.com/default-avatar.png") @map("avatar_url") @db.VarChar(255)
+  avatarUrl String  @default("default_avatar.png") @map("avatar_url") @db.VarChar(255)
   profile   String? @db.Text
   discordId String? @map("discord_id") @db.VarChar(100)
 
@@ -124,4 +124,25 @@ model EventParticipant {
 
   @@unique([userId, eventId])
   @@map("event_participants")
+}
+
+model Article {
+  id         BigInt   @id @default(autoincrement())
+  title      String   @db.VarChar(255)
+  content    String   @db.LongText
+  status     String   @db.VarChar(20)
+
+  categoryId BigInt
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Category {
+  id   BigInt @id @default(autoincrement())
+  name String @unique @db.VarChar(50)
+
+  articles Article[]
 }

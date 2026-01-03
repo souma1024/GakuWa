@@ -1,18 +1,17 @@
 import { Routes, Route } from "react-router-dom";
 import SignupPage from "../pages/SignupPage";
 import OtpVerifyPage from "../pages/OtpVerifyPage";
-import UserHomePage from "../pages/UserHomePage";
 import HomePage from "../pages/HomePage";
 import LoginPage from "../pages/LoginPage";
-import BlockPage from "../components/BlockPage";
-import EventsPage from "../pages/EventsPage"; 
+import ArticlesList from "../pages/ArticlesList";
+import BlockPage from "../pages/BlockPage";
+import MainLayout from "../layout/MainLayout";
+import ProfilePage from "../pages/ProfilePage";
+import EventsPage from "../pages/EventsPage";
 
 function App() {
   return (
     <Routes>
-      {/* ホームページ */}
-      <Route path="/" element={<HomePage />} />
-
       {/* ログイン */}
       <Route path="/login" element={<LoginPage />} />
       
@@ -24,7 +23,13 @@ function App() {
       
       {/* ユーザーホーム画面 */}
       <Route element={<BlockPage />}>
-        <Route path="/:handle" element={<UserHomePage />} />
+        {/* 記事一覧 */}
+        <Route path="/articles" element={<ArticlesList />} />
+        <Route element={<MainLayout/>}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/:handle" element={<HomePage />} />
+          <Route path="/:handle/profile" element={<ProfilePage />} />
+        </Route>
       </Route>
 
       {/* イベント画面 */}
