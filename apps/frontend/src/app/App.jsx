@@ -5,6 +5,7 @@ import UserHomePage from "../pages/UserHomePage";
 import HomePage from "../pages/HomePage";
 import LoginPage from "../pages/LoginPage";
 import BlockPage from "../components/BlockPage";
+import EventsPage from "../pages/EventsPage"; 
 
 function App() {
   return (
@@ -25,6 +26,9 @@ function App() {
       <Route element={<BlockPage />}>
         <Route path="/:handle" element={<UserHomePage />} />
       </Route>
+
+      {/* イベント画面 */}
+      <Route path="/events" element={<EventsPage />} />
       
       {/* 404 Not Found */}
       <Route path="*" element={<div>404 Not Found</div>} />
