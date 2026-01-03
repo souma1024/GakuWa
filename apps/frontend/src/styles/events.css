@@ -223,3 +223,9 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ボタン無効化時のスタイル */
+.event-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

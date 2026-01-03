@@ -3,7 +3,7 @@ import { EventList } from "../components/EventList";
 import "../styles/events.css";
 
 export default function EventsPage() {
-  const { events, isLoading, error } = useEvents();
+  const { events, isLoading, error, participate, cancelParticipate } = useEvents();
 
   if (isLoading) {
     return (
@@ -36,7 +36,11 @@ export default function EventsPage() {
             <p className="events-subtitle">スキルアップのためのイベントに参加しよう</p>
           </div>
 
-          <EventList events={events} />
+          <EventList
+            events={events}
+            onParticipate={participate}
+            onCancelParticipate={cancelParticipate}
+          />
         </main>
 
         {/* サイドコンテンツ */}

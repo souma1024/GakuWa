@@ -3,9 +3,11 @@ import { EventCard } from "./EventCard";
 
 type Props = {
   events: Event[];
+  onParticipate: (eventId: string) => Promise<void>;
+  onCancelParticipate: (eventId: string) => Promise<void>;
 };
 
-export const EventList = ({ events }: Props) => {
+export const EventList = ({ events, onParticipate, onCancelParticipate }: Props) => {
   if (events.length === 0) {
     return <p className="no-events">現在開催中のイベントはありません</p>;
   }
@@ -13,7 +15,12 @@ export const EventList = ({ events }: Props) => {
   return (
     <div className="events-grid">
       {events.map((event) => (
-        <EventCard key={String(event.id)} event={event} />
+        <EventCard
+          key={event.id}
+          event={event}
+          onParticipate={onParticipate}
+          onCancelParticipate={onCancelParticipate}
+        />
       ))}
     </div>
   );
