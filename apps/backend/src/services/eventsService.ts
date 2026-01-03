@@ -9,6 +9,7 @@ export const eventsService = {
 
     return events.map(event => ({
       ...event,
+      id: String(event.id),
       isParticipating: participatingEventIds.includes(event.id)
     }));
   }
