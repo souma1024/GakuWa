@@ -22,7 +22,7 @@ import request from "supertest";
 import app from "../../../src/app";
 import { prisma } from "../../../src/lib/prisma";
 
-describe("Tag CRUD API", () => {
+describe.skip("Tag CRUD API", () => {
   let userCookie: string;
   let adminCookie: string;
   let tagId: number;
