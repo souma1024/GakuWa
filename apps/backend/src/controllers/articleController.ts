@@ -52,7 +52,7 @@ export const getArticleDetailController = async (
     const articleId = BigInt(id);
     const article: GetArticleResponse = await articleService.getArticleById(articleId);
 
-    sendSuccess(res, article, 201);
+    return sendSuccess(res, article);
   } catch (e) {
     return next(e);
   }
@@ -103,6 +103,6 @@ export const deleteArticleController = async (
 
     return res.sendStatus(204);
   } catch (e: any) {
-    throw next(e);
+    return next(e);
   }
 };
