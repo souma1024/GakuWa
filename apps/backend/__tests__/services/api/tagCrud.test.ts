@@ -1,19 +1,23 @@
-import request from "supertest";
-import app from "../../../src/app";
-import { prisma } from "../../../src/lib/prisma";
+jest.mock("../../../src/middlewares/sessionMiddleware", () => ({
+  authenticateUser: (req: any, _res: any, next: any) => {
+    req.user = { id: 1, role: "admin", handle: "test" };
+    req.userId = 1;
+    next();
+  },
+}));
 
 jest.mock("../../../src/middlewares/adminMiddleware", () => ({
   adminOnly: (req: any, _res: any, next: any) => {
     if (req.user?.role !== "admin") {
-      const err = new Error("forbidden");
-      // status をつけて errorMiddleware に流す
-      // もしくは res.status(403).json(...)
-      throw err;
+      return _res.status(403).json({ success: false });
     }
     next();
   },
 }));
 
+import request from "supertest";
+import app from "../../../src/app";
+import { prisma } from "../../../src/lib/prisma";
 
 describe("Tag CRUD API", () => {
   let userCookie: string;
