@@ -2,6 +2,19 @@ import request from "supertest";
 import app from "../../../src/app";
 import { prisma } from "../../../src/lib/prisma";
 
+jest.mock("../../../src/middlewares/adminMiddleware", () => ({
+  adminOnly: (req: any, _res: any, next: any) => {
+    if (req.user?.role !== "admin") {
+      const err = new Error("forbidden");
+      // status をつけて errorMiddleware に流す
+      // もしくは res.status(403).json(...)
+      throw err;
+    }
+    next();
+  },
+}));
+
+
 describe("Tag CRUD API", () => {
   let userCookie: string;
   let adminCookie: string;
@@ -36,6 +49,7 @@ describe("Tag CRUD API", () => {
         userId: user.id,
         sessionToken: `user-session-${Date.now()}`,
         expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+        revokedAt: null,
       },
     });
 
@@ -44,6 +58,7 @@ describe("Tag CRUD API", () => {
         userId: admin.id,
         sessionToken: `admin-session-${Date.now()}`,
         expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+        revokedAt: null, 
       },
     });
 
