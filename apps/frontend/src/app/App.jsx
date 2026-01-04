@@ -7,11 +7,11 @@ import ArticlesList from "../pages/ArticlesList";
 import BlockPage from "../pages/BlockPage";
 import MainLayout from "../layout/MainLayout";
 import ProfilePage from "../pages/ProfilePage";
+import EventsPage from "../pages/EventsPage";
 
 function App() {
   return (
     <Routes>
-
       {/* ログイン */}
       <Route path="/login" element={<LoginPage />} />
       
@@ -32,6 +32,9 @@ function App() {
 
         </Route>
       </Route>
+
+      {/* イベント画面 */}
+      <Route path="/events" element={<EventsPage />} />
       
       {/* 404 Not Found */}
       <Route path="*" element={<div>404 Not Found</div>} />

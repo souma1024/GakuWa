@@ -5,7 +5,6 @@ import { preSignupController } from '../controllers/preSignupController'
 import { otpController } from '../controllers/otpController'
 import { reOtpController } from '../controllers/reOtpController'
 import { validateBody } from '../middlewares/validationMiddleware'
-
 import {
   loginFormSchema,
   otpVerifySchema,
@@ -14,6 +13,12 @@ import {
 import { authenticateUser } from '../middlewares/sessionMiddleware'
 import { indexController } from '../controllers/indexController'
 
+// ===== イベント関連 =====
+import { eventsController } from '../controllers/eventsController'
+import { participateController } from '../controllers/participateController'
+import { cancelParticipateController } from '../controllers/cancelParticipateController'
+
+// ===== 記事関連 =====
 import {
   createArticleController,
   getArticlesController,
@@ -22,16 +27,16 @@ import {
   publishArticleController,
   deleteArticleController,
 } from '../controllers/articleController'
+import { createArticleSchema } from '../types/articleSchema'
+import { updateArticleSchema } from '../types/articleSchema'
 
-
-
-import { createArticleSchema } from '../types/articleSchema';
-import { updateArticleSchema } from "../types/articleSchema";
+// ===== 画像関連 =====
 import { imageUploadController } from '../controllers/imageUploadController'
 import { imageGetController } from '../controllers/imageGetController'
-import { updateProfileController } from '../controllers/updateProfileController'
 import { upload } from '../middlewares/imageMiddleware'
 
+// ===== プロフィール関連 =====
+import { updateProfileController } from '../controllers/updateProfileController'
 
 const router = Router()
 
@@ -42,62 +47,25 @@ router.post('/auth/otp/verify', validateBody(otpVerifySchema), otpController)
 router.post('/auth/otp/send', reOtpController)
 router.post('/auth/session', authenticateUser, indexController)
 
+// ===== Events =====
+router.get('/events', authenticateUser, eventsController)
+router.post('/events/:eventId/participate', authenticateUser, participateController)
+router.delete('/events/:eventId/participate', authenticateUser, cancelParticipateController)
+
 // ===== Articles =====
-router.post(
-  '/articles',
-  validateBody(createArticleSchema),
-  createArticleController
-)
-
-router.get(
-  '/articles',
-  getArticlesController
-)
-
-
-router.get(
-  '/articles/:id',
-  getArticleDetailController
-)
-
-router.put(
-  '/articles/:id',
-  validateBody(updateArticleSchema),
-  updateArticleController
-)
-// /api/articles
-router.post('/articles', validateBody(createArticleSchema), createArticleController);
-
-
-router.patch(
-  '/articles/:id/publish',
-  publishArticleController
-)
-
-router.delete(
-  '/articles/:id',
-  deleteArticleController
-)
+router.post('/articles', validateBody(createArticleSchema), createArticleController)
+router.get('/articles', getArticlesController)
+router.get('/articles/:id', getArticleDetailController)
+router.put('/articles/:id', validateBody(updateArticleSchema), updateArticleController)
+router.patch('/articles/:id/publish', publishArticleController)
+router.delete('/articles/:id', deleteArticleController)
 
 // ===== Images =====
-router.post(
-  '/images/upload',
-  authenticateUser,
-  upload.single('file'),
-  imageUploadController
-)
-
+router.post('/images/upload', authenticateUser, upload.single('file'), imageUploadController)
 router.get('/images/avatars/:handle/:key', imageGetController)
 router.get('/images/avatars/:key', imageGetController)
 
+// ===== Profile =====
+router.patch('/profile', authenticateUser, updateProfileController)
 
-router.delete("/articles/:id", deleteArticleController);
-// 画像関係
-router.post('/images/upload', authenticateUser, upload.single('file'),  imageUploadController);
-router.get('/images/avatars/:handle/:key', imageGetController);
-router.get('/images/avatars/:key', imageGetController);
-
-// プロフィール編集
-router.patch('/profile', authenticateUser, updateProfileController);
-
-export default router;
+export default router
