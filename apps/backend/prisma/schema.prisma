@@ -147,5 +147,13 @@ model Category {
   name String @unique @db.VarChar(50)
 
   articles Article[]
+
   @@map("categories")
+}
+
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
 }

@@ -34,6 +34,7 @@ import { updateArticleSchema } from '../types/articleSchema'
 import { imageUploadController } from '../controllers/imageUploadController'
 import { imageGetController } from '../controllers/imageGetController'
 import { upload } from '../middlewares/imageMiddleware'
+import { createTagController } from "../controllers/tagController";
 
 // ===== プロフィール関連 =====
 import { updateProfileController } from '../controllers/updateProfileController'
@@ -68,4 +69,17 @@ router.get('/images/avatars/:key', imageGetController)
 // ===== Profile =====
 router.patch('/profile', authenticateUser, updateProfileController)
 
-export default router
+router.delete("/articles/:id",/*authenticateUser,*/deleteArticleController);
+// 画像関係
+router.post('/images/upload', authenticateUser, upload.single('file'),  imageUploadController);
+router.get('/images/avatars/:handle/:key', imageGetController);
+router.get('/images/avatars/:key', imageGetController);
+
+// プロフィール編集
+router.patch('/profile', authenticateUser, updateProfileController);
+
+// タグ作成
+router.post("/tags", createTagController);
+
+
+export default router;
