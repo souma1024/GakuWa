@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { prisma } from "../lib/prisma";
 import { ApiError } from "../errors/apiError";
 
@@ -52,42 +51,18 @@ export const adminTagService = {
       where: { id: tagId },
     });
 
-=======
-import { adminTagRepository } from "../repositories/adminTagRepository";
-import { ApiError } from "../errors/apiError";
-
-export const adminTagService = {
-  async deleteTag(tagId: number) {
-    // ① タグ存在チェック
-    const tag = await adminTagRepository.findById(tagId);
->>>>>>> 0adcb1a (タグ削除完成)
     if (!tag) {
       throw new ApiError("not_found", "タグが存在しません");
     }
 
-<<<<<<< HEAD
     /**
      * ⚠️ 現時点では Article-Tag 中間テーブルが無いため
      * 「使用中かどうか」のチェックは行わない
-     * （Issue記載どおり：ある場合のみチェック）
      */
 
     // ② 物理削除
     await prisma.tag.delete({
       where: { id: tagId },
     });
-=======
-    // ② 使用中チェック
-    const isUsed = await adminTagRepository.isTagUsed(tagId);
-    if (isUsed) {
-      throw new ApiError(
-        "validation_error",
-        "このタグは使用中のため削除できません"
-      );
-    }
-
-    // ③ 削除
-    await adminTagRepository.delete(tagId);
->>>>>>> 0adcb1a (タグ削除完成)
   },
 };
