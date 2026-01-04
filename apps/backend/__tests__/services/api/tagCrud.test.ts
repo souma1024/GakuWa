@@ -1,6 +1,8 @@
+let mockRole: "admin" | "user" = "admin";
+
 jest.mock("../../../src/middlewares/sessionMiddleware", () => ({
   authenticateUser: (req: any, _res: any, next: any) => {
-    req.user = { id: 1, role: "admin", handle: "test" };
+    req.user = { id: 1, role: mockRole, handle: "test" };
     req.userId = 1;
     next();
   },
