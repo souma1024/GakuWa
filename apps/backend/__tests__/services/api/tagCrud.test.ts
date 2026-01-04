@@ -17,6 +17,7 @@ jest.mock("../../../src/middlewares/adminMiddleware", () => ({
   },
 }));
 
+
 import request from "supertest";
 import app from "../../../src/app";
 import { prisma } from "../../../src/lib/prisma";
@@ -110,6 +111,8 @@ adminCookie = `session_id=${adminSession.sessionToken}`;
   // タグ更新（管理者）
   // ===============================
   test("PUT /api/admin/tags/:id 管理者はタグを更新できる", async () => {
+
+    mockRole = "admin";
     const res = await request(app)
       .put(`/api/admin/tags/${tagId}`)
       .set("Cookie", adminCookie)
@@ -121,6 +124,8 @@ adminCookie = `session_id=${adminSession.sessionToken}`;
   });
 
   test("PUT /api/admin/tags/:id 一般ユーザーは更新できない", async () => {
+
+    mockRole = "user";
     const res = await request(app)
       .put(`/api/admin/tags/${tagId}`)
       .set("Cookie", userCookie)
