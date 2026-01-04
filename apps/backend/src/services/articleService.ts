@@ -23,11 +23,13 @@ export const articleService = {
   async getArticlesByStatus(status: string): Promise<GetArticlesResponse[]> {
     const articles = await articleRepository.findArticlesByStatus(status);
 
+    console.log("記事： ", articles.length);
+
     if (!articles) {
       throw new ApiError('database_error', '記事の取得に失敗しました');
     }
 
-    if (articles.length) {
+    if (!articles.length) {
       throw new ApiError('not_found', '記事が見つかりません');
     }
 
