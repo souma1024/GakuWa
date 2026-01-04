@@ -47,8 +47,9 @@ describe("Tag CRUD API", () => {
       },
     });
 
-    userCookie = `session_token=${userSession.sessionToken}`;
-    adminCookie = `session_token=${adminSession.sessionToken}`;
+    userCookie = `session_id=${userSession.sessionToken}`;
+adminCookie = `session_id=${adminSession.sessionToken}`;
+
   });
 
   afterAll(async () => {
