@@ -138,6 +138,7 @@ adminCookie = `session_id=${adminSession.sessionToken}`;
   // タグ削除（管理者）
   // ===============================
   test("DELETE /api/admin/tags/:id 管理者はタグを削除できる", async () => {
+    mockRole = "admin";
     const res = await request(app)
       .delete(`/api/admin/tags/${tagId}`)
       .set("Cookie", adminCookie);
@@ -147,6 +148,7 @@ adminCookie = `session_id=${adminSession.sessionToken}`;
   });
 
   test("DELETE /api/admin/tags/:id 存在しないタグは404", async () => {
+    mockRole = "admin";
     const res = await request(app)
       .delete(`/api/admin/tags/999999`)
       .set("Cookie", adminCookie);
