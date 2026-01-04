@@ -10,7 +10,8 @@ export default function ArticlesList() {
     const fetchArticles = async () => {
       try {
         const res = await fetch(
-          "/api/articles?status=draft",
+          "/api/articles",
+          { method: "GET" },
           { credentials: "include" } // ★重要
         );
 

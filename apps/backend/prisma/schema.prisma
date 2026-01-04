@@ -133,10 +133,12 @@ model Article {
   status     String   @db.VarChar(20)
 
   categoryId BigInt
-  category   Category @relation(fields: [categoryId], references: [id])
+  categories   Category @relation(fields: [categoryId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("articles")
 }
 
 
@@ -145,4 +147,5 @@ model Category {
   name String @unique @db.VarChar(50)
 
   articles Article[]
+  @@map("categories")
 }

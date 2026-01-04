@@ -23,12 +23,13 @@ function App() {
       
       {/* ユーザーホーム画面 */}
       <Route element={<BlockPage />}>
-        {/* 記事一覧 */}
-        <Route path="/articles" element={<ArticlesList />} />
         <Route element={<MainLayout/>}>
+
+          <Route path="/articles" element={<ArticlesList />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/:handle" element={<HomePage />} />
           <Route path="/:handle/profile" element={<ProfilePage />} />
+
         </Route>
       </Route>
 

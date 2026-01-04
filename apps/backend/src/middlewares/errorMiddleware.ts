@@ -10,7 +10,7 @@ export const errorHandler = (err: any, _req: Request, res: Response, _next: Next
         : { success: false, error: {status:err.status, type: err.type, message: err.message } };
 
     return res.status(err.status).json(body);
-  }
+  } 
 
   // 異常エラー
   console.error(err);
