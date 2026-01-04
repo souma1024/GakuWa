@@ -1,39 +1,29 @@
-import { Request, Response, NextFunction } from "express";
-import { ApiError } from "../errors/apiError";
-import { sessionService } from "../services/sessionService";
-import { prisma } from "../lib/prisma";
+import multer from "multer";
+import os from "os";
+import path from "path";
 
-export const authenticateUser = async (
-  req: Request,
-  _res: Response,
-  next: NextFunction
-) => {
-  try {
-    const sessionToken = req.cookies?.session_id;
-    if (!sessionToken) {
-      throw new ApiError("authentication_error", "セッションがありません");
-    }
+const tmpDir = path.join(os.tmpdir(), "avatars");
 
-    const userId = await sessionService.checkSession(sessionToken);
-
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        role: true,
-        handle: true,
-      },
-    });
-
-    if (!user) {
-      throw new ApiError("authentication_error", "ユーザーが存在しません");
-    }
-
-    req.userId = user.id;
-    req.user = user;
-
-    return next();
-  } catch (e) {
-    return next(e);
+const storage = multer.diskStorage({
+  destination: function (_req, _file, cb) {
+    cb(null, tmpDir)
+  },
+  filename: function (_req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, file.fieldname + '-' + uniqueSuffix)
   }
-};
+})
+
+export const upload = multer({ 
+  storage: storage, 
+  limits: { fileSize: 1 * 1024 * 1024 }, // 1MB
+  fileFilter: (_req, file, cb) => {
+    if (!file.mimetype.startsWith("image/")) {
+      cb(new Error("画像ファイルのみ対応"));
+    } else {
+      cb(null, true);
+    }
+  }, })
+
+
+  

@@ -14,10 +14,8 @@ export const authenticateUser = async (
       throw new ApiError("authentication_error", "セッションがありません");
     }
 
-    // セッション → userId
     const userId = await sessionService.checkSession(sessionToken);
 
-    // ★ ユーザーをDBから必ず取る
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: {
@@ -31,7 +29,6 @@ export const authenticateUser = async (
       throw new ApiError("authentication_error", "ユーザーが存在しません");
     }
 
-    // ★ ここが決定打
     req.userId = user.id;
     req.user = user;
 
