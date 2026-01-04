@@ -1,25 +1,42 @@
 import { Request, Response, NextFunction } from "express";
-
+import { ApiError } from "../errors/apiError";
 import { sessionService } from "../services/sessionService";
-import { ApiError } from "../errors/apiError"; 
+import { prisma } from "../lib/prisma";
 
-
-// ログイン済みかどうかを検証する
-// ログイン済みじゃないとアクセスできないAPI（eventやprofileなど）の前に呼び出す。
-export const authenticateUser = async (req: Request, _res: Response, next: NextFunction) => {
+export const authenticateUser = async (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+) => {
   try {
     const sessionToken = req.cookies?.session_id;
-  
     if (!sessionToken) {
-      throw new ApiError('authentication_error', 'ブラウザにセッション情報が保存されていません。');
+      throw new ApiError("authentication_error", "セッションがありません");
     }
- 
+
+    // セッション → userId
     const userId = await sessionService.checkSession(sessionToken);
 
-    req.userId = userId;
+    // ★ ユーザーをDBから必ず取る
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        role: true,
+        handle: true,
+      },
+    });
+
+    if (!user) {
+      throw new ApiError("authentication_error", "ユーザーが存在しません");
+    }
+
+    // ★ ここが決定打
+    req.userId = user.id;
+    req.user = user;
 
     return next();
-  } catch(e) {
+  } catch (e) {
     return next(e);
   }
 };

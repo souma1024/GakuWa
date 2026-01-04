@@ -1,24 +1,25 @@
-import { Router } from 'express'
+import { Router } from "express";
 
-import { loginController } from '../controllers/loginController'
-import { preSignupController } from '../controllers/preSignupController'
-import { otpController } from '../controllers/otpController'
-import { reOtpController } from '../controllers/reOtpController'
-import { validateBody } from '../middlewares/validationMiddleware'
+// ===== Auth =====
+import { loginController } from "../controllers/loginController";
+import { preSignupController } from "../controllers/preSignupController";
+import { otpController } from "../controllers/otpController";
+import { reOtpController } from "../controllers/reOtpController";
+import { indexController } from "../controllers/indexController";
+import { validateBody } from "../middlewares/validationMiddleware";
 import {
   loginFormSchema,
   otpVerifySchema,
   signupFormSchema,
-} from '../types/validationType'
-import { authenticateUser } from '../middlewares/sessionMiddleware'
-import { indexController } from '../controllers/indexController'
+} from "../types/validationType";
+import { authenticateUser } from "../middlewares/sessionMiddleware";
 
-// ===== イベント関連 =====
-import { eventsController } from '../controllers/eventsController'
-import { participateController } from '../controllers/participateController'
-import { cancelParticipateController } from '../controllers/cancelParticipateController'
+// ===== Events =====
+import { eventsController } from "../controllers/eventsController";
+import { participateController } from "../controllers/participateController";
+import { cancelParticipateController } from "../controllers/cancelParticipateController";
 
-// ===== 記事関連 =====
+// ===== Articles =====
 import {
   createArticleController,
   getArticlesController,
@@ -26,60 +27,82 @@ import {
   updateArticleController,
   publishArticleController,
   deleteArticleController,
-} from '../controllers/articleController'
-import { createArticleSchema } from '../types/articleSchema'
-import { updateArticleSchema } from '../types/articleSchema'
-
-// ===== 画像関連 =====
-import { imageUploadController } from '../controllers/imageUploadController'
-import { imageGetController } from '../controllers/imageGetController'
-import { upload } from '../middlewares/imageMiddleware'
-import { createTagController } from "../controllers/tagController";
-
-// ===== プロフィール関連 =====
-import { updateProfileController } from '../controllers/updateProfileController'
-
-const router = Router()
-
-// ===== Auth =====
-router.post('/auth/login', validateBody(loginFormSchema), loginController)
-router.post('/auth/preSignup', validateBody(signupFormSchema), preSignupController)
-router.post('/auth/otp/verify', validateBody(otpVerifySchema), otpController)
-router.post('/auth/otp/send', reOtpController)
-router.post('/auth/session', authenticateUser, indexController)
-
-// ===== Events =====
-router.get('/events', authenticateUser, eventsController)
-router.post('/events/:eventId/participate', authenticateUser, participateController)
-router.delete('/events/:eventId/participate', authenticateUser, cancelParticipateController)
-
-// ===== Articles =====
-router.post('/articles', validateBody(createArticleSchema), createArticleController)
-router.get('/articles', getArticlesController)
-router.get('/articles/:id', getArticleDetailController)
-router.put('/articles/:id', validateBody(updateArticleSchema), updateArticleController)
-router.patch('/articles/:id/publish', publishArticleController)
-router.delete('/articles/:id', deleteArticleController)
+} from "../controllers/articleController";
+import { createArticleSchema, updateArticleSchema } from "../types/articleSchema";
 
 // ===== Images =====
-router.post('/images/upload', authenticateUser, upload.single('file'), imageUploadController)
-router.get('/images/avatars/:handle/:key', imageGetController)
-router.get('/images/avatars/:key', imageGetController)
+import { imageUploadController } from "../controllers/imageUploadController";
+import { imageGetController } from "../controllers/imageGetController";
+import { upload } from "../middlewares/imageMiddleware";
 
 // ===== Profile =====
-router.patch('/profile', authenticateUser, updateProfileController)
+import { updateProfileController } from "../controllers/updateProfileController";
 
-router.delete("/articles/:id",/*authenticateUser,*/deleteArticleController);
-// 画像関係
-router.post('/images/upload', authenticateUser, upload.single('file'),  imageUploadController);
-router.get('/images/avatars/:handle/:key', imageGetController);
-router.get('/images/avatars/:key', imageGetController);
+// ===== Tags =====
+import { adminOnly } from "../middlewares/adminMiddleware";
 
-// プロフィール編集
-router.patch('/profile', authenticateUser, updateProfileController);
+import { createTagSchema, updateTagSchema } from "../types/tagSchema";
 
-// タグ作成
-router.post("/tags", createTagController);
+import { createTagController } from "../controllers/tagController";
+import {
+  updateTagController,
+  deleteTagController,
+} from "../controllers/adminTagController";
 
+const router = Router();
+
+// ===== Auth =====
+router.post("/auth/login", validateBody(loginFormSchema), loginController);
+router.post("/auth/preSignup", validateBody(signupFormSchema), preSignupController);
+router.post("/auth/otp/verify", validateBody(otpVerifySchema), otpController);
+router.post("/auth/otp/send", reOtpController);
+router.post("/auth/session", authenticateUser, indexController);
+
+// ===== Events =====
+router.get("/events", authenticateUser, eventsController);
+router.post("/events/:eventId/participate", authenticateUser, participateController);
+router.delete("/events/:eventId/participate", authenticateUser, cancelParticipateController);
+
+// ===== Articles =====
+router.post("/articles", validateBody(createArticleSchema), createArticleController);
+router.get("/articles", getArticlesController);
+router.get("/articles/:id", getArticleDetailController);
+router.put("/articles/:id", validateBody(updateArticleSchema), updateArticleController);
+router.patch("/articles/:id/publish", publishArticleController);
+router.delete("/articles/:id", deleteArticleController);
+
+// ===== Images =====
+router.post(
+  "/images/supload",
+  authenticateUser,
+  upload.single("file"),
+  imageUploadController
+);
+router.get("/images/avatars/:handle/:key", imageGetController);
+router.get("/images/avatars/:key", imageGetController);
+
+// ===== Profile =====
+router.patch("/profile", authenticateUser, updateProfileController);
+
+// ===== Tags =====
+
+// タグ作成（ユーザー）
+router.post("/tags", authenticateUser, createTagController);
+
+// タグ更新（管理者）
+router.put(
+  "/admin/tags/:tagId",
+  authenticateUser,
+  adminOnly,
+  updateTagController
+);
+
+// タグ削除（管理者）
+router.delete(
+  "/admin/tags/:tagId",
+  authenticateUser,
+  adminOnly,
+  deleteTagController
+);
 
 export default router;
