@@ -2,6 +2,10 @@ import { Request, Response, NextFunction } from "express";
 import { tagService } from "../services/tagService";
 import { sendSuccess } from "../utils/sendSuccess";
 
+/**
+ * タグ作成（ユーザー）
+ * POST /api/tags
+ */
 export const createTagController = async (
   req: Request,
   res: Response,
@@ -10,7 +14,7 @@ export const createTagController = async (
   try {
     const { name } = req.body;
 
-    const tag = await tagService.createTag(name);
+    const tag = await tagService.findOrCreateTag(name);
 
     sendSuccess(res, tag);
   } catch (err) {

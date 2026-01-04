@@ -58,14 +58,26 @@ router.post("/auth/session", authenticateUser, indexController);
 
 // ===== Events =====
 router.get("/events", authenticateUser, eventsController);
-router.post("/events/:eventId/participate", authenticateUser, participateController);
-router.delete("/events/:eventId/participate", authenticateUser, cancelParticipateController);
+router.post(
+  "/events/:eventId/participate",
+  authenticateUser,
+  participateController
+);
+router.delete(
+  "/events/:eventId/participate",
+  authenticateUser,
+  cancelParticipateController
+);
 
 // ===== Articles =====
 router.post("/articles", validateBody(createArticleSchema), createArticleController);
 router.get("/articles", getArticlesController);
 router.get("/articles/:id", getArticleDetailController);
-router.put("/articles/:id", validateBody(updateArticleSchema), updateArticleController);
+router.put(
+  "/articles/:id",
+  validateBody(updateArticleSchema),
+  updateArticleController
+);
 router.patch("/articles/:id/publish", publishArticleController);
 router.delete("/articles/:id", deleteArticleController);
 
