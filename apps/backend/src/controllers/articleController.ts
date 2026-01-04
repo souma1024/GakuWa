@@ -14,7 +14,7 @@ export const createArticleController = async (
     const request: CreateArticleRequest = req.body;
     const response: CreateArticleResponse = await articleService.createArticle(request);
 
-    return sendSuccess(res, response);
+    return sendSuccess(res, response, 201);
   } catch (e) {
     return next(e);
   }
