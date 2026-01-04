@@ -34,12 +34,13 @@ import { imageUploadController } from '../controllers/imageUploadController'
 import { imageGetController } from '../controllers/imageGetController'
 import { updateProfileController } from '../controllers/updateProfileController'
 import { upload } from '../middlewares/imageMiddleware'
-import { createTagController } from "../controllers/tagController";
-import {updateTagController,} from "../controllers/tagController";
+import { tagController } from '../controllers/tagController';
 import { adminOnly } from "../middlewares/adminMiddleware";
 
 import { createTagSchema } from "../types/tagSchema";
 import { deleteTagController } from "../controllers/adminTagController";
+import { updateTagSchema } from "../types/tagSchema";
+
 
 import {
   getCategoriesController,
@@ -57,6 +58,7 @@ router.post('/auth/preSignup', validateBody(signupFormSchema), preSignupControll
 router.post('/auth/otp/verify', validateBody(otpVerifySchema), otpController)
 router.post('/auth/otp/send', reOtpController)
 router.post('/auth/session', authenticateUser, indexController)
+
 
 // ===== Articles =====
 router.post(
@@ -122,16 +124,12 @@ router.get('/images/avatars/:key', imageGetController);
 // プロフィール編集
 router.patch('/profile', authenticateUser, updateProfileController);
 
-// タグ作成
-router.post("/tags", createTagController);
-router.put("/admin/tags/:tagId", authenticateUser, updateTagController);
-
-
 router.put(
   "/admin/tags/:tagId",
-  authenticateUser, // ① セッション確認
-  adminOnly,        // ② 管理者確認
-  updateTagController
+  authenticateUser,
+  adminOnly,
+  validateBody(updateTagSchema),
+  tagController.update
 );
 
 // POST /api/tags
@@ -139,7 +137,7 @@ router.post(
   "/tags",
   authenticateUser,
   validateBody(createTagSchema),
-  createTagController
+  tagController.create
 );
 
 /**
