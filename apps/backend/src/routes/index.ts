@@ -38,6 +38,9 @@ import { upload } from '../middlewares/imageMiddleware'
 // ===== プロフィール関連 =====
 import { updateProfileController } from '../controllers/updateProfileController'
 
+// 【変更点】クラスではなく、関数としてインポートします
+import { batchNotificationController } from '../controllers/notificationController'
+
 const router = Router()
 
 // ===== Auth =====
@@ -67,5 +70,8 @@ router.get('/images/avatars/:key', imageGetController)
 
 // ===== Profile =====
 router.patch('/profile', authenticateUser, updateProfileController)
+
+// ===== Notifications =====
+router.post('/notifications/batch', batchNotificationController)
 
 export default router
