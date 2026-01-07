@@ -99,10 +99,9 @@ export const articleService = {
   },
 
   async deleteArticle(id: bigint) {
-    const deletedArticle = await articleRepository.deleteById(id);
-
-    if (!deletedArticle) {
-      throw new ApiError('not_found', 'article not found');
-    }
+    const deleted = await articleRepository.deleteById(id);
+if (!deleted) {
+  throw new ApiError("not_found", "記事が存在しません");
+}
   },
 };

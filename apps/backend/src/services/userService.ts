@@ -2,7 +2,6 @@ import bcrypt from 'bcrypt'
 
 import { ApiError } from "../errors/apiError"
 import { userRepository } from "../repositories/userRepository"
-import { sessionRepository } from '../repositories/sessionRepository'
 import { generateSixDigitCode } from '../utils/otpGenerator'
 import { emailService } from './emailService'
 import { emailOtpRepository } from '../repositories/emailOtpRepository'
@@ -11,18 +10,27 @@ import { sessionService } from './sessionService'
 import { LoginResponse } from '../dtos/users/responseDto'
 import { prisma } from '../lib/prisma'
 import { LoginRequest, PreSignupRequest } from '../dtos/users/requestDto'
+import { Cookie } from '../dtos/Cookie'
+import { Prisma } from '@prisma/client'
 
 export const userService = {
-  async login(input: LoginRequest): Promise<LoginResponse> {
+  async login(input: LoginRequest): Promise<LoginResponse & Cookie> {
     const user = await userRepository.findByEmail(input.email);
     if (!user) {
       throw new ApiError('authentication_error', 'ユーザーが存在しません');
     }
 
     const ok = await bcrypt.compare(input.password, user.passwordHash);
+
     if (!ok) {
-      throw new ApiError('authentication_error', 'メールアドレスもしくはパスワードが異なります');
+      throw new ApiError(
+        'authentication_error',
+        'メールアドレスもしくはパスワードが異なります'
+      );
     }
+
+    // ★ セッションを作成（これが無かった）
+    const sessionToken = await sessionService.createSession(user.id);
 
     return {
       handle: user.handle,
@@ -30,7 +38,9 @@ export const userService = {
       avatarUrl: user.avatarUrl,
       profile: user.profile,
       followersCount: user.followersCount,
-      followingsCount: user.followingsCount
+      followingsCount: user.followingsCount,
+      role: user.role,
+      sessionToken,
     };
   },
 
@@ -49,6 +59,7 @@ export const userService = {
       profile: user.profile,
       followersCount: user.followersCount,
       followingsCount: user.followingsCount,
+      role: user.role
     };
   },
 
@@ -61,10 +72,10 @@ export const userService = {
       throw new ApiError('duplicate_error', 'そのメールアドレスは既に使用されています');
     }
 
-    const { user, isDisabled, sessionToken } = await prisma.$transaction(async (tx) => {
+    const { user, isDisabled, sessionToken } = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const user = await userRepository.registerUser(tx, name, handle, email, passwordHash);
       const isDisabled = await emailOtpRepository.disableOtp(tx, public_token);
-      const sessionToken = await sessionService.createSession(tx, user.id);
+      const sessionToken = await sessionService.createSession(user.id, tx);
       return { user, isDisabled, sessionToken };
     });
 

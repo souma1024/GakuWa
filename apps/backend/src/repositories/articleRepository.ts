@@ -47,8 +47,15 @@ export const articleRepository = {
   },
 
   async deleteById(id: bigint) {
+  try {
     return await prisma.article.delete({
       where: { id },
     });
-  },
+  } catch (e: any) {
+    if (e.code === "P2025") {
+      return null; // ← ここが重要
+    }
+    throw e;
+  }
+},
 };

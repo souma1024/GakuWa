@@ -52,6 +52,7 @@ export default function LoginPage() {
       const result = await response.json();
 
       const user = result.data.userInfo;
+
       console.log("user情報 %o", user)
       // public_tokenを取得してOTP画面に遷移
       if (result.success && user.handle) {
