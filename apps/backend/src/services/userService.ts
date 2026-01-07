@@ -11,6 +11,7 @@ import { LoginResponse } from '../dtos/users/responseDto'
 import { prisma } from '../lib/prisma'
 import { LoginRequest, PreSignupRequest } from '../dtos/users/requestDto'
 import { Cookie } from '../dtos/Cookie'
+import { Prisma } from '@prisma/client'
 
 export const userService = {
   async login(input: LoginRequest): Promise<LoginResponse & Cookie> {
@@ -71,7 +72,7 @@ export const userService = {
       throw new ApiError('duplicate_error', 'そのメールアドレスは既に使用されています');
     }
 
-    const { user, isDisabled, sessionToken } = await prisma.$transaction(async (tx) => {
+    const { user, isDisabled, sessionToken } = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const user = await userRepository.registerUser(tx, name, handle, email, passwordHash);
       const isDisabled = await emailOtpRepository.disableOtp(tx, public_token);
       const sessionToken = await sessionService.createSession(user.id, tx);
