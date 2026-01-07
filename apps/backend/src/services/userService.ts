@@ -2,7 +2,6 @@ import bcrypt from 'bcrypt'
 
 import { ApiError } from "../errors/apiError"
 import { userRepository } from "../repositories/userRepository"
-import { sessionRepository } from '../repositories/sessionRepository'
 import { generateSixDigitCode } from '../utils/otpGenerator'
 import { emailService } from './emailService'
 import { emailOtpRepository } from '../repositories/emailOtpRepository'
@@ -11,28 +10,28 @@ import { sessionService } from './sessionService'
 import { LoginResponse } from '../dtos/users/responseDto'
 import { prisma } from '../lib/prisma'
 import { LoginRequest, PreSignupRequest } from '../dtos/users/requestDto'
+import { Cookie } from '../dtos/Cookie'
 
 export const userService = {
-  async login(input: LoginRequest) {
-  const user = await userRepository.findByEmail(input.email);
-  if (!user) {
-    throw new ApiError('authentication_error', 'ユーザーが存在しません');
-  }
+  async login(input: LoginRequest): Promise<LoginResponse & Cookie> {
+    const user = await userRepository.findByEmail(input.email);
+    if (!user) {
+      throw new ApiError('authentication_error', 'ユーザーが存在しません');
+    }
 
-  const ok = await bcrypt.compare(input.password, user.passwordHash);
-  if (!ok) {
-    throw new ApiError(
-      'authentication_error',
-      'メールアドレスもしくはパスワードが異なります'
-    );
-  }
+    const ok = await bcrypt.compare(input.password, user.passwordHash);
 
-  // ★ セッションを作成（これが無かった）
-const sessionToken = await sessionService.createSession(user.id);
+    if (!ok) {
+      throw new ApiError(
+        'authentication_error',
+        'メールアドレスもしくはパスワードが異なります'
+      );
+    }
 
-  return {
-    user: {
-      id: user.id,
+    // ★ セッションを作成（これが無かった）
+    const sessionToken = await sessionService.createSession(user.id);
+
+    return {
       handle: user.handle,
       name: user.name,
       avatarUrl: user.avatarUrl,
@@ -40,10 +39,9 @@ const sessionToken = await sessionService.createSession(user.id);
       followersCount: user.followersCount,
       followingsCount: user.followingsCount,
       role: user.role,
-    },
-    sessionToken,
-  };
-},
+      sessionToken,
+    };
+  },
 
   async cookielogin(userId: bigint): Promise<LoginResponse> {
     
@@ -60,6 +58,7 @@ const sessionToken = await sessionService.createSession(user.id);
       profile: user.profile,
       followersCount: user.followersCount,
       followingsCount: user.followingsCount,
+      role: user.role
     };
   },
 
