@@ -1,28 +1,23 @@
 import { Request, Response, NextFunction } from "express";
 import { ApiError } from "../errors/apiError";
 import { sessionService } from "../services/sessionService";
-import { prisma } from "../lib/prisma";
+import { userRepository } from "../repositories/userRepository";
 
 export const authenticateUser = async (req: Request, _res: Response, next: NextFunction) => {
   try {
-    console.log("[auth] cookies:", req.cookies);
-
     const sessionToken = req.cookies?.session_id;
-    console.log("[auth] sessionToken:", sessionToken);
 
     if (!sessionToken) {
-      throw new ApiError("authentication_error", "セッションがありません");
+      throw new ApiError("authentication_error", "ブラウザにセッション情報が保存されていません。");
     }
 
     const userId = await sessionService.checkSession(sessionToken);
-    console.log("[auth] userId:", userId);
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { id: true, role: true, handle: true },
-    });
+    if (!userId) {
+      throw new ApiError('not_found', 'ユーザーIDの取得に失敗しました。');
+    }
 
-    console.log("[auth] user:", user);
+    const user = await userRepository.findBacicParamsById(userId);
 
     if (!user) {
       throw new ApiError("authentication_error", "ユーザーが存在しません");
