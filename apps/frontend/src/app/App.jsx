@@ -24,17 +24,15 @@ function App() {
       {/* ユーザーホーム画面 */}
       <Route element={<BlockPage />}>
         <Route element={<MainLayout/>}>
-
-          <Route path="/articles" element={<ArticlesList />} />
+        
           <Route path="/" element={<HomePage />} />
           <Route path="/:handle" element={<HomePage />} />
+          <Route path="/:handle/articles" element={<ArticlesList />} />
           <Route path="/:handle/profile" element={<ProfilePage />} />
-
+          <Route path="/:handle/events" element={<EventsPage />} />
+        
         </Route>
       </Route>
-
-      {/* イベント画面 */}
-      <Route path="/events" element={<EventsPage />} />
       
       {/* 404 Not Found */}
       <Route path="*" element={<div>404 Not Found</div>} />
