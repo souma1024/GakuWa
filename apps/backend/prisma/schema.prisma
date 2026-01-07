@@ -176,6 +176,8 @@ model ArticleTag {
 
   @@unique([articleId, tagId])
   @@map("article_tags")
+}
+
 // 【新規】通知履歴テーブル
 // 二重送信を防ぐため、送信成功ログをここに残します
 model NotificationLog {
