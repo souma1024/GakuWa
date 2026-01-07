@@ -24,6 +24,15 @@ export const userRepository = {
     });
   },
 
+  async findBacicParamsById(id: bigint) {
+    const user = await prisma.user.findUnique({
+      where: { id: id },
+      select: { id: true, role: true, handle: true },
+    });
+
+    return user;
+  },
+
   async findByEmailPassword(email: string, passwordHash: string) {
     return await prisma.user.findUnique({
       where: {
