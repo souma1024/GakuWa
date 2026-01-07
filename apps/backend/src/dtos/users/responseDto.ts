@@ -5,4 +5,5 @@ export type LoginResponse = {
   profile: string | null;
   followersCount: number;
   followingsCount: number;
+  role: string;
 }
