@@ -104,8 +104,12 @@ model Event {
   isActive     Int      @default(1) @map("is_active") @db.UnsignedTinyInt
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+  startDateTime DateTime @map("start_datetime") @db.Timestamp(0)
 
   participants EventParticipant[]
+
+  // 通知履歴テーブルとのリレーション
+  notificationLogs NotificationLog[]
 
   @@map("events")
 }
@@ -172,4 +176,18 @@ model ArticleTag {
 
   @@unique([articleId, tagId])
   @@map("article_tags")
+// 【新規】通知履歴テーブル
+// 二重送信を防ぐため、送信成功ログをここに残します
+model NotificationLog {
+  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  eventId    BigInt   @map("event_id") @db.UnsignedBigInt
+  type       String   @db.VarChar(20) // "REMINDER" (3日前) or "START" (開始時)
+  status     String   @db.VarChar(20) // "SUCCESS" or "FAILED"
+  executedAt DateTime @default(now()) @map("executed_at") @db.Timestamp(0)
+
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  // 検索高速化用インデックス
+  @@index([eventId, type])
+  @@map("notification_logs")
 }

@@ -47,7 +47,10 @@ import {
   deleteTagController,
 } from "../controllers/adminTagController";
 
-const router = Router();
+// 【変更点】クラスではなく、関数としてインポートします
+import { batchNotificationController } from '../controllers/notificationController'
+
+const router = Router()
 
 // ===== Auth =====
 router.post("/auth/login", validateBody(loginFormSchema), loginController);
@@ -121,4 +124,7 @@ router.delete(
   deleteTagController
 );
 
-export default router;
+// ===== Notifications =====
+router.post('/notifications/batch', batchNotificationController)
+
+export default router
