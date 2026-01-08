@@ -1,0 +1,28 @@
+
+
+.menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu > div:hover {
+  background-color: rgb(241, 241, 241);
+}
+
+.profile {
+
+  cursor: pointer;
+}
+
+
+.library {
+  cursor: pointer;
+}
+
+.account {
+  cursor: pointer;
+}
+
+.logout {
+  cursor: pointer;
+}
