@@ -87,6 +87,13 @@
   width: 200px;
 }
 
+.bell {
+  margin-right: 25px;
+  height: 22px;
+  width: 22px;
+  cursor: pointer;
+}
+
 .footer {
   background-color: aqua;
   margin-top: auto;

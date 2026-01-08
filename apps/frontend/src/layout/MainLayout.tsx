@@ -7,6 +7,7 @@ import { useOutletContext } from "react-router-dom";
 import { OutletContext } from '../pages/BlockPage';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { BsBell } from "react-icons/bs";
 
 export default function MainLayout() {
   const { user, setUser } = useOutletContext<OutletContext>();
@@ -37,7 +38,7 @@ export default function MainLayout() {
               </>
             }
             
-            {user && <Avatar src={user.avatarUrl} user={ user } />}
+            {user && <><BsBell className={ styles.bell }/> <Avatar src={user.avatarUrl} user={ user }  /></>}
           </div>
         </div>
         <div className={ styles.headerBottom }>
