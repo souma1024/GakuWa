@@ -16,7 +16,14 @@ export default function MainLayout() {
   const pathname = useLocation().pathname;
 
   useEffect(() => {
-    if (!user?.handle) return;
+    
+    if (!user?.handle) {
+      if (pathname === "/") {
+        setFocus("home");
+        return;
+      }
+      return;
+    }
 
     if (pathname === "/" || pathname === `/${user.handle}`) {
       setFocus("home");
@@ -32,7 +39,11 @@ export default function MainLayout() {
 
   function home() {
     setFocus('home');
-    navigate('/' + user?.handle);
+    if (!user?.handle) {
+      navigate('/');
+    } else {
+      navigate('/' + user?.handle);
+    }
   }
 
   function event() {
