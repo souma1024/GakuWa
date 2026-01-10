@@ -11,7 +11,7 @@ import { LoginResponse } from '../dtos/users/responseDto'
 import { prisma } from '../lib/prisma'
 import { LoginRequest, PreSignupRequest } from '../dtos/users/requestDto'
 import { Cookie } from '../dtos/Cookie'
-import { Prisma } from '@prisma/client'
+import { Prisma, UserSession } from '@prisma/client'
 
 export const userService = {
   async login(input: LoginRequest): Promise<LoginResponse & Cookie> {
@@ -42,6 +42,21 @@ export const userService = {
       role: user.role,
       sessionToken,
     };
+  },
+
+  async logout(userId: bigint, sessionToken: string) {
+
+    const user = await userRepository.findById(userId);
+
+    if (!user) {
+      throw new ApiError('authentication_error', 'ユーザが存在しません');
+    }
+
+    const logoutSession: UserSession = await sessionService.expiresSession(sessionToken);
+
+    if (!logoutSession) {
+      throw new ApiError('database_error', 'セッション情報の無効化に失敗しました');
+    }
   },
 
   async cookielogin(userId: bigint): Promise<LoginResponse> {
