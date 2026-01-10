@@ -1,0 +1,110 @@
+.card {
+	width: 540px;
+	height: 180px;
+	border-radius: 10px;
+	border: 1px solid;
+	margin-top: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	background-color: white;
+}
+
+.wrapper {
+	width: 95%;
+	height: 95%;
+	display: flex;
+}
+
+.lefter {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+}
+
+.righter {
+	flex: 10;
+	display: flex;
+	flex-direction: column;
+}
+
+.header {
+	flex: 2;
+	display: flex;
+	font-size: small;
+}
+
+.headerLeft {
+	flex: 6;
+	margin-left: 10px;
+}
+
+.headerRight {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.circle {
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+
+.circle:hover {
+	background-color: rgb(232, 232, 232);
+}
+
+.center {
+	flex: 4;
+}
+
+.tags {
+	flex: 1.8	;
+	width: 450px;
+	display: flex;
+	align-items: center;	
+}
+
+
+.title {
+	margin-top: 0;
+	font-size: 20px;
+}
+
+.footer {
+	flex: 2;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.footerLeft {
+	display: flex;
+	align-items: center;
+}
+
+.heart {
+	height: 22px;
+}
+
+.likes {
+	margin-left: 4px;
+	padding: 0;	
+}
+
+.avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	margin-top: 10px;
+}
+
+.footerRight {
+}
