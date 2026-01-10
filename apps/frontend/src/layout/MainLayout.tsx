@@ -1,21 +1,49 @@
 import styles from '../styles/main.module.css';
 
 import Button from '../components/Button';
-import Avatar from '../components/Avatar';
+import AvatarMenu from '../components/AvatarMenu';
 import { Outlet } from "react-router-dom";
 import { useOutletContext } from "react-router-dom";
 import { OutletContext } from '../pages/BlockPage';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { BsBell } from "react-icons/bs";
 
 export default function MainLayout() {
   const { user, setUser } = useOutletContext<OutletContext>();
-  const [focus, setFocus] = useState('home');
+  const [focus, setFocus] = useState('');
   const navigate = useNavigate();
+  const pathname = useLocation().pathname;
+
+  useEffect(() => {
+    
+    if (!user?.handle) {
+      if (pathname === "/") {
+        setFocus("home");
+        return;
+      }
+      return;
+    }
+
+    if (pathname === "/" || pathname === `/${user.handle}`) {
+      setFocus("home");
+      return;
+    }
+
+    if (pathname === `/${user.handle}/events`) {
+      setFocus("event");
+      return;
+    }
+    setFocus('');
+  }, [pathname, user?.handle]);
 
   function home() {
     setFocus('home');
-    navigate('/' + user?.handle);
+    if (!user?.handle) {
+      navigate('/');
+    } else {
+      navigate('/' + user?.handle);
+    }
   }
 
   function event() {
@@ -37,7 +65,7 @@ export default function MainLayout() {
               </>
             }
             
-            {user && <Avatar src={user.avatarUrl} user={ user } />}
+            {user && <><BsBell className={ styles.bell }/> <AvatarMenu src={user.avatarUrl} user={ user }  /></>}
           </div>
         </div>
         <div className={ styles.headerBottom }>
@@ -58,7 +86,7 @@ export default function MainLayout() {
 
           <div id='contact' className={ styles.contact }>
             <div className={ styles.tabTextArea}>
-              <strong>イベント</strong>
+              <strong>お問い合わせ</strong>
             </div>
           </div>
 

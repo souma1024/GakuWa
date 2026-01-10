@@ -61,7 +61,8 @@ export const sessionService = {
   },
 
   async expiresSession(sessionToken: string) {
-    const sessionTokenHash = sessionTokenHashGenerator(sessionToken);
-    await sessionRepository.revokeSession(sessionTokenHash);
+    const sessionTokenHash: string = sessionTokenHashGenerator(sessionToken);
+    const expiredSession = await sessionRepository.revokeSession(sessionTokenHash);
+    return expiredSession;
   }
 };

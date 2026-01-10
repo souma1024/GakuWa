@@ -34,7 +34,9 @@ export default function BlockPage() {
           if (isUserArea) return;
 
           navigate(`/${handle}`, { state: user});
-        } 
+        } else {
+          navigate("/");
+        }
       } catch(e) {
         console.log(e);
       }
