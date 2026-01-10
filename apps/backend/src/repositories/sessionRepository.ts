@@ -1,6 +1,15 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma'
 
+export type UserSession = {
+  id: bigint;
+  userId: bigint;
+  sessionToken: string;
+  expiresAt: Date;    
+  createdAt: Date;
+  revokedAt: Date | null;
+}
+
 export const sessionRepository = {
   // セッション作成
   async createSession(
@@ -30,11 +39,12 @@ export const sessionRepository = {
   },
 
   // セッション失効（ログアウト）
-  async revokeSession(sessionToken: string, revokedAt = new Date()) {
-    return await prisma.userSession.updateMany({
+  async revokeSession(sessionToken: string, revokedAt = new Date()): Promise<UserSession> {
+    const logoutSession = await prisma.userSession.update({
       where: { sessionToken, revokedAt: null },
       data: { revokedAt },
     });
+    return logoutSession;
   },
 
   // ユーザーの全セッションを失効（全端末ログアウト）
