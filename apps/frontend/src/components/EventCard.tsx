@@ -1,37 +1,43 @@
 import { useState } from "react";
-import { Event } from "../hooks/useEvents";
+import { Event, TeamInfo } from "../hooks/useEvents";
 import { ConfirmModal } from "./ConfirmModal";
+import { ResultModal } from "./ResultModal";
 
 type Props = {
   event: Event;
-  onParticipate: (eventId: string) => Promise<void>;
+  onParticipate: (eventId: string) => Promise<TeamInfo>;
   onCancelParticipate: (eventId: string) => Promise<void>;
 };
 
 export const EventCard = ({ event, onParticipate, onCancelParticipate }: Props) => {
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isResultModalOpen, setIsResultModalOpen] = useState(false);
+  const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
 
   // 難易度を星で表示
   const renderDifficulty = (level: number) => {
     return "★".repeat(level) + "☆".repeat(5 - level);
   };
 
-  // ボタンクリック → モーダルを開く
+  // ボタンクリック → 確認モーダルを開く
   const handleButtonClick = () => {
-    setIsModalOpen(true);
+    setIsConfirmModalOpen(true);
   };
 
-  // モーダルで確認 → 実際の処理
+  // 確認モーダルで確定 → 実際の処理
   const handleConfirm = async () => {
     setIsProcessing(true);
     try {
       if (event.isParticipating) {
         await onCancelParticipate(event.id);
+        setIsConfirmModalOpen(false);
       } else {
-        await onParticipate(event.id);
+        const result = await onParticipate(event.id);
+        setTeamInfo(result);
+        setIsConfirmModalOpen(false);
+        setIsResultModalOpen(true);  // 結果モーダルを表示
       }
-      setIsModalOpen(false);
     } catch (error) {
       console.error("Error:", error);
       alert(error instanceof Error ? error.message : "エラーが発生しました");
@@ -40,11 +46,17 @@ export const EventCard = ({ event, onParticipate, onCancelParticipate }: Props) 
     }
   };
 
-  // モーダルを閉じる
+  // 確認モーダルを閉じる
   const handleCancel = () => {
     if (!isProcessing) {
-      setIsModalOpen(false);
+      setIsConfirmModalOpen(false);
     }
+  };
+
+  // 結果モーダルを閉じる
+  const handleResultClose = () => {
+    setIsResultModalOpen(false);
+    setTeamInfo(null);
   };
 
   return (
@@ -71,8 +83,9 @@ export const EventCard = ({ event, onParticipate, onCancelParticipate }: Props) 
         </div>
       </div>
 
+      {/* 確認モーダル */}
       <ConfirmModal
-        isOpen={isModalOpen}
+        isOpen={isConfirmModalOpen}
         title={event.isParticipating ? "参加を取り消しますか？" : "イベントに参加しますか？"}
         message={`「${event.name}」${event.isParticipating ? "の参加を取り消します" : "に参加します"}`}
         confirmText={event.isParticipating ? "取り消す" : "参加する"}
@@ -81,6 +94,17 @@ export const EventCard = ({ event, onParticipate, onCancelParticipate }: Props) 
         onCancel={handleCancel}
         isProcessing={isProcessing}
       />
+
+      {/* 結果モーダル */}
+      {teamInfo && (
+        <ResultModal
+          isOpen={isResultModalOpen}
+          title="参加登録が完了しました！"
+          teamName={teamInfo.name}
+          role={teamInfo.role}
+          onClose={handleResultClose}
+        />
+      )}
     </>
   );
 };

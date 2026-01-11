@@ -28,6 +28,7 @@ export const ConfirmModal = ({
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <h2 className="modal-title">{title}</h2>
         <p className="modal-message">{message}</p>
+        <p className="modal-message">※チームは自動で割り当てられます。</p>
         <div className="modal-buttons">
           <button
             className="modal-btn btn-cancel"

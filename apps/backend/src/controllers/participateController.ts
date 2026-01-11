@@ -1,8 +1,7 @@
-import { NextFunction, Request, Response } from 'express'
-
-import { sendSuccess } from '../utils/sendSuccess'
-import { participateService } from '../services/participateService'
-import { ApiError } from '../errors/apiError'
+import { NextFunction, Request, Response } from "express";
+import { sendSuccess } from '../utils/sendSuccess';
+import { participateService } from "../services/participateService";
+import { ApiError } from '../errors/apiError';
 
 export const participateController = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -13,10 +12,18 @@ export const participateController = async (req: Request, res: Response, next: N
 
     const eventId = BigInt(req.params.eventId);
 
-    await participateService.participate(userId, eventId);
+    // チーム情報を含むレスポンスを返す
+    const result = await participateService.participate(userId, eventId);
 
-    return sendSuccess(res, { message: "参加登録しました" });
+    return sendSuccess(res, {
+      message: "参加登録しました",
+      team: {
+        id: result.teamId,
+        name: result.teamName,
+        role: result.role
+      }
+    });
   } catch (e) {
     return next(e);
   }
-}
+};
