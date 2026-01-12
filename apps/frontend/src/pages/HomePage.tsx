@@ -1,6 +1,7 @@
 import styles from '../styles/home.module.css';
 import ArticleCard from '../components/ArticleCard';
 import RankingCard from '../components/RankingCard';
+import { postsRanking, useRanking } from '../hooks/useRanking';
 
 // fetchでarticle情報を取得し以下の形式に直す
 export const article = {
@@ -13,15 +14,10 @@ export const article = {
   updatedAt: "2026/01/10"
 }
 
-export const ranking = {
-  handle: "テストユーザー",
-  avatar_url: '/api/images/avatars/default_avatar.png',
-  posts_count: "22",
-}
-
-const rankings = [ranking, ranking, ranking, ranking, ranking, ranking];
-
 export default function Homepage() {
+
+  const rankings: postsRanking[] = useRanking();
+
   return (
     <>
       <div id="home" className={styles.home}>
@@ -66,7 +62,6 @@ export default function Homepage() {
           <p><a href="/events">イベント</a></p>
           <p><a href="notice">おしらせ</a></p>
         </div>
-      
       </div>   
     </>
   );  
