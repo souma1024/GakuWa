@@ -3,6 +3,7 @@ import { sendSuccess } from '../utils/sendSuccess';
 
 import { otpService } from '../services/otpService';
 import { userService } from '../services/userService';
+import { setCookie } from '../utils/setCookie';
 
 /**
  * POST /api/auth/otp/verify
@@ -16,12 +17,7 @@ export const otpController = async (req: Request, res: Response, next: NextFunct
 
     const { userInfo, sessionToken } = await userService.signup(name, email, passwordHash, public_token);
 
-    res.cookie("session_id", sessionToken, {
-      httpOnly: true,
-      sameSite: "strict",
-      secure: false,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    setCookie(res, sessionToken);
 
     sendSuccess(res, { userInfo });
   } catch (e) {

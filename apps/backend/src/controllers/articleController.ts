@@ -1,237 +1,108 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { articleService } from "../services/articleService";
+import { CreateArticleRequest } from "../dtos/articles/requestDtos";
+import { CreateArticleResponse, GetArticleResponse, GetArticlesResponse } from "../dtos/articles/responseDtos";
+import { sendSuccess } from "../utils/sendSuccess";
+import { ApiError } from "../errors/apiError";
 
 export const createArticleController = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
-    const { title, content, categoryId } = req.body;
+    const request: CreateArticleRequest = req.body;
+    const response: CreateArticleResponse = await articleService.createArticle(request);
 
-    const article = await articleService.createArticle({
-      title,
-      content,
-      categoryId,
-    });
-
-  return res.status(201).json({
-  success: true,
-  data: {
-    id: article.id.toString(),
-    title: article.title,
-    status: article.status,
-    createdAt: article.createdAt,
-  },
-});  
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({
-      success: false,
-      error: {
-        type: "internal_error",
-        message: "failed to create article",
-      },
-    });
+    return sendSuccess(res, response);
+  } catch (e) {
+    return next(e);
   }
 };
 
 
 export const getArticlesController = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
     const status = req.query.status as string;
 
-    const articles = await articleService.getArticlesByStatus(status);
+    const articles: GetArticlesResponse[] = await articleService.getArticlesByStatus(status);
 
-    return res.json({
-      success: true,
-      data: articles.map((a) => ({
-        id: a.id.toString(),
-        title: a.title,
-        status: a.status,
-        createdAt: a.createdAt,
-      })),
-    });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({
-      success: false,
-      error: {
-        type: "internal_error",
-        message: "failed to fetch articles",
-      },
-    });
+    return sendSuccess(res, articles);
+  } catch (e) {
+    return next(e)
   }
 };
 
 export const getArticleDetailController = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
     const { id } = req.params;
 
     if (!id) {
-      return res.status(400).json({
-        success: false,
-        error: { message: "id is required" },
-      });
+      throw new ApiError('validation_error', 'id is required')
     }
 
     const articleId = BigInt(id);
-    const article = await articleService.getArticleById(articleId);
+    const article: GetArticleResponse = await articleService.getArticleById(articleId);
 
-    if (!article) {
-      return res.status(404).json({
-        success: false,
-        error: { message: "article not found" },
-      });
-    }
-
-    return res.json({
-      success: true,
-      data: {
-        id: article.id.toString(),
-        title: article.title,
-        content: article.content,
-        status: article.status,
-        createdAt: article.createdAt,
-        updatedAt: article.updatedAt,
-      },
-    });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({
-      success: false,
-      error: { message: "failed to fetch article" },
-    });
+    return sendSuccess(res, article);
+  } catch (e) {
+    return next(e);
   }
 };
 
 
 export const updateArticleController = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
     const id = BigInt(req.params.id);
 
-    const article = await articleService.updateArticle(id, req.body);
+    const updatedArticle = await articleService.updateArticle(id, req.body);
 
-    return res.json({
-      success: true,
-      data: {
-        id: article.id.toString(),
-        title: article.title,
-        content: article.content,
-        status: article.status,
-        updatedAt: article.updatedAt,
-      },
-    });
-  } catch (err: any) {
-    // Prisma: レコードが存在しない場合
-    if (err.code === "P2025") {
-      return res.status(404).json({
-        success: false,
-        error: {
-          type: "not_found",
-          message: "article not found",
-        },
-      });
-    }
-
-    console.error(err);
-    return res.status(500).json({
-      success: false,
-      error: {
-        type: "internal_error",
-        message: "failed to update article",
-      },
-    });
+    return sendSuccess(res, updatedArticle);
+  } catch (e: any) {
+    return next(e);
   }
 };
 
 export const publishArticleController = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
     const id = BigInt(req.params.id);
 
     const article = await articleService.publishArticle(id);
 
-    if (!article) {
-      return res.status(404).json({
-        success: false,
-        error: {
-          type: "not_found",
-          message: "article not found",
-        },
-      });
-    }
-
-    return res.json({
-      success: true,
-      data: {
-        id: article.id.toString(),
-        status: article.status,
-        updatedAt: article.updatedAt,
-      },
-    });
-  } catch (err: any) {
-    if (err.message === "already_published") {
-      return res.status(400).json({
-        success: false,
-        error: {
-          type: "invalid_state",
-          message: "article is already published",
-        },
-      });
-    }
-
-    console.error(err);
-    return res.status(500).json({
-      success: false,
-      error: {
-        type: "internal_error",
-        message: "failed to publish article",
-      },
-    });
+    return sendSuccess(res, article);
+  } catch (e: any) {
+    return next(e);
   }
 };
 
 export const deleteArticleController = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
     const id = BigInt(req.params.id);
 
     await articleService.deleteArticle(id);
 
-    // 削除成功：レスポンスボディなし
-    return res.status(204).send();
-  } catch (err: any) {
-    // Prisma: 対象が存在しない
-    if (err.code === "P2025") {
-      return res.status(404).json({
-        success: false,
-        error: {
-          type: "not_found",
-          message: "article not found",
-        },
-      });
-    }
-
-    console.error(err);
-    return res.status(500).json({
-      success: false,
-      error: {
-        type: "internal_error",
-        message: "failed to delete article",
-      },
-    });
+    return res.sendStatus(204);
+  } catch (e: any) {
+    return next(e);
   }
 };

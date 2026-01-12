@@ -31,7 +31,6 @@ export const authenticateUser = async (
       throw new ApiError("authentication_error", "ユーザーが存在しません");
     }
 
-    // ★ ここが決定打
     req.userId = user.id;
     req.user = user;
 

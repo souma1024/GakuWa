@@ -7,11 +7,11 @@ import ArticlesList from "../pages/ArticlesList";
 import BlockPage from "../pages/BlockPage";
 import MainLayout from "../layout/MainLayout";
 import ProfilePage from "../pages/ProfilePage";
+import EventsPage from "../pages/EventsPage";
 
 function App() {
   return (
     <Routes>
-
       {/* ログイン */}
       <Route path="/login" element={<LoginPage />} />
       
@@ -23,14 +23,14 @@ function App() {
       
       {/* ユーザーホーム画面 */}
       <Route element={<BlockPage />}>
-
-        {/* ★ 記事一覧 */}
-        <Route path="/articles" element={<ArticlesList />} />
-
         <Route element={<MainLayout/>}>
+        
           <Route path="/" element={<HomePage />} />
           <Route path="/:handle" element={<HomePage />} />
+          <Route path="/:handle/articles" element={<ArticlesList />} />
           <Route path="/:handle/profile" element={<ProfilePage />} />
+          <Route path="/:handle/events" element={<EventsPage />} />
+        
         </Route>
       </Route>
       

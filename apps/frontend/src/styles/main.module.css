@@ -6,11 +6,61 @@
 
 .header {
   display: flex;
-  flex-direction: row;
-  flex: 1;
+  flex-direction: column;
+  flex: 1.5;
   border-bottom: solid;
   border-bottom-color: darkgrey;
+}
+
+.headerUpper {
+  display: flex;
+  flex-direction: row;
   justify-content: space-between;
+}
+
+.headerBottom {
+  margin-top: 0;
+  display: flex;
+  font-size: 10px;
+  height: 30px;
+  line-height: 5px;
+}
+
+.headerBottom > div:hover {
+  background-color: rgb(241, 241, 241);
+}
+
+.home {
+  width: 80px;
+  margin-left: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.tabFooter {
+  background-color: blue;
+  flex: 2;
+}
+
+.event {
+  width: 80px;
+  display: flex;
+  flex-direction: column;
+}
+
+.tabTextArea {
+  flex: 15; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.contact {
+  width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .headerRight {
@@ -35,6 +85,13 @@
   margin-right: 20px;
   border-radius: 10px;
   width: 200px;
+}
+
+.bell {
+  margin-right: 25px;
+  height: 22px;
+  width: 22px;
+  cursor: pointer;
 }
 
 .footer {

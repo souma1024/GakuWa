@@ -17,13 +17,20 @@ function sessionTokenHashGenerator(token: string): string {
 }
 
 export const sessionService = {
+<<<<<<< HEAD
   // ★ db を optional にする
+=======
+>>>>>>> origin/main
   async createSession(
     userId: bigint,
     db?: Prisma.TransactionClient
   ): Promise<string> {
 
+<<<<<<< HEAD
     const client = db ?? prisma; // ★ tx があれば tx、なければ通常 prisma
+=======
+    const client = db ?? prisma;
+>>>>>>> origin/main
 
     const { token, hash } = generateSessionTokenHash();
     const expiresAt = new Date(Date.now() + SESSION_TTL_MS);
@@ -44,8 +51,12 @@ export const sessionService = {
 
   async checkSession(sessionToken: string): Promise<bigint> {
     const sessionTokenHash = sessionTokenHashGenerator(sessionToken);
+<<<<<<< HEAD
     const sessionInfo =
       await sessionRepository.findValidSessionByToken(sessionTokenHash);
+=======
+    const sessionInfo = await sessionRepository.findValidSessionByToken(sessionTokenHash);
+>>>>>>> origin/main
 
     if (!sessionInfo) {
       throw new ApiError('authentication_error', 'セッション情報が保存されていません');
@@ -63,7 +74,8 @@ export const sessionService = {
   },
 
   async expiresSession(sessionToken: string) {
-    const sessionTokenHash = sessionTokenHashGenerator(sessionToken);
-    await sessionRepository.revokeSession(sessionTokenHash);
+    const sessionTokenHash: string = sessionTokenHashGenerator(sessionToken);
+    const expiredSession = await sessionRepository.revokeSession(sessionTokenHash);
+    return expiredSession;
   }
 };

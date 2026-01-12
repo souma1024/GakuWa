@@ -1,6 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { sendSuccess } from "../utils/sendSuccess";
 import { userService } from "../services/userService";
+import { LoginRequest } from "../dtos/users/requestDto";
+import { LoginResponse } from "../dtos/users/responseDto";
+import { Cookie } from "../dtos/Cookie";
+import { setCookie } from "../utils/setCookie";
+
 
 export const loginController = async (
   req: Request,
@@ -8,15 +13,12 @@ export const loginController = async (
   next: NextFunction
 ) => {
   try {
-    const { user, sessionToken } = await userService.login(req.body);
+    const request: LoginRequest = req.body;
 
-    // Cookie は先にセット
-    res.cookie("session_id", sessionToken, {
-      httpOnly: true,
-      sameSite: "lax",
-    });
+    const { user, sessionToken } = await userService.login(request);
 
-    // ★ BigInt を完全に排除したレスポンス
+    setCookie(res, sessionToken);
+
     return sendSuccess(res, {
       handle: user.handle,
       name: user.name,

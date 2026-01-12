@@ -54,6 +54,8 @@ export default function LoginPage() {
     console.log("login result: FULL", result);
 
       const user = result.data;
+
+
       console.log("user情報 %o", user)
       // public_tokenを取得してOTP画面に遷移
       if (result.success && user.handle) {

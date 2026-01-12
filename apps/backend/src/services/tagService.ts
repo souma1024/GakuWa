@@ -1,30 +1,26 @@
-import { prisma } from "../lib/prisma";
+import { tagRepository } from "../repositories/tagRepository";
 import { ApiError } from "../errors/apiError";
 
 export const tagService = {
-  async findOrCreate(name: string) {
-    const existing = await prisma.tag.findUnique({ where: { name } });
-    if (existing) return existing;
-
-    return prisma.tag.create({
-      data: { name },
-    });
-  },
-
-  async update(tagId: number, name: string) {
-    const tag = await prisma.tag.findUnique({ where: { id: tagId } });
-    if (!tag) {
-      throw new ApiError("not_found", "タグが存在しません");
+  /**
+   * タグ作成（ユーザー）
+   * 既存タグがあれば再利用、なければ新規作成
+   */
+  async findOrCreateTag(name: string) {
+    if (!name || typeof name !== "string") {
+      throw new ApiError("validation_error", "タグ名は必須です");
     }
 
-    const duplicate = await prisma.tag.findUnique({ where: { name } });
-    if (duplicate && duplicate.id !== tagId) {
-      throw new ApiError("validation_error", "同名タグが既に存在します");
+    const normalized = name.trim();
+    if (normalized.length === 0) {
+      throw new ApiError("validation_error", "タグ名は必須です");
     }
 
-    return prisma.tag.update({
-      where: { id: tagId },
-      data: { name },
-    });
+    const existing = await tagRepository.findByName(normalized);
+    if (existing) {
+      return existing;
+    }
+
+    return await tagRepository.create(normalized);
   },
 };
