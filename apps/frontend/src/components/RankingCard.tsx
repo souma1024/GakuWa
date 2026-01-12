@@ -12,6 +12,7 @@ type rankingProps = {
 }
 
 export default function RankingCard({ ranking, rank }: rankingProps) {
+  const url = '/api/images/avatars/' + ranking.avatar_url;
   return (
     <>
       <div className={ styles.card }>
@@ -20,7 +21,7 @@ export default function RankingCard({ ranking, rank }: rankingProps) {
         </div>
         <div className={ styles.right }>
           <div className={ styles.avatarContainer}>
-            <img src={ ranking.avatar_url } alt="avatar" className={ styles.avatar } />
+            <img src={ url } alt="avatar" className={ styles.avatar } />
           </div>
           <div className={ styles.textContainer }>
             <p className={ styles.handleName }>{ranking.handle}</p>
