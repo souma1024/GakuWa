@@ -64,6 +64,7 @@ model User {
   sessions          UserSession[]
   eventParticipants EventParticipant[]
   articles          Article[]
+  teamMembers TeamMember[]
 
   @@map("users") // 実テーブル名
 }
@@ -118,6 +119,8 @@ model Event {
 
   // 通知履歴テーブルとのリレーション
   notificationLogs NotificationLog[]
+
+  teams Team[]
 
   @@map("events")
 }
@@ -210,4 +213,44 @@ model NotificationLog {
   // 検索高速化用インデックス
   @@index([eventId, type])
   @@map("notification_logs")
+}
+
+model Team {
+  id               BigInt   @id @default(autoincrement())
+  eventId          BigInt   @map("event_id") @db.UnsignedBigInt
+  name             String   @db.VarChar(100)
+  discordInviteUrl String?  @map("discord_invite_url") @db.VarChar(255)
+  status           TeamStatus @default(ready)
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  event   Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  members TeamMember[]
+
+  @@map("teams")
+}
+
+model TeamMember {
+  teamId   BigInt   @map("team_id")
+  userId   BigInt   @map("user_id")
+  role     TeamRole @default(member)
+  joinedAt DateTime @default(now()) @map("joined_at")
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([teamId, userId])
+  @@map("team_members")
+}
+
+enum TeamStatus {
+  ready
+  active
+  finished
+  trouble
+}
+
+enum TeamRole {
+  leader
+  member
 }
