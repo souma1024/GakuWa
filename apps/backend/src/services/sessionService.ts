@@ -1,8 +1,8 @@
-import { ApiError } from '../errors/apiError';
-import { sessionRepository } from '../repositories/sessionRepository';
-import crypto from 'crypto';
-import { Prisma } from '@prisma/client';
-import { prisma } from '../lib/prisma'; // ★ 追加
+import { ApiError } from "../errors/apiError";
+import { sessionRepository } from "../repositories/sessionRepository";
+import crypto from "crypto";
+import { Prisma } from "@prisma/client";
+import { prisma } from "../lib/prisma";
 
 const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 7; // 7日
 
@@ -17,20 +17,12 @@ function sessionTokenHashGenerator(token: string): string {
 }
 
 export const sessionService = {
-<<<<<<< HEAD
-  // ★ db を optional にする
-=======
->>>>>>> origin/main
+  // db を optional にする（tx があれば tx、なければ通常 prisma）
   async createSession(
     userId: bigint,
     db?: Prisma.TransactionClient
   ): Promise<string> {
-
-<<<<<<< HEAD
-    const client = db ?? prisma; // ★ tx があれば tx、なければ通常 prisma
-=======
     const client = db ?? prisma;
->>>>>>> origin/main
 
     const { token, hash } = generateSessionTokenHash();
     const expiresAt = new Date(Date.now() + SESSION_TTL_MS);
@@ -43,7 +35,7 @@ export const sessionService = {
     );
 
     if (!session) {
-      throw new ApiError('database_error', 'セッション登録に失敗しました');
+      throw new ApiError("database_error", "セッション登録に失敗しました");
     }
 
     return token;
@@ -51,31 +43,30 @@ export const sessionService = {
 
   async checkSession(sessionToken: string): Promise<bigint> {
     const sessionTokenHash = sessionTokenHashGenerator(sessionToken);
-<<<<<<< HEAD
+
     const sessionInfo =
       await sessionRepository.findValidSessionByToken(sessionTokenHash);
-=======
-    const sessionInfo = await sessionRepository.findValidSessionByToken(sessionTokenHash);
->>>>>>> origin/main
 
     if (!sessionInfo) {
-      throw new ApiError('authentication_error', 'セッション情報が保存されていません');
+      throw new ApiError(
+        "authentication_error",
+        "セッション情報が保存されていません"
+      );
     }
 
     if (sessionInfo.revokedAt != null) {
-      throw new ApiError('authentication_error', 'セッションが破棄されています');
+      throw new ApiError("authentication_error", "セッションが破棄されています");
     }
 
     if (sessionInfo.expiresAt <= new Date()) {
-      throw new ApiError('authentication_error', '有効期限が切れています');
+      throw new ApiError("authentication_error", "有効期限が切れています");
     }
 
     return sessionInfo.userId;
   },
 
   async expiresSession(sessionToken: string) {
-    const sessionTokenHash: string = sessionTokenHashGenerator(sessionToken);
-    const expiredSession = await sessionRepository.revokeSession(sessionTokenHash);
-    return expiredSession;
-  }
+    const sessionTokenHash = sessionTokenHashGenerator(sessionToken);
+    return await sessionRepository.revokeSession(sessionTokenHash);
+  },
 };
