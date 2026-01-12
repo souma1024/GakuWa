@@ -9,6 +9,12 @@ export type Event = {
   isParticipating: boolean;
 };
 
+export type TeamInfo = {
+  id: string;
+  name: string;
+  role: 'leader' | 'member';
+};
+
 export const useEvents = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,8 +56,8 @@ export const useEvents = () => {
     }
   };
 
-  // 参加登録
-  const participate = async (eventId: string) => {
+  // 参加登録（チーム情報を返す）
+  const participate = async (eventId: string): Promise<TeamInfo> => {
     const response = await fetch(`http://localhost:8080/api/events/${eventId}/participate`, {
       method: "POST",
       credentials: "include",
@@ -62,6 +68,8 @@ export const useEvents = () => {
       throw new Error(errorBody?.error?.message || "参加登録に失敗しました");
     }
 
+    const result = await response.json();
+
     // 成功したらeventsの状態を更新
     setEvents(prevEvents =>
       prevEvents.map(event =>
@@ -70,6 +78,9 @@ export const useEvents = () => {
           : event
       )
     );
+
+    // チーム情報を返す
+    return result.data.team;
   };
 
   // 参加取り消し
