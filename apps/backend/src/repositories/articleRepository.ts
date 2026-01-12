@@ -1,27 +1,29 @@
 import { prisma } from "../lib/prisma";
+import { ArticleStatus } from '@prisma/client';
 import { CreateArticleInput, UpdateArticleInput } from "../types/articleSchema";
 
 export const articleRepository = {
-  async create(data: CreateArticleInput) {
+  async create(data: CreateArticleInput, authorId: bigint, handle: string) {
     const { title, content, categoryId } = data;
 
     return await prisma.article.create({
       data: {
         title,
-        content,
+        handle: handle,
+        contentMd: content,
+        contentHtml: content,
         status: "draft",
-        categories: {
-          connect: {
-            id: BigInt(categoryId), // ← ここが重要
-          },
+        author:   { connect: { id: authorId } },
+        category: { connect: { id: BigInt(categoryId) },
         },
       },
     });
   },
 
   async findArticlesByStatus(status: string) {
+    const statusEnum: ArticleStatus = status as ArticleStatus; 
     return await prisma.article.findMany({
-      where: { status },
+      where: { status: statusEnum },
       orderBy: { createdAt: "desc" },
     });
   },

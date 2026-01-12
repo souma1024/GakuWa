@@ -12,7 +12,11 @@ export const createArticleController = async (
 ) => {
   try {
     const request: CreateArticleRequest = req.body;
-    const response: CreateArticleResponse = await articleService.createArticle(request);
+    const userId = req?.userId;
+    if (!userId) {
+      throw new ApiError('authentication_error', 'セッション情報が保存されていません');
+    }
+    const response: CreateArticleResponse = await articleService.createArticle(request, userId);
 
     return sendSuccess(res, response);
   } catch (e) {

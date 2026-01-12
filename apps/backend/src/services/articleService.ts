@@ -5,8 +5,9 @@ import { CreateArticleInput } from "../types/articleSchema";
 import { UpdateArticleInput } from "../types/articleSchema";
 
 export const articleService = {
-  async createArticle(input: CreateArticleInput): Promise<CreateArticleResponse> {
-    const article =  await articleRepository.create(input);
+  async createArticle(input: CreateArticleInput, userId: bigint): Promise<CreateArticleResponse> {
+    const handle: string = "hh";
+    const article =  await articleRepository.create(input, userId, handle);
 
     if (!article) {
       throw new ApiError('database_error', '記事の新規登録に失敗しました');
@@ -52,7 +53,7 @@ export const articleService = {
     return  {
       id: article.id.toString(),
       title: article.title,
-      content: article.content,
+      content: article.contentMd,
       status: article.status,
       createdAt: article.createdAt,
       updatedAt: article.updatedAt
@@ -68,7 +69,7 @@ export const articleService = {
     return {
       id: updatedArticle.id.toString(),
       title: updatedArticle.title,
-      content: updatedArticle.content,
+      content: updatedArticle.contentMd,
       status: updatedArticle.status,
       updatedAt: updatedArticle.updatedAt,
     };
@@ -100,8 +101,8 @@ export const articleService = {
 
   async deleteArticle(id: bigint) {
     const deleted = await articleRepository.deleteById(id);
-if (!deleted) {
-  throw new ApiError("not_found", "記事が存在しません");
-}
+    if (!deleted) {
+      throw new ApiError("not_found", "記事が存在しません");
+    }
   },
 };
