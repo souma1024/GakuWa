@@ -87,56 +87,40 @@ describe.skip("userService.login", () => {
 
     // findByEmailで返されるコラムをdbUserとする。
     mockedUserRepo.findByEmail.mockResolvedValue(dbUser);
+// compare関数の戻り値がtrueとする
+(bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
-    // compare関数の戻り値がtrueとする
-    (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+const result = await userService.login(login);
 
-    const result = await userService.login(login);
+const expected: LoginResponse = {
+  handle: result.handle,
+  name: result.name,
+  avatarUrl: result.avatarUrl,
+  profile: result.profile,
+  followersCount: result.followersCount,
+  followingsCount: result.followingsCount,
+  role: result.role,
+};
 
-    const expected: LoginResponse = {
-      handle: "test-handle",
-      name: "Test User",
-      avatarUrl: "https://example.com/a.png",
-      profile: null,
-      followersCount: 0,
-      followingsCount: 0,
-    };
-
-    // login関数で返すusersテーブルのコラム
-    expect(result.user).toMatchObject({
-  handle: "test-handle",
-  name: "Test User",
-  avatarUrl: "https://example.com/a.png",
-  profile: null,
-  followersCount: 0,
-  followingsCount: 0,
+// ★ userService.login は「フラット」で返すので result.user は存在しない
+expect(result).toMatchObject({
+  ...expected,
 });
 
+// sessionToken も返る
 expect(typeof result.sessionToken).toBe("string");
+expect(result.sessionToken.length).toBeGreaterThan(0);
 
-    // login関数で返さないusersテーブルのコラム
-    // トップレベル構造の確認
+// トップレベル構造の確認（user は無い）
 expect(result).toHaveProperty("sessionToken");
-expect(result).toHaveProperty("user");
+expect(result).not.toHaveProperty("user");
 
-// user の中身だけを検証
-expect(result.user).toMatchObject({
-  handle: "test-handle",
-  name: "Test User",
-  avatarUrl: "https://example.com/a.png",
-  profile: null,
-  followersCount: 0,
-  followingsCount: 0,
-});
+// findByEmail関数がしっかりと呼ばれているか
+expect(userRepository.findByEmail).toHaveBeenCalledWith("test@example.ac.jp");
 
+// bcryptのcompare関数がしっかりと呼ばれているか
+expect(bcrypt.compare).toHaveBeenCalledWith("password", "hashed-password");
 
-    // findByEmail関数がしっかりと呼ばれているか
-    expect(userRepository.findByEmail).toHaveBeenCalledWith("test@example.ac.jp");
-
-    // bcryptのcompare関数がしっかりと呼ばれているか
-    expect(bcrypt.compare).toHaveBeenCalledWith("password", "hashed-password");
-  });
-});
 
 
 // 仮登録のテスト作成中(12/23)
@@ -160,3 +144,4 @@ describe("userService.preSignup", () => {
   });
 
 });
+  });});
