@@ -50,6 +50,7 @@ import {
 // 【変更点】クラスではなく、関数としてインポートします
 import { batchNotificationController } from '../controllers/notificationController'
 import { logoutController } from "../controllers/logoutController";
+import { rankingController } from "../controllers/rankingController";
 
 const router = Router()
 
@@ -75,7 +76,7 @@ router.delete(
 );
 
 // ===== Articles =====
-router.post("/articles", validateBody(createArticleSchema), createArticleController);
+router.post("/articles", validateBody(createArticleSchema), authenticateUser, createArticleController);
 router.get("/articles", getArticlesController);
 router.get("/articles/:id", getArticleDetailController);
 router.put(
@@ -128,5 +129,9 @@ router.delete(
 
 // ===== Notifications =====
 router.post('/notifications/batch', batchNotificationController)
+
+
+// ranking関係
+router.get('/ranking', rankingController);
 
 export default router
