@@ -19,7 +19,6 @@ export const useRanking = () :postsRanking[] => {
       });
       
       const result = await res.json();
-      console.log(result.data);
       setPosts(result.data);
     } catch(e) {
       console.log(e);
