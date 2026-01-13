@@ -2,21 +2,12 @@ import styles from '../styles/home.module.css';
 import ArticleCard from '../components/ArticleCard';
 import RankingCard from '../components/RankingCard';
 import { postsRanking, useRanking } from '../hooks/useRanking';
-
-// fetchでarticle情報を取得し以下の形式に直す
-export const article = {
-  title: "ReactとTypeScriptを使ってWebサービスを作った話",
-  author: "test user",
-  author_avatarUrl: '/api/images/avatars/default_avatar.png',
-  likes_count: "11",
-  tag_names: ["react", "css", "typescript", "Minio", "javascript", "cookie"],
-  // 要素数が多くなると見切れてしまうので、後で直す
-  updatedAt: "2026/01/10"
-}
+import { Article, useArticles } from '../hooks/useArticles';
 
 export default function Homepage() {
 
   const rankings: postsRanking[] = useRanking();
+  const articles: Article[] = useArticles();
 
   return (
     <>
@@ -33,22 +24,11 @@ export default function Homepage() {
 
         {/* fetchで取得したarticle数分のArticleCardをfor文で作成するべき */}
         <div id='articles' className={styles.articles}>
-          <ArticleCard article={ article }/>
-          <ArticleCard article={ article }/>
-          <ArticleCard article={ article }/>
-          <ArticleCard article={ article }/>
-          <ArticleCard article={ article }/>
-          <ArticleCard article={ article }/>
-          <ArticleCard article={ article }/>
-          <ArticleCard article={ article }/>
-          <ArticleCard article={ article }/>
-          <ArticleCard article={ article }/>
-          <ArticleCard article={ article }/>
-          <ArticleCard article={ article }/>
-          <ArticleCard article={ article }/>
-          <ArticleCard article={ article }/>
-          <ArticleCard article={ article }/>
-          <ArticleCard article={ article }/>
+          {
+            articles.map((article, _) => (
+              <ArticleCard article={ article }/>
+            ))
+          }
         </div>
 
         <div id='pop' className={styles.pop}>
