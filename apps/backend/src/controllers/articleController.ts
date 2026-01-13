@@ -33,7 +33,7 @@ export const getArticlesController = async (
   try {
     const status = req.query.status as string;
 
-    const articles: GetArticlesResponse[] = await articleService.getArticlesByStatus(status);
+    const articles = await articleService.getArticlesByStatus(status);
 
     return sendSuccess(res, articles);
   } catch (e) {

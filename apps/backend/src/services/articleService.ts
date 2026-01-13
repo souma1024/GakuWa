@@ -1,6 +1,7 @@
 import { CreateArticleResponse, GetArticleResponse, GetArticlesResponse } from "../dtos/articles/responseDtos";
 import { ApiError } from "../errors/apiError";
 import { articleRepository } from "../repositories/articleRepository";
+import { userRepository } from "../repositories/userRepository";
 import { CreateArticleInput } from "../types/articleSchema";
 import { UpdateArticleInput } from "../types/articleSchema";
 
@@ -21,7 +22,7 @@ export const articleService = {
     };
   },
 
-  async getArticlesByStatus(status: string): Promise<GetArticlesResponse[]> {
+  async getArticlesByStatus(status: string) {
     const articles = await articleRepository.findArticlesByStatus(status);
 
     console.log("記事： ", articles.length);
@@ -34,11 +35,13 @@ export const articleService = {
       throw new ApiError('not_found', '記事が見つかりません');
     }
 
-    const response: GetArticlesResponse[] = articles.map(article => ({
-      id: article.id.toString(),
+    const response = articles.map(article => ({
       title: article.title,
-      status: article.status,
-      createdAt: article.createdAt
+      likes_count: article.likesCount.toString(),
+      author: article.author.handle,
+      author_avatarUrl: article.author.avatarUrl,
+      tag_names: article.articleTags,
+      updated_at: article.publishedAt
     }));
 
     return response;
