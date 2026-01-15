@@ -1,7 +1,6 @@
 .main {
   display: flex;
   flex-direction: column;
-  height: 100vh;
 }
 
 .header {
@@ -70,7 +69,6 @@
 
 .content {
   flex: 12;
-  overflow-y: auto;
 }
 
 .appTitle {
@@ -95,6 +93,13 @@
 }
 
 .footer {
-  background-color: aqua;
-  margin-top: auto;
+  background-color: rgb(79, 106, 171);
+  border-top: solid;
+  border-color: rgb(216, 219, 223);
+  margin-top: 100px;
+}
+
+.footer a {
+  color: white;
+  margin-left: 30px;
 }

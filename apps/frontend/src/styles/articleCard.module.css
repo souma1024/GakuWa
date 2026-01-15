@@ -66,8 +66,8 @@
 }
 
 .tags {
-	flex: 1.8	;
-	width: 450px;
+	flex: 1.8;
+	width: 100%;
 	display: flex;
 	align-items: center;	
 }
