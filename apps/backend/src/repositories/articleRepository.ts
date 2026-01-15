@@ -1,7 +1,5 @@
 import { prisma } from "../lib/prisma";
-import { ArticleStatus } from '@prisma/client';
 import { CreateArticleInput, UpdateArticleInput } from "../types/articleSchema";
-import { userService } from "../services/userService";
 
 export const articleRepository = {
   async create(data: CreateArticleInput, authorId: bigint, handle: string) {
@@ -21,13 +19,16 @@ export const articleRepository = {
     });
   },
 
-  async findArticlesByStatus(status: string) {
-    const statusEnum: ArticleStatus = status as ArticleStatus;
+  async findPublishedArticles(authorId? :bigint) {
 
     const articles = await prisma.article.findMany({
-      where: { status: statusEnum },
+      where: { 
+        status: 'published',
+        authorId: authorId
+      },
       orderBy: { createdAt: "desc" },
       select: {
+        handle: true,
         title: true,
         likesCount: true,
         publishedAt: true,

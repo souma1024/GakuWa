@@ -23,6 +23,7 @@ import { cancelParticipateController } from "../controllers/cancelParticipateCon
 import {
   createArticleController,
   getArticlesController,
+  getUsersArticlesController,
   getArticleDetailController,
   updateArticleController,
   publishArticleController,
@@ -78,6 +79,7 @@ router.delete(
 // ===== Articles =====
 router.post("/articles", validateBody(createArticleSchema), authenticateUser, createArticleController);
 router.get("/articles", getArticlesController);
+router.get("/:handle/articles", authenticateUser, getUsersArticlesController);
 router.get("/articles/:id", getArticleDetailController);
 router.put(
   "/articles/:id",

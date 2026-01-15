@@ -1,13 +1,13 @@
 import { CreateArticleResponse, GetArticleResponse, GetArticlesResponse } from "../dtos/articles/responseDtos";
 import { ApiError } from "../errors/apiError";
 import { articleRepository } from "../repositories/articleRepository";
-import { userRepository } from "../repositories/userRepository";
 import { CreateArticleInput } from "../types/articleSchema";
 import { UpdateArticleInput } from "../types/articleSchema";
+import { uuidGenerator } from "../utils/uuidGenerator";
 
 export const articleService = {
   async createArticle(input: CreateArticleInput, userId: bigint): Promise<CreateArticleResponse> {
-    const handle: string = "hh";
+    const handle: string = uuidGenerator() ;
     const article =  await articleRepository.create(input, userId, handle);
 
     if (!article) {
@@ -22,10 +22,8 @@ export const articleService = {
     };
   },
 
-  async getArticlesByStatus(status: string) {
-    const articles = await articleRepository.findArticlesByStatus(status);
-
-    console.log("記事： ", articles.length);
+  async getPublishedArticles(authorId? :bigint) {
+    const articles = await articleRepository.findPublishedArticles(authorId);
 
     if (!articles) {
       throw new ApiError('database_error', '記事の取得に失敗しました');
@@ -36,6 +34,7 @@ export const articleService = {
     }
 
     const response = articles.map(article => ({
+      handle: article.handle,
       title: article.title,
       likes_count: article.likesCount.toString(),
       author: article.author.handle,
@@ -46,6 +45,7 @@ export const articleService = {
 
     return response;
   },
+
   async getArticleById(id: bigint): Promise<GetArticleResponse> {
     const article = await articleRepository.findById(id);
 
