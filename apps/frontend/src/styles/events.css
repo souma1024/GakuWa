@@ -1,7 +1,7 @@
 /* ===== イベントページ全体 ===== */
 .events-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+  background-color: rgb(252, 252, 255);
 }
 
 .events-container {

@@ -24,17 +24,3 @@
 .pop {
   flex: 1;
 }
-
-.footer {
-  background-color: rgb(79, 106, 171);
-  height: 200px;
-  margin-top: 100px;
-  border-top: solid;
-  border-color: rgb(216, 219, 223);
-  
-}
-
-.footer a {
-  color: white;
-  margin-left: 30px;
-}
