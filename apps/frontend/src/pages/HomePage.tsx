@@ -25,7 +25,7 @@ export default function Homepage() {
           <p>ユーザー投稿数ランキング</p>
           {
             postsRanking.map((ranking, index) => (
-              <RankingCard ranking={ ranking } rank={ index + 1} />
+              <RankingCard key={ ranking.handle} ranking={ ranking } rank={ index + 1} />
             ))
           }
         </div>
@@ -33,7 +33,7 @@ export default function Homepage() {
         <div id='articles' className={styles.articles}>
           {
             articles.map((article, _) => (
-              <ArticleCard article={ article }/>
+              <ArticleCard key={ article.handle } article={ article }/>
             ))
           }
         </div>
