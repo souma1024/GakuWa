@@ -97,6 +97,15 @@ export default function MainLayout() {
       <div id="content" className={styles.content}>
         <Outlet context={{user, setUser}}/>
       </div>
+
+      <div id="footer" className={styles.footer}>
+        <div>
+          <p><a href="/about">GakuWaについて</a></p>
+          <p><a href="/operation">運営チーム</a></p>
+          <p><a href="/events">イベント</a></p>
+          <p><a href="notice">おしらせ</a></p>
+        </div>
+      </div>   
     </div>
   );
 }

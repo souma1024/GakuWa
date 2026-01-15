@@ -2,12 +2,17 @@ import styles from '../styles/home.module.css';
 import ArticleCard from '../components/ArticleCard';
 import RankingCard from '../components/RankingCard';
 import { postsRanking, useRanking } from '../hooks/useRanking';
-import { Article, useArticles } from '../hooks/useArticles';
+import { useArticles } from '../hooks/useArticles';
+import { useEffect } from 'react';
 
 export default function Homepage() {
 
   const rankings: postsRanking[] = useRanking();
-  const articles: Article[] = useArticles();
+  const { articles, fetchArticles } = useArticles();
+
+  useEffect(() => {
+    fetchArticles(); // 全記事
+  }, []);
 
   return (
     <>
@@ -21,8 +26,6 @@ export default function Homepage() {
           }
         </div>
 
-
-        {/* fetchで取得したarticle数分のArticleCardをfor文で作成するべき */}
         <div id='articles' className={styles.articles}>
           {
             articles.map((article, _) => (
@@ -35,14 +38,6 @@ export default function Homepage() {
 
         </div>      
       </div>
-      <div id="footer" className={styles.footer}>
-        <div>
-          <p><a href="/about">GakuWaについて</a></p>
-          <p><a href="/operation">運営チーム</a></p>
-          <p><a href="/events">イベント</a></p>
-          <p><a href="notice">おしらせ</a></p>
-        </div>
-      </div>   
     </>
   );  
 }
