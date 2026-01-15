@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 
 export type postsRanking = {
@@ -7,10 +7,9 @@ export type postsRanking = {
   posts_count: string;
 }
 
-const init: postsRanking[] = [{handle: "default", avatar_url: '/api/images/avatars/default_avatar.png', posts_count: "0"}];
 
-export const useRanking = () :postsRanking[] => {
-  const [posts, setPosts] = useState<postsRanking[]>(init);
+export const useRanking = () => {
+  const [postsRanking, setPosts] = useState<postsRanking[]>([]);
 
   const fetchPosts = async () => {
     try {
@@ -25,9 +24,5 @@ export const useRanking = () :postsRanking[] => {
     }
   }
 
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  return posts;
+  return { postsRanking, fetchPosts };
 }

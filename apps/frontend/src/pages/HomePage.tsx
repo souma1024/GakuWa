@@ -1,17 +1,21 @@
 import styles from '../styles/home.module.css';
 import ArticleCard from '../components/ArticleCard';
 import RankingCard from '../components/RankingCard';
-import { postsRanking, useRanking } from '../hooks/useRanking';
+import { useRanking } from '../hooks/useRanking';
 import { useArticles } from '../hooks/useArticles';
 import { useEffect } from 'react';
 
 export default function Homepage() {
 
-  const rankings: postsRanking[] = useRanking();
+  const { postsRanking, fetchPosts } = useRanking();
   const { articles, fetchArticles } = useArticles();
 
   useEffect(() => {
-    fetchArticles(); // 全記事
+    fetchArticles(); 
+  }, []);
+
+  useEffect(() => {
+    fetchPosts();
   }, []);
 
   return (
@@ -20,7 +24,7 @@ export default function Homepage() {
         <div id='ranking' className={styles.ranking}>
           <p>ユーザー投稿数ランキング</p>
           {
-            rankings.map((ranking, index) => (
+            postsRanking.map((ranking, index) => (
               <RankingCard ranking={ ranking } rank={ index + 1} />
             ))
           }
