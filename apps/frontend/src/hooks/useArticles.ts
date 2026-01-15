@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 export type Article = {
+  handle: string,
   title: string,
   author: string,
   author_avatarUrl: string,
@@ -9,17 +10,8 @@ export type Article = {
   updated_at: string | null
 }
 
-const init = [{
-  title: "デフォルト",
-  author: "デフォルト",
-  author_avatarUrl: "/api/images/avatars/default_avatar.png",
-  likes_count: "0",
-  tag_names: [],
-  updated_at: (new Date()).toLocaleDateString()
-}];
-
-export const useArticles = () : Article[] => {
-  const [articles, setArticles] = useState<Article[]>(init);
+export const useArticles = () => {
+  const [articles, setArticles] = useState<Article[]>([]);
 
   const fetchArticles = async () => {
     try {
@@ -34,9 +26,17 @@ export const useArticles = () : Article[] => {
     }
   }
 
-  useEffect(() => {
-    fetchArticles();
-  }, []);
+  const fetchUsersArticles = async (handle: string) => {
+    try {
+      const res = await fetch(`http://localhost:8080/api/${handle}/articles`, {
+        method: 'GET'
+      });
+      const result = await res.json();
+      setArticles(result.data);
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
-  return articles;
+  return { articles, fetchArticles, fetchUsersArticles };
 }
