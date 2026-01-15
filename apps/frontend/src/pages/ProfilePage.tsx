@@ -1,10 +1,13 @@
-import { useLocation, Outlet, useOutletContext } from "react-router-dom";
+import { useLocation, useOutletContext } from "react-router-dom";
 
 import ProfileCard from "../components/ProfileCard";
 import ProfileEdit from "../components/ProfileEdit";
 import ArticleCard from "../components/ArticleCard";
 
+import { useArticles } from "../hooks/useArticles";
+
 import styles from "../styles/profile.module.css";
+import { useEffect } from "react";
 
 type User = {
   handle: string;
@@ -24,7 +27,12 @@ export default function ProfilePage() {
   const { user, setUser } = useOutletContext<OutletContext>();
   const location = useLocation();
   const mode = new URLSearchParams(location.search).get('mode');
-  
+  const { articles, fetchUsersArticles } = useArticles();
+
+  useEffect(() => {
+    if (!user)  return;
+    fetchUsersArticles(user.handle);
+  }, [user?.handle])
 
   if (!user) return <div>Loading...</div>;
 
@@ -40,11 +48,18 @@ export default function ProfilePage() {
       ) : (
         <div className={ styles.wrapper }>
           <div className={ styles.lefter}>
-            <ProfileCard user={user} />
-          </div>
-          {/* ArticleCardの大きさが若干変わっているので、後で修正する */}
-          <div className={ styles.righter }>
+            <div className={ styles.fixed }>
+              <ProfileCard user={user} />
+            </div>
             
+          </div>
+          
+          <div className={ styles.righter }>    
+            {
+              articles.map((article, _) => (
+                <ArticleCard key={ article.handle } article={ article }/>
+              ))
+            }
           </div>
         </div>
       )}
