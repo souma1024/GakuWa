@@ -25,14 +25,6 @@ export const articleService = {
   async getPublishedArticles(authorId? :bigint) {
     const articles = await articleRepository.findPublishedArticles(authorId);
 
-    if (!articles) {
-      throw new ApiError('database_error', '記事の取得に失敗しました');
-    }
-
-    if (!articles.length) {
-      throw new ApiError('not_found', '記事が見つかりません');
-    }
-
     const response = articles.map(article => ({
       handle: article.handle,
       title: article.title,
