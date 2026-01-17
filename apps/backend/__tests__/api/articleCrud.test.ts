@@ -88,7 +88,7 @@ describe.skip("Article CRUD API", () => {
     });
 
     expect(updated?.title).toBe("更新後タイトル");
-    expect(updated?.content).toBe("更新後本文");
+    expect(updated?.contentMd).toBe("更新後本文");
   });
 
   // =========================

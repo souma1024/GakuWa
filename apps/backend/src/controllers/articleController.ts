@@ -12,7 +12,11 @@ export const createArticleController = async (
 ) => {
   try {
     const request: CreateArticleRequest = req.body;
-    const response: CreateArticleResponse = await articleService.createArticle(request);
+    const userId = req?.userId;
+    if (!userId) {
+      throw new ApiError('authentication_error', 'セッション情報が保存されていません');
+    }
+    const response: CreateArticleResponse = await articleService.createArticle(request, userId);
 
     return sendSuccess(res, response);
   } catch (e) {
@@ -27,15 +31,34 @@ export const getArticlesController = async (
   next: NextFunction
 ) => {
   try {
-    const status = req.query.status as string;
 
-    const articles: GetArticlesResponse[] = await articleService.getArticlesByStatus(status);
+    const articles = await articleService.getPublishedArticles();
 
     return sendSuccess(res, articles);
   } catch (e) {
     return next(e)
   }
 };
+
+export const getUsersArticlesController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.userId;
+
+    if (!userId) {
+      throw new ApiError('authentication_error', 'セッション情報が保存されていません');
+    }
+
+    const articles = await articleService.getPublishedArticles(userId);
+
+    return sendSuccess(res, articles);
+  } catch(e) {
+    next(e);
+  }
+}
 
 export const getArticleDetailController = async (
   req: Request,

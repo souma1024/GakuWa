@@ -1,7 +1,7 @@
 
-.card {
-  width: 300px;
-  height: 500px;
+.card { 
+  width: 240px;
+  height: 400px;
   border-radius: 10%;
   border: solid;
   display: flex;
@@ -12,8 +12,8 @@
 }
 
 .avatar {
-  height: 120px;
-  width: 120px;
+  height: 60px;
+  width: 60px;
   border-radius: 50%;
   border: "solid";
   border-color: "blue";
@@ -28,6 +28,8 @@
 }
 
 .handle {
+  margin-top: 10px;
+  margin-bottom: 0px;
   font-size: 23px;
   font-family: Georgia, Times, 'Times New Roman', serif;
 }

@@ -3,10 +3,12 @@ import { ApiError } from "../errors/apiError";
 import { articleRepository } from "../repositories/articleRepository";
 import { CreateArticleInput } from "../types/articleSchema";
 import { UpdateArticleInput } from "../types/articleSchema";
+import { uuidGenerator } from "../utils/uuidGenerator";
 
 export const articleService = {
-  async createArticle(input: CreateArticleInput): Promise<CreateArticleResponse> {
-    const article =  await articleRepository.create(input);
+  async createArticle(input: CreateArticleInput, userId: bigint): Promise<CreateArticleResponse> {
+    const handle: string = uuidGenerator() ;
+    const article =  await articleRepository.create(input, userId, handle);
 
     if (!article) {
       throw new ApiError('database_error', '記事の新規登録に失敗しました');
@@ -20,28 +22,22 @@ export const articleService = {
     };
   },
 
-  async getArticlesByStatus(status: string): Promise<GetArticlesResponse[]> {
-    const articles = await articleRepository.findArticlesByStatus(status);
+  async getPublishedArticles(authorId? :bigint) {
+    const articles = await articleRepository.findPublishedArticles(authorId);
 
-    console.log("記事： ", articles.length);
-
-    if (!articles) {
-      throw new ApiError('database_error', '記事の取得に失敗しました');
-    }
-
-    if (!articles.length) {
-      throw new ApiError('not_found', '記事が見つかりません');
-    }
-
-    const response: GetArticlesResponse[] = articles.map(article => ({
-      id: article.id.toString(),
+    const response = articles.map(article => ({
+      handle: article.handle,
       title: article.title,
-      status: article.status,
-      createdAt: article.createdAt
+      likes_count: article.likesCount.toString(),
+      author: article.author.handle,
+      author_avatarUrl: article.author.avatarUrl,
+      tag_names: article.articleTags,
+      updated_at: article.publishedAt
     }));
 
     return response;
   },
+
   async getArticleById(id: bigint): Promise<GetArticleResponse> {
     const article = await articleRepository.findById(id);
 
@@ -52,7 +48,7 @@ export const articleService = {
     return  {
       id: article.id.toString(),
       title: article.title,
-      content: article.content,
+      content: article.contentMd,
       status: article.status,
       createdAt: article.createdAt,
       updatedAt: article.updatedAt
@@ -68,7 +64,7 @@ export const articleService = {
     return {
       id: updatedArticle.id.toString(),
       title: updatedArticle.title,
-      content: updatedArticle.content,
+      content: updatedArticle.contentMd,
       status: updatedArticle.status,
       updatedAt: updatedArticle.updatedAt,
     };
@@ -100,8 +96,8 @@ export const articleService = {
 
   async deleteArticle(id: bigint) {
     const deleted = await articleRepository.deleteById(id);
-if (!deleted) {
-  throw new ApiError("not_found", "記事が存在しません");
-}
+    if (!deleted) {
+      throw new ApiError("not_found", "記事が存在しません");
+    }
   },
 };

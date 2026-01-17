@@ -33,6 +33,13 @@ enum EmailOtpPurpose {
   password_reset
 }
 
+// 記事の状態を定義
+enum ArticleStatus {
+  draft
+  published
+  archived
+}
+
 model User {
   id           BigInt @id @default(autoincrement())
   handle       String @unique @db.VarChar(50)
@@ -56,6 +63,8 @@ model User {
   // リレーション
   sessions          UserSession[]
   eventParticipants EventParticipant[]
+  articles          Article[]
+  teamMembers TeamMember[]
 
   @@map("users") // 実テーブル名
 }
@@ -96,20 +105,22 @@ model UserSession {
 }
 
 model Event {
-  id           BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
-  name         String   @db.VarChar(100)
-  thumbnailUrl String   @default("https://example.com/thumbnail.png") @map("thumbnail_url") @db.VarChar(255)
-  details      String   @db.Text
-  difficulty   Int      @db.UnsignedTinyInt
-  isActive     Int      @default(1) @map("is_active") @db.UnsignedTinyInt
-  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+  id            BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  name          String   @db.VarChar(100)
+  thumbnailUrl  String   @default("https://example.com/thumbnail.png") @map("thumbnail_url") @db.VarChar(255)
+  details       String   @db.Text
+  difficulty    Int      @db.UnsignedTinyInt
+  isActive      Int      @default(1) @map("is_active") @db.UnsignedTinyInt
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
   startDateTime DateTime @map("start_datetime") @db.Timestamp(0)
 
   participants EventParticipant[]
 
   // 通知履歴テーブルとのリレーション
   notificationLogs NotificationLog[]
+
+  teams Team[]
 
   @@map("events")
 }
@@ -131,22 +142,33 @@ model EventParticipant {
 }
 
 model Article {
-  id         BigInt   @id @default(autoincrement())
-  title      String   @db.VarChar(255)
-  content    String   @db.LongText
-  status     String   @db.VarChar(20)
+  id     BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  handle String @db.VarChar(50)
 
-  categoryId BigInt
-  categories   Category @relation(fields: [categoryId], references: [id])
+  authorId BigInt @map("author_id")
+  author   User   @relation(fields: [authorId], references: [id])
 
-  tags ArticleTag[]
-  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  title       String @db.VarChar(255)
+  contentMd   String @map("content_md") @db.Text
+  contentHtml String @map("content_html") @db.Text
 
+  likesCount     Int @default(0) @map("likes_count") @db.UnsignedInt
+  bookmarksCount Int @default(0) @map("bookmarks_count") @db.UnsignedInt
+  viewsCount     Int @default(0) @map("views_count") @db.UnsignedInt
+
+  status      ArticleStatus @default(draft)
+  publishedAt DateTime?     @map("published_at") @db.DateTime(3)
+
+  createdAt   DateTime     @default(now()) @map("created_at") @db.DateTime(3)
+  updatedAt   DateTime     @updatedAt @map("updated_at") @db.DateTime(3)
+  category    Category?    @relation(fields: [categoryId], references: [id])
+  categoryId  BigInt?
+  articleTags ArticleTag[]
+
+  @@unique([handle], map: "articles_handle_key")
+  @@index([authorId, status])
   @@map("articles")
 }
-
 
 model Category {
   id   BigInt @id @default(autoincrement())
@@ -158,7 +180,6 @@ model Category {
 
 }
 
-
 model Tag {
   id        Int      @id @default(autoincrement())
   name      String   @unique
@@ -168,12 +189,12 @@ model Tag {
 }
 
 model ArticleTag {
-  id        BigInt   @id @default(autoincrement())
-  articleId BigInt
+  id        BigInt @id @default(autoincrement())
+  articleId BigInt @db.UnsignedBigInt
   tagId     Int
 
-  article  Article @relation(fields: [articleId], references: [id])
-  tag      Tag     @relation(fields: [tagId], references: [id])
+  article Article @relation(fields: [articleId], references: [id])
+  tag     Tag     @relation(fields: [tagId], references: [id])
 
   @@unique([articleId, tagId])
   @@map("article_tags")
@@ -188,9 +209,49 @@ model NotificationLog {
   status     String   @db.VarChar(20) // "SUCCESS" or "FAILED"
   executedAt DateTime @default(now()) @map("executed_at") @db.Timestamp(0)
 
-  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   // 検索高速化用インデックス
   @@index([eventId, type])
   @@map("notification_logs")
+}
+
+model Team {
+  id               BigInt   @id @default(autoincrement())
+  eventId          BigInt   @map("event_id") @db.UnsignedBigInt
+  name             String   @db.VarChar(100)
+  discordInviteUrl String?  @map("discord_invite_url") @db.VarChar(255)
+  status           TeamStatus @default(ready)
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  event   Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  members TeamMember[]
+
+  @@map("teams")
+}
+
+model TeamMember {
+  teamId   BigInt   @map("team_id")
+  userId   BigInt   @map("user_id")
+  role     TeamRole @default(member)
+  joinedAt DateTime @default(now()) @map("joined_at")
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([teamId, userId])
+  @@map("team_members")
+}
+
+enum TeamStatus {
+  ready
+  active
+  finished
+  trouble
+}
+
+enum TeamRole {
+  leader
+  member
 }

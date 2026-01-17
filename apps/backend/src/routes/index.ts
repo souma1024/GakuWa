@@ -24,6 +24,7 @@ import { cancelParticipateController } from "../controllers/cancelParticipateCon
 import {
   createArticleController,
   getArticlesController,
+  getUsersArticlesController,
   getArticleDetailController,
   updateArticleController,
   publishArticleController,
@@ -59,6 +60,9 @@ import {
   createCategorySchema,
   updateCategorySchema,
 } from "../types/categorySchema";
+// 【変更点】クラスではなく、関数としてインポートします
+import { rankingController } from "../controllers/rankingController";
+
 
 // ===== Notifications =====
 import { batchNotificationController } from "../controllers/notificationController";
@@ -87,8 +91,9 @@ router.delete(
 );
 
 // ===== Articles =====
-router.post("/articles", validateBody(createArticleSchema), createArticleController);
+router.post("/articles", validateBody(createArticleSchema), authenticateUser, createArticleController);
 router.get("/articles", getArticlesController);
+router.get("/:handle/articles", authenticateUser, getUsersArticlesController);
 router.get("/articles/:id", getArticleDetailController);
 router.put("/articles/:id", validateBody(updateArticleSchema), updateArticleController);
 router.patch("/articles/:id/publish", publishArticleController);
@@ -156,4 +161,8 @@ router.delete(
 // ===== Notifications =====
 router.post("/notifications/batch", batchNotificationController);
 
-export default router;
+// ranking関係
+router.get('/ranking', rankingController);
+
+export default router
+

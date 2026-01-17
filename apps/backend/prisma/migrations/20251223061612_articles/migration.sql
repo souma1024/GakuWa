@@ -2,7 +2,7 @@
 CREATE TABLE `articles` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `handle` VARCHAR(50) NOT NULL,
-    `author_id` BIGINT UNSIGNED NOT NULL,
+    `author_id` BIGINT NOT NULL,
     `title` VARCHAR(255) NOT NULL,
     `content_md` TEXT NOT NULL,
     `content_html` TEXT NOT NULL,
