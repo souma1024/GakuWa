@@ -8,6 +8,7 @@ import BlockPage from "../pages/BlockPage";
 import MainLayout from "../layout/MainLayout";
 import ProfilePage from "../pages/ProfilePage";
 import EventsPage from "../pages/EventsPage";
+import ArticlePage from "../pages/ArticlePage";
 
 function App() {
   return (
@@ -30,7 +31,7 @@ function App() {
           <Route path="/:handle/articles" element={<ArticlesList />} />
           <Route path="/:handle/profile" element={<ProfilePage />} />
           <Route path="/:handle/events" element={<EventsPage />} />
-        
+          <Route path="/:handle/article" element={<ArticlePage />} />
         </Route>
       </Route>
       
