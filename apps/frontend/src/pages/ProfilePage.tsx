@@ -7,7 +7,7 @@ import ArticleCard from "../components/ArticleCard";
 import { useArticles } from "../hooks/useArticles";
 
 import styles from "../styles/profile.module.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type User = {
   handle: string;
@@ -28,10 +28,12 @@ export default function ProfilePage() {
   const location = useLocation();
   const mode = new URLSearchParams(location.search).get('mode');
   const { articles, fetchUsersArticles } = useArticles();
+  const [isArticles, setIsArticles] = useState(false);
 
   useEffect(() => {
     if (!user)  return;
     fetchUsersArticles(user.handle);
+    articles.length == 0 ? setIsArticles(false) : setIsArticles(true);
   }, [user?.handle])
 
   if (!user) return <div>Loading...</div>;
@@ -54,11 +56,14 @@ export default function ProfilePage() {
             
           </div>
           
-          <div className={ styles.righter }>    
+          <div className={ styles.righter }>
             {
               articles.map((article, _) => (
                 <ArticleCard key={ article.handle } article={ article }/>
               ))
+            }
+            { !isArticles && 
+              <p>記事を作成してみよう</p>
             }
           </div>
         </div>
