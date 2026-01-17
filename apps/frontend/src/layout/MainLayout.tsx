@@ -65,7 +65,12 @@ export default function MainLayout() {
               </>
             }
             
-            {user && <><BsBell className={ styles.bell }/> <AvatarMenu src={user.avatarUrl} user={ user }  /></>}
+            {user && 
+              <>
+                <BsBell className={ styles.bell }/> 
+                <button className={ styles.createButton } onClick={() => navigate(`/${user?.handle}/articles`)}>記事作成</button>
+                <AvatarMenu src={user.avatarUrl} user={ user }  />
+              </>}
           </div>
         </div>
         <div className={ styles.headerBottom }>
