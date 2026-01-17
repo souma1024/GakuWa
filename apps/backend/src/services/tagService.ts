@@ -11,11 +11,16 @@ export const tagService = {
       throw new ApiError("validation_error", "タグ名は必須です");
     }
 
-    const existing = await tagRepository.findByName(name);
+    const normalized = name.trim();
+    if (normalized.length === 0) {
+      throw new ApiError("validation_error", "タグ名は必須です");
+    }
+
+    const existing = await tagRepository.findByName(normalized);
     if (existing) {
       return existing;
     }
 
-    return await tagRepository.create(name);
+    return await tagRepository.create(normalized);
   },
 };

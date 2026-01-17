@@ -1,11 +1,11 @@
 import "express-serve-static-core";
-import { User } from "@prisma/client";
+import { UserRole } from "@prisma/client";
 
 declare module "express-serve-static-core" {
   interface Request {
-    userId?: bigint;   
+    userId?: bigint;
     user?: {
-      id: bigint;        // ← ここが重要
+      id: bigint;
       role: UserRole;
       handle: string;
     };

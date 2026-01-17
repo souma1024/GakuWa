@@ -177,6 +177,7 @@ model Category {
   articles Article[]
 
   @@map("categories")
+
 }
 
 model Tag {

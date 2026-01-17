@@ -27,6 +27,8 @@ export const deleteTagController = async (
     const tagId = Number(req.params.tagId);
 
     await adminTagService.deleteTag(tagId);
+
+    sendSuccess(res, null);
     sendSuccess(res, { message: "タグを削除しました" });
   } catch (err) {
     next(err);

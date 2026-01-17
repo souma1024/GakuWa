@@ -1,37 +1,38 @@
-import bcrypt from 'bcrypt'
+import bcrypt from "bcrypt";
+import crypto from "crypto";
 
-import { ApiError } from "../errors/apiError"
-import { userRepository } from "../repositories/userRepository"
-import { generateSixDigitCode } from '../utils/otpGenerator'
-import { emailService } from './emailService'
-import { emailOtpRepository } from '../repositories/emailOtpRepository'
-import { generateUniqueHandle } from '../utils/handleNameGenerator'
-import { sessionService } from './sessionService'
-import { LoginResponse } from '../dtos/users/responseDto'
-import { prisma } from '../lib/prisma'
-import { LoginRequest, PreSignupRequest } from '../dtos/users/requestDto'
-import { Cookie } from '../dtos/Cookie'
-import { Prisma, UserSession } from '@prisma/client'
+import { ApiError } from "../errors/apiError";
+import { userRepository } from "../repositories/userRepository";
+import { generateSixDigitCode } from "../utils/otpGenerator";
+import { emailService } from "./emailService";
+import { emailOtpRepository } from "../repositories/emailOtpRepository";
+import { generateUniqueHandle } from "../utils/handleNameGenerator";
+import { sessionService } from "./sessionService";
+import { LoginResponse } from "../dtos/users/responseDto";
+import { prisma } from "../lib/prisma";
+import { LoginRequest, PreSignupRequest } from "../dtos/users/requestDto";
+import { Cookie } from "../dtos/Cookie";
+import { Prisma, UserSession } from "@prisma/client";
 
 export const userService = {
   async login(input: LoginRequest): Promise<LoginResponse & Cookie> {
     const user = await userRepository.findByEmail(input.email);
     if (!user) {
-      throw new ApiError('authentication_error', 'ユーザーが存在しません');
+      throw new ApiError("authentication_error", "ユーザーが存在しません");
     }
 
     const ok = await bcrypt.compare(input.password, user.passwordHash);
-
     if (!ok) {
       throw new ApiError(
-        'authentication_error',
-        'メールアドレスもしくはパスワードが異なります'
+        "authentication_error",
+        "メールアドレスもしくはパスワードが異なります"
       );
     }
 
-    // ★ セッションを作成（これが無かった）
+    // セッションを作成
     const sessionToken = await sessionService.createSession(user.id);
 
+    // LoginResponse & Cookie（フラット返却）に統一
     return {
       handle: user.handle,
       name: user.name,
@@ -45,26 +46,26 @@ export const userService = {
   },
 
   async logout(userId: bigint, sessionToken: string) {
-
     const user = await userRepository.findById(userId);
 
     if (!user) {
-      throw new ApiError('authentication_error', 'ユーザが存在しません');
+      throw new ApiError("authentication_error", "ユーザが存在しません");
     }
 
-    const logoutSession: UserSession = await sessionService.expiresSession(sessionToken);
+    const logoutSession: UserSession = await sessionService.expiresSession(
+      sessionToken
+    );
 
     if (!logoutSession) {
-      throw new ApiError('database_error', 'セッション情報の無効化に失敗しました');
+      throw new ApiError("database_error", "セッション情報の無効化に失敗しました");
     }
   },
 
   async cookielogin(userId: bigint): Promise<LoginResponse> {
-    
     const user = await userRepository.findById(userId);
 
     if (!user) {
-      throw new ApiError('authentication_error', 'ユーザーが存在しません');
+      throw new ApiError("authentication_error", "ユーザーが存在しません");
     }
 
     return {
@@ -74,7 +75,7 @@ export const userService = {
       profile: user.profile,
       followersCount: user.followersCount,
       followingsCount: user.followingsCount,
-      role: user.role
+      role: user.role,
     };
   },
 
@@ -84,23 +85,30 @@ export const userService = {
 
     const sameEmail = await userRepository.findByEmail(email);
     if (sameEmail) {
-      throw new ApiError('duplicate_error', 'そのメールアドレスは既に使用されています');
+      throw new ApiError("duplicate_error", "そのメールアドレスは既に使用されています");
     }
 
-    const { user, isDisabled, sessionToken } = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const user = await userRepository.registerUser(tx, name, handle, email, passwordHash);
-      const isDisabled = await emailOtpRepository.disableOtp(tx, public_token);
-      const sessionToken = await sessionService.createSession(user.id, tx);
-      return { user, isDisabled, sessionToken };
-    });
+    const { user, isDisabled, sessionToken } = await prisma.$transaction(
+      async (tx: Prisma.TransactionClient) => {
+        const user = await userRepository.registerUser(
+          tx,
+          name,
+          handle,
+          email,
+          passwordHash
+        );
+        const isDisabled = await emailOtpRepository.disableOtp(tx, public_token);
+        const sessionToken = await sessionService.createSession(user.id, tx);
+        return { user, isDisabled, sessionToken };
+      }
+    );
 
-    
     if (!user) {
-      throw new ApiError('database_error', '新規登録に失敗しました');
+      throw new ApiError("database_error", "新規登録に失敗しました");
     }
-    
+
     if (!isDisabled) {
-      throw new ApiError('database_error', 'OTP削除に失敗しました');
+      throw new ApiError("database_error", "OTP削除に失敗しました");
     }
 
     const userInfo = {
@@ -114,42 +122,40 @@ export const userService = {
 
     return { userInfo, sessionToken };
   },
-  
+
   // ユーザー仮登録関数
   async preSignup(input: PreSignupRequest): Promise<string> {
-
     const sameEmail = await userRepository.findByEmail(input.email);
     if (sameEmail) {
-      throw new ApiError('duplicate_error', 'そのメールアドレスは既に使用されています');
+      throw new ApiError("duplicate_error", "そのメールアドレスは既に使用されています");
     }
 
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(input.password, saltRounds);
 
-    // 2. トークンを生成
-    const otpCode = generateSixDigitCode(); // これはメールでユーザーに送る「数字」
-    const publicToken = crypto.randomUUID(); // これは画面側に返す「ランダムな文字列」
+    // OTP生成
+    const otpCode = generateSixDigitCode(); // メールで送る「数字」
+    const publicToken = crypto.randomUUID(); // 画面側に返す「ランダム文字列」
 
-    // 3. OTPコードもハッシュ化！
-    // もしDBの中身を見られても認証コードがバレないように、こっちもハッシュ化して保存するのが安全らしいです
+    // OTPもハッシュ化して保存
     const otpHash = await bcrypt.hash(otpCode, 10);
 
-    // 有効期限を設定（とりあえず今から10分後にしてます）
+    // 有効期限（10分）
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
     const params = {
       name: input.name,
-      email: input.email, 
-      password_hash: passwordHash, 
-      public_token: publicToken, 
+      email: input.email,
+      password_hash: passwordHash,
+      public_token: publicToken,
       code_hash: otpHash,
-      expires_at: expiresAt
+      expires_at: expiresAt,
     };
 
     const preUser = await emailOtpRepository.registerEmailOtp(params);
 
     if (!preUser) {
-      throw new ApiError('database_error', '仮登録に失敗しました');
+      throw new ApiError("database_error", "仮登録に失敗しました");
     }
 
     await emailService.sendVerificationEmail(input.email, otpCode);
@@ -158,12 +164,11 @@ export const userService = {
   },
 
   async updateProfile(id: bigint, name?: string, profile?: string) {
-
     const user = await userRepository.updateUserProfile(id, name, profile);
     if (!user) {
-      throw new ApiError('database_error', 'ユーザー情報更新に失敗しました');
+      throw new ApiError("database_error", "ユーザー情報更新に失敗しました");
     }
- 
+
     return {
       handle: user.handle,
       name: user.name,
@@ -172,5 +177,5 @@ export const userService = {
       followersCount: user.followersCount,
       followingsCount: user.followingsCount,
     };
-  }
-}
+  },
+};

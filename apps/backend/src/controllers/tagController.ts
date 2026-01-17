@@ -14,7 +14,11 @@ export const createTagController = async (
   try {
     const { name } = req.body;
 
-    const tag = await tagService.findOrCreateTag(name);
+    // tagService 側の関数名ゆれに対応
+    const tag =
+      "findOrCreateTag" in tagService
+        ? await (tagService as any).findOrCreateTag(name)
+        : await (tagService as any).findOrCreate(name);
 
     sendSuccess(res, tag);
   } catch (err) {

@@ -2,6 +2,7 @@ import { Router } from "express";
 
 // ===== Auth =====
 import { loginController } from "../controllers/loginController";
+import { logoutController } from "../controllers/logoutController";
 import { preSignupController } from "../controllers/preSignupController";
 import { otpController } from "../controllers/otpController";
 import { reOtpController } from "../controllers/reOtpController";
@@ -48,28 +49,41 @@ import {
   deleteTagController,
 } from "../controllers/adminTagController";
 
+// ===== Categories =====
+import {
+  getCategoriesController,
+  createCategoryController,
+  updateCategoryController,
+  deleteCategoryController,
+} from "../controllers/categoryController";
+import {
+  createCategorySchema,
+  updateCategorySchema,
+} from "../types/categorySchema";
 // 【変更点】クラスではなく、関数としてインポートします
-import { batchNotificationController } from '../controllers/notificationController'
-import { logoutController } from "../controllers/logoutController";
 import { rankingController } from "../controllers/rankingController";
 
-const router = Router()
+
+// ===== Notifications =====
+import { batchNotificationController } from "../controllers/notificationController";
+
+const router = Router();
 
 // ===== Auth =====
 router.post("/auth/login", validateBody(loginFormSchema), loginController);
 router.post("/auth/logout", authenticateUser, logoutController);
-router.post("/auth/preSignup", validateBody(signupFormSchema), preSignupController);
+router.post(
+  "/auth/preSignup",
+  validateBody(signupFormSchema),
+  preSignupController
+);
 router.post("/auth/otp/verify", validateBody(otpVerifySchema), otpController);
 router.post("/auth/otp/send", reOtpController);
 router.post("/auth/session", authenticateUser, indexController);
 
 // ===== Events =====
 router.get("/events", authenticateUser, eventsController);
-router.post(
-  "/events/:eventId/participate",
-  authenticateUser,
-  participateController
-);
+router.post("/events/:eventId/participate", authenticateUser, participateController);
 router.delete(
   "/events/:eventId/participate",
   authenticateUser,
@@ -81,11 +95,7 @@ router.post("/articles", validateBody(createArticleSchema), authenticateUser, cr
 router.get("/articles", getArticlesController);
 router.get("/:handle/articles", authenticateUser, getUsersArticlesController);
 router.get("/articles/:id", getArticleDetailController);
-router.put(
-  "/articles/:id",
-  validateBody(updateArticleSchema),
-  updateArticleController
-);
+router.put("/articles/:id", validateBody(updateArticleSchema), updateArticleController);
 router.patch("/articles/:id/publish", publishArticleController);
 router.delete("/articles/:id", deleteArticleController);
 
@@ -103,14 +113,8 @@ router.get("/images/avatars/:key", imageGetController);
 router.patch("/profile", authenticateUser, updateProfileController);
 
 // ===== Tags =====
-
 // タグ作成（ユーザー）
-router.post(
-  "/tags",
-  authenticateUser,
-  validateBody(createTagSchema),
-  createTagController
-);
+router.post("/tags", authenticateUser, validateBody(createTagSchema), createTagController);
 
 // タグ更新（管理者）
 router.put(
@@ -122,18 +126,43 @@ router.put(
 );
 
 // タグ削除（管理者）
-router.delete(
-  "/admin/tags/:tagId",
+router.delete("/admin/tags/:tagId", authenticateUser, adminOnly, deleteTagController);
+
+// ===== Categories =====
+// public: カテゴリ一覧
+router.get("/categories", getCategoriesController);
+
+// admin: 作成
+router.post(
+  "/admin/categories",
   authenticateUser,
   adminOnly,
-  deleteTagController
+  validateBody(createCategorySchema),
+  createCategoryController
+);
+
+// admin: 更新
+router.put(
+  "/admin/categories/:categoryId",
+  authenticateUser,
+  adminOnly,
+  validateBody(updateCategorySchema),
+  updateCategoryController
+);
+
+// admin: 削除
+router.delete(
+  "/admin/categories/:categoryId",
+  authenticateUser,
+  adminOnly,
+  deleteCategoryController
 );
 
 // ===== Notifications =====
-router.post('/notifications/batch', batchNotificationController)
-
+router.post("/notifications/batch", batchNotificationController);
 
 // ranking関係
 router.get('/ranking', rankingController);
 
 export default router
+
