@@ -94,3 +94,19 @@
   cursor: pointer;
   font-family: 'Courier New', Courier, monospace;
 }
+
+.container {
+	display: flex;
+	background-color: rgb(252, 252, 255);
+	min-height: 100vh;
+}
+
+.lefter {
+	flex: 1;
+	background-color: red;
+}
+
+.center {
+	flex: 6;
+	background-color: green;
+}
