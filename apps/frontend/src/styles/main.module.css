@@ -92,6 +92,23 @@
   cursor: pointer;
 }
 
+.createButton {
+  margin-right: 20px;
+  height: 32px;
+  width: 100px;
+  border-radius: 5px;
+  background-color: rgb(36, 149, 255);
+  color: white;
+  border: solid 0px;
+  cursor: pointer;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.createButton:hover {
+  background-color: rgb(36, 149, 255);
+  box-shadow: 1px 1px 1px rgb(0, 153, 255);
+}
+
 .footer {
   background-color: rgb(79, 106, 171);
   border-top: solid;
