@@ -13,6 +13,8 @@
     "@hookform/resolvers": "^5.2.2",
     "bootstrap-icons": "^1.13.1",
     "browser-image-compression": "^2.0.2",
+    "html-react-parser": "^5.2.11",
+    "marked": "^17.0.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.67.0",

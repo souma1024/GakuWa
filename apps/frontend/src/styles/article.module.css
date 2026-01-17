@@ -36,14 +36,23 @@
 	border-color: rgb(36, 124, 255);	
 }
 
+.content:has(.write) {
+	border: 1.5px solid;
+	border-color: rgb(36, 124, 255);	
+}
+
 .mode {
 	margin-left: 10px;
 	font-size: 12px;
-	color: rgb(110, 110, 110);
+	color: rgb(207, 207, 207);
 	padding: 0px;
 	cursor: pointer;
 	line-height: 15px;
 	border-radius: 5px;
+}
+
+.focus {
+	color: black;
 }
 
 .contentDispcription {
