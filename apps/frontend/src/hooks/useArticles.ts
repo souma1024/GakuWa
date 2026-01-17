@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-export type Article = {
+export type PublishedArticle = {
   handle: string,
   title: string,
   author: string,
@@ -10,17 +10,34 @@ export type Article = {
   updated_at: string | null
 }
 
+export type Article = PublishedArticle & {
+  status: string;
+}
+
 export const useArticles = () => {
+  const [publishedArticles, setPublishedArticles] = useState<PublishedArticle[]>([]);
   const [articles, setArticles] = useState<Article[]>([]);
 
-  const fetchArticles = async () => {
+  const fetchPublishedArticles = async () => {
     try {
       const res = await fetch('http://localhost:8080/api/articles', {
         method: 'GET'
       });
       const result = await res.json();
-      setArticles(result.data);
+      setPublishedArticles(result.data);
       console.log(result.data);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const fetchPublishedUsersArticles = async (handle: string) => {
+    try {
+      const res = await fetch(`http://localhost:8080/api/${handle}/articles`, {
+        method: 'GET'
+      });
+      const result = await res.json();
+      setPublishedArticles(result.data);
     } catch (e) {
       console.log(e);
     }
@@ -28,15 +45,22 @@ export const useArticles = () => {
 
   const fetchUsersArticles = async (handle: string) => {
     try {
-      const res = await fetch(`http://localhost:8080/api/${handle}/articles`, {
+      const res = await fetch(`http://localhost:8080/api/${handle}/articles?t=all`, {
         method: 'GET'
       });
       const result = await res.json();
+      console.log("fetchUsersArticle: ", result);
       setArticles(result.data);
     } catch (e) {
       console.log(e);
     }
   }
 
-  return { articles, fetchArticles, fetchUsersArticles };
+  return { 
+    articles,
+    fetchUsersArticles,
+    publishedArticles, 
+    fetchPublishedArticles, 
+    fetchPublishedUsersArticles 
+  };
 }

@@ -8,10 +8,10 @@ import { useEffect } from 'react';
 export default function Homepage() {
 
   const { postsRanking, fetchPosts } = useRanking();
-  const { articles, fetchArticles } = useArticles();
+  const { publishedArticles, fetchPublishedArticles } = useArticles();
 
   useEffect(() => {
-    fetchArticles(); 
+    fetchPublishedArticles(); 
   }, []);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export default function Homepage() {
 
         <div id='articles' className={styles.articles}>
           {
-            articles.map((article, _) => (
+            publishedArticles.map((article, _) => (
               <ArticleCard key={ article.handle } article={ article }/>
             ))
           }
