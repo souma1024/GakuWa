@@ -77,10 +77,10 @@ router.delete(
 );
 
 // ===== Articles =====
-router.post("/articles", validateBody(createArticleSchema), authenticateUser, createArticleController);
+router.post("/articles/create", authenticateUser, createArticleController);
 router.get("/articles", getArticlesController);
 router.get("/:handle/articles", authenticateUser, getUsersArticlesController);
-router.get("/articles/:id", getArticleDetailController);
+router.get("/articles/:handle", getArticleDetailController);
 router.put(
   "/articles/:id",
   validateBody(updateArticleSchema),

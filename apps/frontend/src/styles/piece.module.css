@@ -1,0 +1,37 @@
+
+
+.status {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  height: 30px;
+	width: 100px;
+	border-radius: 5px;
+}
+
+.text {
+	font-size: 14px;
+}
+
+.published {
+	background-color: rgb(81, 255, 81);
+	color: white;
+}
+
+.published:hover {
+	box-shadow: 1px 1px 1px rgb(81, 255, 81);;
+}
+
+.draft {
+	background-color: #ffe26f;
+  color: #fd9400;
+}
+
+.draft:hover {
+	box-shadow: 1px 1px 1px #ffe26f;
+}
+
+.archived {
+	background-color: rgb(161, 161, 161);
+	color: rgb(99, 99, 99)
+}

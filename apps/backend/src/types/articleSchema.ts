@@ -3,8 +3,9 @@ import { z } from "zod";
 // ✅ 作成（POST /api/articles）
 export const createArticleSchema = z.object({
   title: z.string().max(255),
-  content: z.string().max(65535),
-  categoryId: z.number().int().positive(),
+  contentMd: z.string().max(65535),
+  contentHtml: z.string().max(65535),
+  status: z.string().max(65535),
 });
 
 // ✅ 更新（PUT /api/articles/:id）

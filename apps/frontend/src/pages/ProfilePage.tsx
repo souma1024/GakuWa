@@ -27,13 +27,13 @@ export default function ProfilePage() {
   const { user, setUser } = useOutletContext<OutletContext>();
   const location = useLocation();
   const mode = new URLSearchParams(location.search).get('mode');
-  const { articles, fetchUsersArticles } = useArticles();
+  const { publishedArticles, fetchPublishedUsersArticles } = useArticles();
   const [isArticles, setIsArticles] = useState(false);
 
   useEffect(() => {
     if (!user)  return;
-    fetchUsersArticles(user.handle);
-    articles.length == 0 ? setIsArticles(false) : setIsArticles(true);
+    fetchPublishedUsersArticles(user.handle);
+    publishedArticles.length == 0 ? setIsArticles(false) : setIsArticles(true);
   }, [user?.handle])
 
   if (!user) return <div>Loading...</div>;
@@ -58,12 +58,12 @@ export default function ProfilePage() {
           
           <div className={ styles.righter }>
             {
-              articles.map((article, _) => (
+              publishedArticles.map((article, _) => (
                 <ArticleCard key={ article.handle } article={ article }/>
               ))
             }
             { !isArticles && 
-              <p>記事を作成してみよう</p>
+              <p>記事を作成して公開しよう</p>
             }
           </div>
         </div>
