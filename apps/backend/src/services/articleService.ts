@@ -1,12 +1,13 @@
 import { GetArticleResponse, GetArticlesResponse } from "../dtos/articles/responseDtos";
 import { ApiError } from "../errors/apiError";
 import { articleRepository } from "../repositories/articleRepository";
+import { userRepository } from "../repositories/userRepository";
 import { CreateArticleInput } from "../types/articleSchema";
 import { UpdateArticleInput } from "../types/articleSchema";
 import { uuidGenerator } from "../utils/uuidGenerator";
 
 export const articleService = {
-  async createArticle(input: CreateArticleInput, userId: bigint): Promise<GetArticlesResponse> {
+  async createArticle(input: CreateArticleInput, userId: bigint){
     const handle: string = uuidGenerator() ;
     const article =  await articleRepository.create(input, userId, handle);
 
@@ -14,11 +15,14 @@ export const articleService = {
       throw new ApiError('database_error', '記事の新規登録に失敗しました');
     }
 
+    const user = await userRepository.findById(article.authorId);
+
+    if (!user) {
+      throw new ApiError('database_error', 'ユーザー取得に失敗しました');
+    }
+
     return {
-      id: article.id.toString(),
-      title: article.title,
-      status: article.status,
-      createdAt: article.createdAt
+      handle: user.handle
     };
   },
 
@@ -33,6 +37,23 @@ export const articleService = {
       author_avatarUrl: article.author.avatarUrl,
       tag_names: article.articleTags,
       updated_at: article.publishedAt
+    }));
+
+    return response;
+  },
+
+  async getAllArticlesById(id: bigint) {
+    const articles = await articleRepository.findAllArticles(id);
+
+    const response = articles.map(article => ({
+      handle: article.handle,
+      title: article.title,
+      likes_count: article.likesCount.toString(),
+      author: article.author.handle,
+      author_avatarUrl: article.author.avatarUrl,
+      tag_names: article.articleTags,
+      updated_at: article.updatedAt,
+      status: article.status
     }));
 
     return response;
@@ -53,6 +74,16 @@ export const articleService = {
       createdAt: article.createdAt,
       updatedAt: article.updatedAt
     }
+  },
+
+  async getArticleByHandle(handle: string) {
+    const article = await articleRepository.findByHandle(handle);
+
+    if(!article) {
+      throw new ApiError('database_error', '記事の取得に失敗しました');
+    } 
+
+    return { article };
   },
 
   async updateArticle(id: bigint, data: UpdateArticleInput) {

@@ -51,10 +51,85 @@ export const articleRepository = {
     return articles;
   },
 
+  async findAllArticles(userId: bigint) {
+
+    const articles = await prisma.article.findMany({
+      where: { 
+        authorId: userId
+      },
+      orderBy: { createdAt: "desc" },
+      select: {
+        handle: true,
+        title: true,
+        author: {
+          select: {
+            handle: true,
+            avatarUrl: true
+          }
+        },
+        contentMd: true,
+        contentHtml: true,
+        likesCount: true,
+        bookmarksCount: true,
+        viewsCount: true,
+        status: true,
+        publishedAt: true,
+        createdAt: true,
+        updatedAt: true,
+        articleTags: {
+          select: {
+            tag: {
+              select: {
+                name: true
+              }
+            }
+          }
+        }
+      },
+    });
+
+    return articles;
+  },
+
   async findById(id: bigint) {
     return await prisma.article.findUnique({
       where: { id },
     });
+  },
+
+  async findByHandle(handle: string) {
+    const article = await prisma.article.findUnique({
+      where: { handle },
+      select: {
+        handle: true,
+        title: true,
+        author: {
+          select: {
+            handle: true,
+            avatarUrl: true
+          }
+        },
+        contentMd: true,
+        contentHtml: true,
+        likesCount: true,
+        bookmarksCount: true,
+        viewsCount: true,
+        status: true,
+        publishedAt: true,
+        createdAt: true,
+        updatedAt: true,
+        articleTags: {
+          select: {
+            tag: {
+              select: {
+                name: true
+              }
+            }
+          }
+        }
+      },
+    });
+    return article;
   },
 
   async updateById(id: bigint, data: UpdateArticleInput) {

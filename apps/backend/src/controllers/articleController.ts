@@ -16,7 +16,7 @@ export const createArticleController = async (
     if (!userId) {
       throw new ApiError('authentication_error', 'セッション情報が保存されていません');
     }
-    const response: CreateArticleResponse = await articleService.createArticle(request, userId);
+    const response = await articleService.createArticle(request, userId);
 
     return sendSuccess(res, response);
   } catch (e) {
@@ -47,12 +47,16 @@ export const getUsersArticlesController = async (
 ) => {
   try {
     const userId = req.userId;
+    const type = req.query.t;
 
     if (!userId) {
       throw new ApiError('authentication_error', 'セッション情報が保存されていません');
     }
 
-    const articles = await articleService.getPublishedArticles(userId);
+    const articles = type
+      ? await articleService.getAllArticlesById(userId)
+      : await articleService.getPublishedArticles(userId);
+    
 
     return sendSuccess(res, articles);
   } catch(e) {
@@ -66,14 +70,13 @@ export const getArticleDetailController = async (
   next: NextFunction
 ) => {
   try {
-    const { id } = req.params;
+    const { handle } = req.params;
 
-    if (!id) {
-      throw new ApiError('validation_error', 'id is required')
+    if (!handle) {
+      throw new ApiError('validation_error', '記事のキーがありません')
     }
 
-    const articleId = BigInt(id);
-    const article: GetArticleResponse = await articleService.getArticleById(articleId);
+    const article = await articleService.getArticleByHandle(handle);
 
     return sendSuccess(res, article);
   } catch (e) {
