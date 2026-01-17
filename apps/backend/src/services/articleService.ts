@@ -1,4 +1,4 @@
-import { CreateArticleResponse, GetArticleResponse, GetArticlesResponse } from "../dtos/articles/responseDtos";
+import { GetArticleResponse, GetArticlesResponse } from "../dtos/articles/responseDtos";
 import { ApiError } from "../errors/apiError";
 import { articleRepository } from "../repositories/articleRepository";
 import { CreateArticleInput } from "../types/articleSchema";
@@ -6,7 +6,7 @@ import { UpdateArticleInput } from "../types/articleSchema";
 import { uuidGenerator } from "../utils/uuidGenerator";
 
 export const articleService = {
-  async createArticle(input: CreateArticleInput, userId: bigint): Promise<CreateArticleResponse> {
+  async createArticle(input: CreateArticleInput, userId: bigint): Promise<GetArticlesResponse> {
     const handle: string = uuidGenerator() ;
     const article =  await articleRepository.create(input, userId, handle);
 

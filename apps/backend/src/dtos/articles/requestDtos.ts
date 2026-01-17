@@ -1,5 +1,6 @@
 export type CreateArticleRequest = {
   title: string;
-  content: string;
-  categoryId: number;
+  contentMd: string;
+  contentHtml: string;
+  status: string;
 }

@@ -3,18 +3,16 @@ import { CreateArticleInput, UpdateArticleInput } from "../types/articleSchema";
 
 export const articleRepository = {
   async create(data: CreateArticleInput, authorId: bigint, handle: string) {
-    const { title, content, categoryId } = data;
+    const { title, contentMd, contentHtml, status } = data;
 
     return await prisma.article.create({
       data: {
         title,
         handle: handle,
-        contentMd: content,
-        contentHtml: content,
+        contentMd: contentMd,
+        contentHtml: contentHtml,
         status: "draft",
         author:   { connect: { id: authorId } },
-        category: { connect: { id: BigInt(categoryId) },
-        },
       },
     });
   },
