@@ -145,7 +145,7 @@ export default function ArticlePage() {
 
             </div>
             <div className={ styles.center }>
-
+              未完成
             </div>
           </div>
         </>
