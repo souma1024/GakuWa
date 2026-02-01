@@ -1,6 +1,6 @@
 .home {
   display: flex;
-  height: auto;
+  min-height: 60vh;
 }
 
 .ranking {
