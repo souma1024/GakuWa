@@ -23,7 +23,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
 
   return (
     <>
-      <div className={ styles.card } onClick={ () => { navigate(`/${article.author}/article?g=${ article.handle }`) } }>
+      <div className={ styles.card }>
         <div className={ styles.wrapper}>
           <div className={ styles.lefter}>
             <img src={ url } alt="avatar" className={ styles.avatar }/>
@@ -46,13 +46,18 @@ export default function ArticleCard({ article }: ArticleCardProps) {
               </div>
             </div>
             <div className={ styles.center }>
-              <strong className={ styles.title }>{ article.title }</strong>
+              <strong 
+                className={ styles.title }
+                onClick={ () => { navigate(`/${article.author}/article?g=${ article.handle }`) } }>
+                  { article.title }
+                  
+                  </strong>
             </div>
             <div className={ styles.tags }>
-              {
-                article.tag_names.map((tag, index) => (
-                  <Tag title={tag} />
-                ))  
+              {  
+                article.tag_names.map((tag) => (
+                  <Tag key={ tag } title={ tag }/> 
+                ))    
               }
             </div>
             <div className={ styles.footer }>
