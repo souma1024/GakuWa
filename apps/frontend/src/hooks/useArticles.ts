@@ -50,7 +50,12 @@ export const useArticles = () => {
       });
       const result = await res.json();
       console.log("fetchUsersArticle: ", result);
-      setArticles(result.data);
+      const articles = result.data.map((article :any)=> ({
+        ...article,
+        tag_names: article.tag_names.map((t :any) => t.tag.name),
+      }));
+
+      setArticles(articles);
     } catch (e) {
       console.log(e);
     }
