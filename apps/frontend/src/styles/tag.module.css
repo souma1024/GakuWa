@@ -1,6 +1,7 @@
 .tag {
 	height: 25px;
 	margin-right: 10px;
+	margin-top: 5px;
 	border-radius: 3px;
 	padding: 1px 7px;
 	background-color: rgb(240, 240, 240);
@@ -8,4 +9,9 @@
 	justify-content: center;
 	align-items: center;
 	font-size: small;
+	cursor: pointer;
+}
+
+.tag:hover {
+	background-color: rgb(222, 222, 222);
 }
