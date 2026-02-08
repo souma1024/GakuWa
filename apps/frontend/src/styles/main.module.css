@@ -69,7 +69,7 @@
 
 .content {
   flex: 12;
-  min-height: 60vh;
+  min-height: 68vh;
 }
 
 .appTitle {
@@ -114,7 +114,6 @@
   background-color: rgb(79, 106, 171);
   border-top: solid;
   border-color: rgb(216, 219, 223);
-  margin-top: 100px;
 }
 
 .footer a {
