@@ -107,14 +107,88 @@
 
 .container {
 	display: flex;
-	background-color: rgb(252, 252, 255);
-	min-height: 80vh;
+	background-color: rgb(234, 234, 234);
+	min-height: 60vh;
 }
 
+/* お気に入りの数や保存数など */
 .lefter {
 	flex: 1;
+	
 }
 
+/* 記事の本体 */
 .center {
-	flex: 6;
+	flex: 3;
+	min-height: 100vh;
+	background-color: white;
+	display: flex;
+	justify-content: center;
+	margin:20px;
+	border-radius: 2px;
+}
+
+.article {
+	margin-top: 8%;
+	width: 90%;
+	flex-direction: column;
+}
+
+.articleInfo {
+	min-height: 20%;
+	width: 90%;
+	display: flex;
+	flex-direction: column;
+}
+
+.userInfo {
+	display: flex;
+}
+
+.avatar {
+	height: 35px;
+	width: 35px;
+}
+
+.usernameField {
+	height: 35px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.username {
+	font-weight: bold;
+	margin-left:  10px;
+	cursor: pointer;
+}
+
+.username:hover {
+	border-bottom: solid 2px;
+}
+
+.readingTitle {
+	margin: 2px;
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.tags {
+	margin-top: 5px;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.date {
+	font-size: 13px;
+	color: grey
+}
+
+.articleContent {
+	background-color: white;
+}
+
+/* 広告など */
+.righter {
+	flex: 1;
 }
