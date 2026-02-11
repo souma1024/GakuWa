@@ -52,6 +52,7 @@ import {
 import { batchNotificationController } from '../controllers/notificationController'
 import { logoutController } from "../controllers/logoutController";
 import { rankingController } from "../controllers/rankingController";
+import { authController } from "../controllers/authController";
 
 const router = Router()
 
@@ -62,6 +63,7 @@ router.post("/auth/preSignup", validateBody(signupFormSchema), preSignupControll
 router.post("/auth/otp/verify", validateBody(otpVerifySchema), otpController);
 router.post("/auth/otp/send", reOtpController);
 router.post("/auth/session", authenticateUser, indexController);
+router.post("/auth/oneself", authenticateUser, authController);
 
 // ===== Events =====
 router.get("/events", authenticateUser, eventsController);
