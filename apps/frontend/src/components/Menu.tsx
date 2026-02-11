@@ -27,10 +27,10 @@ export const Menu = ({ user, src }: Props) => {
   return (
     <>
     <div className={ styles.menu }>
-      <div className={ styles.profile } onClick={() => navigate(`/${user.handle}/profile`, {state: user}) } >
+      <div className={ styles.profile } onClick={() => navigate(`/profile`, {state: user}) } >
         <p>公開用プロフィール</p>
       </div>
-      <div className={ styles.library } onClick={() => navigate(`/${user.handle}/library`, {state: user})}>
+      <div className={ styles.library } onClick={() => navigate(`/library`, {state: user})}>
         <p>ライブラリ</p>
       </div>
       <div className={ styles.account }>

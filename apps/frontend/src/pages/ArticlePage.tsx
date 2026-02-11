@@ -80,7 +80,7 @@ export default function ArticlePage() {
       const handle: string = result.data.handle;
 
       if (result.success) {
-        navigate(`/${handle}/library`, {state: handle});
+        navigate(`/library`, {state: handle});
       } else {
 
       }
