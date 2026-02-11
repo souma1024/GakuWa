@@ -23,20 +23,26 @@ function App() {
       {/* OTP入力画面 */}
       <Route path="/signup/otp-verify" element={<OtpVerifyPage />} />
       
-      {/* ユーザーホーム画面 */}
-      <Route element={<BlockPage />}>
-        <Route element={<MainLayout/>}>
-        
-          <Route path="/" element={<HomePage />} />
-          <Route path="/:handle" element={<HomePage />} />
-          <Route path="/:handle/articles" element={<ArticlesList />} />
-          <Route path="/:handle/profile" element={<ProfilePage />} />
-          <Route path="/:handle/events" element={<EventsPage />} />
-          <Route path="/:handle/article" element={<ArticlePage />} />
-          <Route path="/:handle/library" element={<LibraryPage />}/>
-        </Route>
-      </Route>
       
+      <Route element={<MainLayout/>}>
+        {/* 認証済みユーザーのみ閲覧可能 */}
+        <Route element={<BlockPage />}>
+
+          {/* 認証済みかどうかで表示を変える */}
+          <Route path="/" element={<HomePage />} />
+          
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/events" element={<EventsPage />} />
+          <Route path="/article" element={<ArticlePage />} />
+          <Route path="/library" element={<LibraryPage />}/>
+
+        </Route>
+
+        {/* 誰でも閲覧できるページ */}
+        <Route path="/:handle/article" element={<ArticlePage />} />
+        <Route path="/:handle/profile" element={<ProfilePage />}/>
+      </Route>
+
       {/* 404 Not Found */}
       <Route path="*" element={<div>404 Not Found</div>} />
     </Routes>
