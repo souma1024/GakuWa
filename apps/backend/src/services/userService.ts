@@ -172,5 +172,21 @@ export const userService = {
       followersCount: user.followersCount,
       followingsCount: user.followingsCount,
     };
+  },
+
+  async getPublicProfile(handle: string) {
+    const user = await userRepository.findByHandle(handle);
+    if (!user) {
+      throw new ApiError('database_error', 'ユーザー情報更新に失敗しました');
+    }
+ 
+    return {
+      handle: user.handle,
+      name: user.name,
+      avatarUrl: user.avatarUrl,
+      profile: user.profile,
+      followersCount: user.followersCount,
+      followingsCount: user.followingsCount,
+    };
   }
 }

@@ -38,6 +38,7 @@ import { upload } from "../middlewares/imageMiddleware";
 
 // ===== Profile =====
 import { updateProfileController } from "../controllers/updateProfileController";
+import { getPublicProfileDataController } from "../controllers/getPublicProfileDataController";
 
 // ===== Tags =====
 import { adminOnly } from "../middlewares/adminMiddleware";
@@ -103,6 +104,8 @@ router.get("/images/avatars/:key", imageGetController);
 
 // ===== Profile =====
 router.patch("/profile", authenticateUser, updateProfileController);
+// ユーザ情報を取得
+router.get("/profile/:handle", getPublicProfileDataController);
 
 // ===== Tags =====
 
