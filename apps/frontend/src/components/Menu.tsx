@@ -3,15 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styles from '../styles/menu.module.css';
 import { useAuth } from "../hooks/useAuth";
 import { useState } from "react";
-
-type User = {
-  handle: string;
-  name: string;
-  avatarUrl: string;
-  profile: string | null;
-  followersCount: number;
-  followingsCount: number;
-}
+import { User } from "../type/user";
 
 type Props = {
   src: string;
@@ -27,7 +19,7 @@ export const Menu = ({ user, src }: Props) => {
   return (
     <>
     <div className={ styles.menu }>
-      <div className={ styles.profile } onClick={() => navigate(`/profile`, {state: user}) } >
+      <div className={ styles.profile } onClick={() => navigate(`/${user.handle}/profile`, {state: user}) } >
         <p>公開用プロフィール</p>
       </div>
       <div className={ styles.library } onClick={() => navigate(`/library`, {state: user})}>
