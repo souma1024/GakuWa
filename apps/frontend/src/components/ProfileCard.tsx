@@ -1,24 +1,25 @@
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/profileCard.module.css'
+import { User } from '../type/user'
 
-export type User = {
-  handle: string;
-  name: string;
-  avatarUrl: string;
-  profile: string | null;
-  followersCount: number;
-  followingsCount: number;
-}
 
 type Props = {
-  user: User;
+  user: User | null;
+  userOneself: boolean;
 }
 
-export default function ProfileCard({ user }: Props) {
+export default function ProfileCard({ user, userOneself }: Props) {
+
+  if (!user) {
+    return (
+      <div className={styles.card}>
+        <p className={styles.intro}>ユーザー情報を読み込み中…</p>
+      </div>
+    );
+  } 
 
   const url: string = '/api/images/avatars/' + user.avatarUrl;
   const navigate = useNavigate();
-
 
   function editProfile() {
     navigate('?mode=edit', { state: user});
@@ -53,7 +54,15 @@ export default function ProfileCard({ user }: Props) {
         
       </div>
       <div className={styles.edit}>
-        <button className={styles.editBtn} onClick={ editProfile }>プロフィールを編集する</button>
+        {
+          userOneself && 
+          <button className={styles.btn} onClick={ editProfile }>プロフィールを編集する</button>
+        }
+
+        {
+          !userOneself && 
+          <button className={styles.btn}>フォローする</button>
+        }
       </div>
     </div>
   );
