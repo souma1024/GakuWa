@@ -3,52 +3,58 @@ import styles from '../styles/main.module.css';
 import Button from '../components/Button';
 import AvatarMenu from '../components/AvatarMenu';
 import { Outlet } from "react-router-dom";
-import { useOutletContext } from "react-router-dom";
-import { OutletContext } from '../pages/BlockPage';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { BsBell } from "react-icons/bs";
+import { User } from '../type/user';
 
 export default function MainLayout() {
-  const { user, setUser } = useOutletContext<OutletContext>();
+  const location = useLocation();
   const [focus, setFocus] = useState('');
+  const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
-  const pathname = useLocation().pathname;
+  const pathname = location.pathname;
+
+  
+  useEffect(() => {
+    const check = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/api/auth/session", {
+          method: "POST",
+          credentials: "include",
+        });
+        const result = await response.json();
+
+        setUser(result?.success ? (result.data ?? null) : null);
+      } catch(e) {
+        console.log(e);
+      }
+    };
+
+    check();
+  }, []);
 
   useEffect(() => {
-    
-    if (!user?.handle) {
-      if (pathname === "/") {
-        setFocus("home");
-        return;
-      }
-      return;
-    }
-
-    if (pathname === "/" || pathname === `/${user.handle}`) {
+    if (pathname === `/`) {
       setFocus("home");
       return;
-    }
-
-    if (pathname === `/${user.handle}/events`) {
+    } else if (pathname === `/events`) {
       setFocus("event");
       return;
+    } else {
+      setFocus("");
+      return;
     }
-    setFocus('');
-  }, [pathname, user?.handle]);
+  }, [pathname]);
 
   function home() {
     setFocus('home');
-    if (!user?.handle) {
-      navigate('/');
-    } else {
-      navigate('/' + user?.handle);
-    }
+    navigate('/');
   }
 
   function event() {
     setFocus('event');
-    navigate('/' + user?.handle + '/events');
+    navigate('/events');
   }
 
   return (
@@ -68,7 +74,7 @@ export default function MainLayout() {
             {user && 
               <>
                 <BsBell className={ styles.bell }/> 
-                <button className={ styles.createButton } onClick={() => navigate(`/${user?.handle}/article`)}>記事作成</button>
+                <button className={ styles.createButton } onClick={() => navigate(`/article`)}>記事作成</button>
                 <AvatarMenu src={user.avatarUrl} user={ user }  />
               </>}
           </div>
@@ -100,7 +106,7 @@ export default function MainLayout() {
       </div>
 
       <div id="content" className={styles.content}>
-        <Outlet context={{user, setUser}}/>
+        <Outlet context={{ user }} />
       </div>
 
       <div id="footer" className={styles.footer}>

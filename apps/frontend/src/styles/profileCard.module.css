@@ -83,11 +83,15 @@
   align-items: center;
 }
 
-.editBtn {
+.btn {
   height: 40px;
+  min-width: 150px;
   margin-top: 15px;
   border-radius: 20px;
-  border: 2px solid;
+  border: 1px solid;
   cursor: pointer;
 }
 
+.btn:hover {
+  background-color: rgb(236, 236, 236);
+}

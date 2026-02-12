@@ -1,14 +1,7 @@
 import { Menu } from './Menu'; 
 import { useEffect, useRef, useState } from "react";
 
-type User = {
-  handle: string;
-  name: string;
-  avatarUrl: string;
-  profile: string | null;
-  followersCount: number;
-  followingsCount: number;
-}
+import { User } from '../type/user';
 
 type Props = {
   src: string;

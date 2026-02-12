@@ -3,28 +3,20 @@ import { useState } from 'react';
 import styles from '../styles/profileEdit.module.css';
 import imageCompression from 'browser-image-compression';
 import { useNavigate } from 'react-router-dom';
-
-type User = {
-  handle: string;
-  name: string;
-  avatarUrl: string;
-  profile: string | null;
-  followersCount: number;
-  followingsCount: number;
-}
+import { User } from '../type/user';
 
 type Props = {
   user: User;
-  onSaved: (updated: User) => void;
 }
 
-export default function ProfileEdit({ user, onSaved }: Props) {
+export default function ProfileEdit({ user }: Props) {
   const navigate = useNavigate();
   const [name, setName] = useState(user.name);
   const [intro, setIntro] = useState(user.profile);
   const [avatar, setAvatar] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState("");
   const [url, setUrl] = useState('/api/images/avatars/' + user.avatarUrl);
+  const [updatedUser, setUpdatedUser] = useState<User>(user); 
 
   const getCompressedAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -45,6 +37,10 @@ export default function ProfileEdit({ user, onSaved }: Props) {
       console.log(error);
     }
   } 
+
+  const onSaved = (updatedUser: User) => {
+    setUpdatedUser(updatedUser); 
+  };
 
   const handleSubmit = async () => {
     try {

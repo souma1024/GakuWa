@@ -113,7 +113,7 @@ export default function OtpVerifyPage() {
       const user = result.data.userInfo;
 
       setTimeout(() => {
-        navigate(`/${user.handle}`, {
+        navigate(`/`, {
           state: user
         });
       }, 1000);

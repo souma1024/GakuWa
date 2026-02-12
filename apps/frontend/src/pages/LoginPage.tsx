@@ -60,7 +60,7 @@ export default function LoginPage() {
         
         // OTP入力画面に遷移 (public_tokenをstateで渡す)
         setTimeout(() => {
-          navigate(`/${user.handle}`, {
+          navigate(`/`, {
             state: user
           });
         }, 1000);
