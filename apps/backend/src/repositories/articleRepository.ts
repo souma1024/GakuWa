@@ -30,6 +30,7 @@ export const articleRepository = {
         title: true,
         likesCount: true,
         publishedAt: true,
+        updatedAt: true,
         author: {
           select: {
             handle: true,
@@ -139,9 +140,9 @@ export const articleRepository = {
     });
   },
 
-  async publishById(id: bigint) {
+  async publishByHandle(handle: string) {
     return await prisma.article.update({
-      where: { id },
+      where: { handle },
       data: { status: "published" },
     });
   },

@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { articleService } from "../services/articleService";
 import { CreateArticleRequest } from "../dtos/articles/requestDtos";
-import { CreateArticleResponse, GetArticleResponse, GetArticlesResponse } from "../dtos/articles/responseDtos";
 import { sendSuccess } from "../utils/sendSuccess";
 import { ApiError } from "../errors/apiError";
 
@@ -107,9 +106,15 @@ export const publishArticleController = async (
   next: NextFunction
 ) => {
   try {
-    const id = BigInt(req.params.id);
+    const handle = req.body.handle;
 
-    const article = await articleService.publishArticle(id);
+    console.log("handle", handle);
+
+    if (!handle) {
+      throw new ApiError('forbidden', '記事のハンドル名取得に失敗しました');
+    }
+
+    const article = await articleService.publishArticle(handle);
 
     return sendSuccess(res, article);
   } catch (e: any) {
