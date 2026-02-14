@@ -33,7 +33,7 @@ export default function ProfilePage() {
    useEffect(() => {
     if (!handle) return;
     fetchPublishedUsersArticles(handle);
-  }, [handle, fetchPublishedUsersArticles]);
+  }, [handle]);
 
   useEffect(() => {
     if (!handle) return;
