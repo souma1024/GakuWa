@@ -35,7 +35,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
               </div>
               <div className={ styles.headerRight }>
                 {"status" in article && article.status && 
-                  <ArticleStatus status={ article.status }/>
+                  <ArticleStatus status={ article.status } handle={ article.handle }/>
                 }
 
                 {!("status" in article) && 
