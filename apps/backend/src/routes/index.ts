@@ -89,7 +89,7 @@ router.put(
   validateBody(updateArticleSchema),
   updateArticleController
 );
-router.patch("/articles/:id/publish", publishArticleController);
+router.post("/articles/publish", publishArticleController);
 router.delete("/articles/:id", deleteArticleController);
 
 // ===== Images =====

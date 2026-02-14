@@ -36,7 +36,7 @@ export const articleService = {
       author: article.author.handle,
       author_avatarUrl: article.author.avatarUrl,
       tag_names: article.articleTags,
-      updated_at: article.publishedAt
+      updated_at: article.updatedAt,
     }));
 
     return response;
@@ -101,8 +101,8 @@ export const articleService = {
     };
   },
 
-   async publishArticle(id: bigint) {
-    const article = await articleRepository.findById(id);
+   async publishArticle(handle: string) {
+    const article = await articleRepository.findByHandle(handle);
 
     if (!article) {
       throw new ApiError('not_found', 'article not found');
@@ -112,16 +112,16 @@ export const articleService = {
       throw new ApiError('forbidden', 'already_published');
     }
 
-    const pulishedArticle = await articleRepository.publishById(id);
+    const publishedArticle = await articleRepository.publishByHandle(handle);
 
-    if (!pulishedArticle) {
+    if (!publishedArticle) {
       throw new ApiError('database_error', '記事の公開に失敗しました');
     }
 
     return {
-      id: article.id.toString(),
-      status: article.status,
-      updatedAt: article.updatedAt,
+      handle: publishedArticle.handle,
+      status: publishedArticle.status,
+      updatedAt: publishedArticle.updatedAt,
     }
   },
 
