@@ -5,6 +5,7 @@ import styles from "../styles/article.module.css"
 import { useNavigate, useLocation } from "react-router-dom";
 import { dateFomatter } from "../utils/formatter";
 import Tag from "../components/Tag";
+import { FaFileUpload } from "react-icons/fa";
 
 type DetailArticle = {
   title: string;
@@ -33,6 +34,10 @@ export default function ArticlePage() {
   const [contentMd, setContentMd] = useState("");
   const [contentHtml, setContentHtml] = useState("");
   const [articleDetailData, setArticleDetailData] = useState<DetailArticle>();
+
+  function uploadFile() {
+
+  }
 
   useEffect(() => {
     
@@ -123,17 +128,27 @@ export default function ArticlePage() {
             </div>
             <p className={ styles.contentDispcription }>記事の内容</p>
             <div className={ styles.content }>
-              <div className={ styles.options }>
-                <div 
-                  className={ styles.mode } 
-                  onClick={() => setIsWrite(true)} >
-                  <p className={`${isWrite ? styles.focus : ""}`}>write</p>
+              <div className={ styles.optionsLine }>
+                <div className={ styles.options }>
+                  <div 
+                    className={ styles.mode } 
+                    onClick={() => setIsWrite(true)} >
+                    <p className={`${isWrite ? styles.focus : ""}`}>write</p>
+                  </div>
+                  <div 
+                    className={ styles.mode } 
+                    onClick={() => { setIsWrite(false) }} >
+                    <p className={`${!isWrite ? styles.focus : ""}`}>preview</p>
+                  </div>
                 </div>
-                <div 
-                  className={ styles.mode } 
-                  onClick={() => { setIsWrite(false) }} >
-                  <p className={`${!isWrite ? styles.focus : ""}`}>preview</p>
-                </div>
+
+                { isWrite && 
+                  <div className={ styles.fileUp } onClick={uploadFile}>
+                    <FaFileUpload >
+                    
+                    </ FaFileUpload>                    
+                  </div>
+                }
               </div>
               { isWrite && 
                 <textarea 
