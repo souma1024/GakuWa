@@ -7,39 +7,17 @@ services:
       - ./apps/backend:/app
     command: sh -c "mkdir -p /tmp/avatars && chmod 700 /tmp/avatars && npm install && npm run dev"
     environment:
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
       - DATABASE_URL=${DATABASE_URL}
       - MAIL_HOST=${MAIL_HOST}
       - MAIL_PORT=${MAIL_PORT}
       - MAIL_FROM=no-reply@example.com
-      - MINIO_ENDPOINT=${MINIO_HOST}
-      - MINIO_PORT=${MINIO_API_PORT}
-      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
-      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - S3_BUCKET_NAME=${S3_BUCKET_NAME}
     ports:
       - "${BACKEND_PORT}:3000"
-    depends_on:
-      - db
     restart: on-failure
-
-  db:
-    image: mysql:8.0
-    container_name: gakuwa-mysql
-    restart: on-failure
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-    ports:
-      - "${MYSQL_PORT}:3306"
-    command: --default-authentication-plugin=mysql_native_password
-    volumes:
-      - db-data:/var/lib/mysql
 
   nginx:
     build:
@@ -51,22 +29,3 @@ services:
     depends_on:
       - backend
     restart: on-failure
-
-  minio:
-    build:
-      context: ./infra/minio
-    image: myminio:minio
-    container_name: minio
-    ports:
-      - "${MINIO_API_PORT}:9000"
-      - "${MINIO_CONSOLE_PORT}:9001"
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-    command: server /data --console-address :9001
-    volumes:
-      - ./data/minio-data:/data
-    restart: on-failure
-
-volumes:
-  db-data:
