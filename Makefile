@@ -1,4 +1,4 @@
-.PHONYH: up down restart logs ps migrate prisma
+.PHONYH: up down restart build logs ps migrate prisma
 
 up:
 	docker compose up -d
@@ -8,6 +8,9 @@ down:
 
 restart:
 	docker compose down && docker compose up -d
+
+build:
+	docker compose up --build
 
 logs:
 	docker compose logs -f
