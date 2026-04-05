@@ -61,10 +61,6 @@
 
 .options {
 	display: flex;
-	background-color: rgb(249, 249, 255);
-	border-radius: 5px;
-	border-bottom: 1px solid;
-	border-color: rgb(216, 216, 216);
 }
 
 .contentMd {
@@ -191,4 +187,31 @@
 /* 広告など */
 .righter {
 	flex: 1;
+}
+
+.contentHtml img {
+	max-width: 200px;
+}
+
+.articleContent img {
+	max-width: 200px;
+}
+
+.optionsLine {
+	display: flex;
+	justify-content: space-between;
+	background-color: rgb(249, 249, 255);
+	border-radius: 5px;
+	border-bottom: 1px solid;
+	border-color: rgb(216, 216, 216);
+}
+
+.fileUp {
+	width: 40px;
+	height: 40px;
+	font-size: 20px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
 }

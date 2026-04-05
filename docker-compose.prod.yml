@@ -1,0 +1,31 @@
+services:
+  backend:
+    image: node:20
+    container_name: gakuwa-backend
+    working_dir: /app
+    volumes:
+      - ./apps/backend:/app
+    command: sh -c "mkdir -p /tmp/avatars && chmod 700 /tmp/avatars && npm install && npm run dev"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_FROM=no-reply@example.com
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - S3_BUCKET_NAME=${S3_BUCKET_NAME}
+    ports:
+      - "${BACKEND_PORT}:3000"
+    restart: on-failure
+
+  nginx:
+    build:
+      context: .
+      dockerfile: infra/nginx/Dockerfile
+    container_name: gakuwa-nginx
+    ports:
+      - "${NGINX_PORT}:80"
+    depends_on:
+      - backend
+    restart: on-failure

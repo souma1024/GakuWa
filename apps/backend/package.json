@@ -28,7 +28,7 @@
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "express": "^5.1.0",
-    "minio": "^8.0.6",
+    "@aws-sdk/client-s3": "^3.787.0",
     "multer": "^2.0.2",
     "mysql2": "^3.15.3",
     "nodemailer": "^7.0.10",

@@ -28,10 +28,11 @@ services:
       - MAIL_HOST=${MAIL_HOST}
       - MAIL_PORT=${MAIL_PORT}
       - MAIL_FROM=no-reply@example.com
-      - MINIO_ENDPOINT=${MINIO_HOST}
-      - MINIO_PORT=${MINIO_API_PORT}
-      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
-      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - AWS_ENDPOINT=http://minio:9000
+      - AWS_REGION=ap-northeast-1
+      - AWS_ACCESS_KEY_ID=${MINIO_ROOT_USER}
+      - AWS_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}
+      - S3_BUCKET_NAME=avatars
     ports:
       - "${BACKEND_PORT}:3000"
       - "5555:5555"  # For debugging with Node Inspector
