@@ -1,9 +1,18 @@
 import nodemailer from 'nodemailer'
 import { ApiError } from '../errors/apiError'
 
+const isProduction = process.env.NODE_ENV === "production";
 
 export const emailService = {
   async sendVerificationEmail(email: string, otp: string): Promise<void> {
+
+    if (isProduction) {
+      console.log("=== OTP EMAIL (PRODUCTION MOCK) ===");
+      console.log(`to: ${email}`);
+      console.log(`otp: ${otp}`);
+      console.log("==================================");
+      return;
+    }
 
     const transporter = await nodemailer.createTransport({
       host: process.env.MAIL_HOST,
