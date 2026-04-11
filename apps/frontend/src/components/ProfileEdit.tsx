@@ -62,7 +62,7 @@ export default function ProfileEdit({ user }: Props) {
         }
       }
 
-      const updateRes = await fetch("''/api/profile", {
+      const updateRes = await fetch("/api/profile", {
         method: "PATCH",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
