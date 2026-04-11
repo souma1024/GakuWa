@@ -20,6 +20,6 @@ export const eventsRepository = {
         eventId: true
       }
     });
-    return participations.map(p => p.eventId);
+    return participations.map((p: { eventId: bigint }) => p.eventId);
   }
 };

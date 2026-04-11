@@ -7,7 +7,7 @@ export const eventsService = {
     const events = await eventsRepository.findAll();
     const participatingEventIds = await eventsRepository.findParticipatingEventIds(userId);
 
-    return events.map(event => ({
+    return events.map((event: any) => ({
       ...event,
       id: String(event.id),
       isParticipating: participatingEventIds.includes(event.id)

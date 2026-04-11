@@ -40,6 +40,18 @@ enum ArticleStatus {
   archived
 }
 
+enum TeamRole {
+  leader
+  member
+}
+
+enum TeamStatus {
+  ready
+  active
+  finished
+  trouble
+}
+
 model User {
   id           BigInt @id @default(autoincrement())
   handle       String @unique @db.VarChar(50)
@@ -243,14 +255,3 @@ model TeamMember {
   @@map("team_members")
 }
 
-enum TeamStatus {
-  ready
-  active
-  finished
-  trouble
-}
-
-enum TeamRole {
-  leader
-  member
-}
