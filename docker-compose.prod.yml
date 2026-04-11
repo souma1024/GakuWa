@@ -1,8 +1,6 @@
 services:
   backend:
-    build: 
-      context: ./apps/backend
-      dockerfile: Dockerfile
+    image: ghcr.io/souma1024/gakuwa-backend:latest
     container_name: gakuwa-backend
     environment:
       - NODE_ENV=${NODE_ENV}
