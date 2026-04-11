@@ -1,4 +1,4 @@
-.PHONYH: up down restart build logs ps migrate prisma
+.PHONYH: up down restart build logs ps migrate prisma update
 
 up:
 	docker compose up -d
@@ -23,3 +23,8 @@ migrate:
 
 prisma:
 	docker compose exec backend npx prisma studio
+
+update:
+	docker compose -f docker-compose.prod.yml down
+	docker compose -f docker-compose.prod.yml pull
+	docker compose -f docker-compose.prod.yml up -d
