@@ -2,11 +2,11 @@ name: Backend CI # バックエンド用のワークフロー
 
 on:
   push:
-    branches: [main] # mainブランチへのpush時に実行
+    branches: [develop] # mainブランチへのpush時に実行
     paths:
       - "apps/backend/**"     # ← backend に変更があったときだけ実行
   pull_request:
-    branches: [main] # mainブランチへのプルリク作成時にも実行
+    branches: [develop] # mainブランチへのプルリク作成時にも実行
     paths:
       - "apps/backend/**"     # ← backend に変更があったときだけ実行
 
