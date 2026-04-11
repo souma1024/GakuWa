@@ -1,12 +1,11 @@
 services:
   backend:
-    image: node:20
+    build: 
+      context: ./apps/backend
+      dockerfile: Dockerfile
     container_name: gakuwa-backend
-    working_dir: /app
-    volumes:
-      - ./apps/backend:/app
-    command: sh -c "mkdir -p /tmp/avatars && chmod 700 /tmp/avatars && npm install && npm run dev"
     environment:
+      - NODE_ENV=${NODE_ENV}
       - DATABASE_URL=${DATABASE_URL}
       - MAIL_HOST=${MAIL_HOST}
       - MAIL_PORT=${MAIL_PORT}
