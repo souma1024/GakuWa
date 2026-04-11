@@ -29,7 +29,7 @@ export const articleService = {
   async getPublishedArticles(authorId? :bigint) {
     const articles = await articleRepository.findPublishedArticles(authorId);
 
-    const response = articles.map(article => ({
+    const response = articles.map((article: any) => ({
       handle: article.handle,
       title: article.title,
       likes_count: article.likesCount.toString(),
@@ -45,7 +45,7 @@ export const articleService = {
   async getAllArticlesById(id: bigint) {
     const articles = await articleRepository.findAllArticles(id);
 
-    const response = articles.map(article => ({
+    const response = articles.map((article: any) => ({
       handle: article.handle,
       title: article.title,
       likes_count: article.likesCount.toString(),

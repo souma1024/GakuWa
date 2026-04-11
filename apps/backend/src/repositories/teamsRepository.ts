@@ -12,7 +12,7 @@ export const teamsRepository = {
       }
     });
 
-    return teams.find(team => team._count.members < 4) || null;
+    return teams.find((team: { _count: { members: number } }) => team._count.members < 4) || null;
   },
 
   // 新しいチームを作成
