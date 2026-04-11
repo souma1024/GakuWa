@@ -26,10 +26,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set image tag
+        run: echo "IMAGE_TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
       - name: Build backend image
         run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/gakuwa-backend:latest ./apps/backend
+          docker build \
+            -t ghcr.io/${{ github.repository_owner }}/gakuwa-backend:$IMAGE_TAG \
+            -t ghcr.io/${{ github.repository_owner }}/gakuwa-backend:latest \
+            ./apps/backend
 
       - name: Push backend image
         run: |
+          docker push ghcr.io/${{ github.repository_owner }}/gakuwa-backend:$IMAGE_TAG
           docker push ghcr.io/${{ github.repository_owner }}/gakuwa-backend:latest
