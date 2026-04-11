@@ -32,7 +32,7 @@ export default function SignupPage() {
     setSubmitStatus("submitting");
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/preSignup', {
+      const response = await fetch('/api/auth/preSignup', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -13,7 +13,7 @@ export const useRanking = () => {
 
   const fetchPosts = async () => {
     try {
-      const res = await fetch('http://localhost:8080/api/ranking', {
+      const res = await fetch('/api/ranking', {
         method: 'GET'
       });
       

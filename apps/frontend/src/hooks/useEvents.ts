@@ -26,7 +26,7 @@ export const useEvents = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/events", {
+      const response = await fetch("/api/events", {
         method: "GET",
         credentials: "include",
       });
@@ -58,7 +58,7 @@ export const useEvents = () => {
 
   // 参加登録（チーム情報を返す）
   const participate = async (eventId: string): Promise<TeamInfo> => {
-    const response = await fetch(`http://localhost:8080/api/events/${eventId}/participate`, {
+    const response = await fetch(`/api/events/${eventId}/participate`, {
       method: "POST",
       credentials: "include",
     });
@@ -85,7 +85,7 @@ export const useEvents = () => {
 
   // 参加取り消し
   const cancelParticipate = async (eventId: string) => {
-    const response = await fetch(`http://localhost:8080/api/events/${eventId}/participate`, {
+    const response = await fetch(`/api/events/${eventId}/participate`, {
       method: "DELETE",
       credentials: "include",
     });

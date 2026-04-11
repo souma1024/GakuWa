@@ -49,7 +49,7 @@ export default function ProfileEdit({ user }: Props) {
         data.append('file', avatar)
 
 
-        const response = await fetch('http://localhost:8080/api/images/upload', {
+        const response = await fetch('/api/images/upload', {
           method: 'POST',
           credentials: "include",
           body: data
@@ -62,7 +62,7 @@ export default function ProfileEdit({ user }: Props) {
         }
       }
 
-      const updateRes = await fetch("http://localhost:8080/api/profile", {
+      const updateRes = await fetch("''/api/profile", {
         method: "PATCH",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

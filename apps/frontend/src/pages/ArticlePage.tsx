@@ -72,7 +72,7 @@ export default function ArticlePage() {
         status: "draft"
       }
 
-      const res = await fetch("http://localhost:8080/api/articles/create", {
+      const res = await fetch("/api/articles/create", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -96,7 +96,7 @@ export default function ArticlePage() {
 
   async function getDetailArticle(articleHandle: string) {
     try {
-      const res = await fetch(`http://localhost:8080/api/articles/${articleHandle}`, {
+      const res = await fetch(`/api/articles/${articleHandle}`, {
         method: "GET"
       })
 
