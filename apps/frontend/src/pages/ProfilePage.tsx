@@ -38,7 +38,7 @@ export default function ProfilePage() {
   useEffect(() => {
     if (!handle) return;
     const fetchOneSelf = async () => {
-      const res = await fetch('http://localhost:8080/api/auth/oneself', {
+      const res = await fetch('/api/auth/oneself', {
         method: "POST",
         credentials: "include"
       });
@@ -53,7 +53,7 @@ export default function ProfilePage() {
     };
 
     const fetchHandleData = async (handle: string) => {
-      const res = await fetch(`http://localhost:8080/api/profile/${handle}`, {
+      const res = await fetch(`/api/profile/${handle}`, {
         method: "GET"
       });
 

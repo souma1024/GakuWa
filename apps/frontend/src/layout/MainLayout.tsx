@@ -19,7 +19,7 @@ export default function MainLayout() {
   useEffect(() => {
     const check = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/auth/session", {
+        const response = await fetch("/api/auth/session", {
           method: "POST",
           credentials: "include",
         });

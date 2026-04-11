@@ -20,7 +20,7 @@ export const useArticles = () => {
 
   const fetchPublishedArticles = async () => {
     try {
-      const res = await fetch('http://localhost:8080/api/articles', {
+      const res = await fetch('/api/articles', {
         method: 'GET'
       });
       const result = await res.json();
@@ -33,7 +33,7 @@ export const useArticles = () => {
 
   const fetchPublishedUsersArticles = async (handle: string) => {
     try {
-      const res = await fetch(`http://localhost:8080/api/${handle}/articles`, {
+      const res = await fetch(`/api/${handle}/articles`, {
         method: 'GET'
       });
       const result = await res.json();
@@ -45,7 +45,7 @@ export const useArticles = () => {
 
   const fetchUsersArticles = async (handle: string) => {
     try {
-      const res = await fetch(`http://localhost:8080/api/${handle}/articles?t=all`, {
+      const res = await fetch(`/api/${handle}/articles?t=all`, {
         method: 'GET'
       });
       const result = await res.json();

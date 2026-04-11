@@ -12,7 +12,7 @@ export default function ArticleStatus({ handle, status}: Props) {
   // 記事を公開する関数
   async function publish() {
     try {
-      const res = await fetch(`http://localhost:8080/api/articles/publish`, {
+      const res = await fetch(`/api/articles/publish`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
