@@ -1,4 +1,4 @@
-.PHONYH: up down restart build logs ps migrate prisma update
+.PHONY: up down restart build logs ps migrate prisma update
 
 up:
 	docker compose up -d
