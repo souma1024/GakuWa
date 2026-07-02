@@ -9,7 +9,7 @@ export const rankingService = {
     const ranking: Posts[] = data.map((item: any) => ({
       handle: item.handle,
       avatar_url: item.avatarUrl,
-      posts_count: item._count.articles.toString(),
+      posts_count: item.articles_count.toString(),
     }));
 
     return ranking;
