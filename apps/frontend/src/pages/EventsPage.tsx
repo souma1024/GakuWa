@@ -20,7 +20,8 @@ export default function EventsPage() {
     return (
       <div className="events-page">
         <div className="events-error">
-          <p>{error}</p>
+          <p>イベント参加にはログインが必須です！</p>
+          <p className="login"><a href="/login">こちら</a>からログインしてください</p>
         </div>
       </div>
     );

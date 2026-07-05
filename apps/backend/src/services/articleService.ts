@@ -35,7 +35,7 @@ export const articleService = {
       likes_count: article.likesCount.toString(),
       author: article.author.handle,
       author_avatarUrl: article.author.avatarUrl,
-      tag_names: article.articleTags,
+      tag_names: article.articleTags.map((articleTag: any) => articleTag.tag.name),
       updated_at: article.updatedAt,
     }));
 
