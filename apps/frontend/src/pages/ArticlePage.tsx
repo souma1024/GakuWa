@@ -191,7 +191,7 @@ export default function ArticlePage() {
                       <img src={ articleDetailData.avatarUrl } alt="avatar"  className={ styles.avatar }/>
                     </div>
                     <div className={ styles.usernameField }>
-                      <p className={ styles.username }>{ articleDetailData.author_handle }</p>
+                      <p className={ styles.username } onClick={ () => { navigate(`/${articleDetailData.author_handle}/profile`) } }>{ articleDetailData.author_handle }</p>
                     </div>
                   </div>
                   <div>
