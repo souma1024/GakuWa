@@ -74,11 +74,11 @@ export default function ProfilePage() {
     fetchHandleData(handle);
   }, [location.pathname]);
 
-  if (!user) return <div>Loading...</div>;
+  if (!user && !publicUser) return <div>Loading...</div>;
 
   return (
     <div>
-      {mode ? (
+      {mode && user ? (
         <ProfileEdit user={user}/>
       ) : (
         <div className={ styles.wrapper }>

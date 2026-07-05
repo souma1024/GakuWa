@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { articleService } from "../services/articleService";
+import { userRepository } from "../repositories/userRepository";
 import { CreateArticleRequest } from "../dtos/articles/requestDtos";
 import { sendSuccess } from "../utils/sendSuccess";
 import { ApiError } from "../errors/apiError";
@@ -45,7 +46,8 @@ export const getUsersArticlesController = async (
   next: NextFunction
 ) => {
   try {
-    const userId = req.userId;
+    const handle = req.params.handle;
+    const userId = req.userId ?? await userRepository.findUserIdByHandle(handle);
     const type = req.query.t;
 
     if (!userId) {
