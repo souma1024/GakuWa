@@ -82,7 +82,7 @@ router.delete(
 // ===== Articles =====
 router.post("/articles/create", authenticateUser, createArticleController);
 router.get("/articles", getArticlesController);
-router.get("/:handle/articles", authenticateUser, getUsersArticlesController);
+router.get("/:handle/articles", getUsersArticlesController);
 router.get("/articles/:handle", getArticleDetailController);
 router.put(
   "/articles/:id",

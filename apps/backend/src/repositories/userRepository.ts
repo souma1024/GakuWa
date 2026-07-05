@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma'
+import { id } from 'zod/v4/locales';
 
 export const userRepository = {
 
@@ -56,6 +57,15 @@ export const userRepository = {
         handle,
       }
     })
+  },
+
+  async findUserIdByHandle(handle: string) {
+    const user = await prisma.user.findFirst({
+      where: {
+        handle: handle
+      }
+    });
+    return user?.id;
   },
 
   // 取得件数, id並び順, 取得初めの位置を指定してuserを返す関数
